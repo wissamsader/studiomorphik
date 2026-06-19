@@ -1,3 +1,7 @@
 .DS_Store
 img/.DS_Store
 YEssS.mp4
+
+# Large source video — exceeds GitHub's 100MB file limit.
+# Kept local; a web-optimized version should be committed before deploying.
+img/STUDIOMORPHIK.mp4

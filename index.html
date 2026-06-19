@@ -7,7 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400&family=Montserrat:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap"
       rel="stylesheet"
     />
     <link rel="preconnect" href="https://fonts.cdnfonts.com" />
@@ -15,7 +15,7 @@
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <div class="hero" style="--hero-image: url('img/yes.png');">
+    <div class="hero" style="--hero-image: url('img/studiomorphik-poster.jpg');">
       <video
         class="hero__media"
         autoplay
@@ -24,17 +24,17 @@
         playsinline
         webkit-playsinline
         preload="auto"
-        poster="img/yes.png"
+        poster="img/studiomorphik-poster.jpg"
         aria-hidden="true"
       >
-        <source src="img/YES.mp4" type="video/mp4" />
+        <source src="img/STUDIOMORPHIK.mp4" type="video/mp4" />
       </video>
 
       <div class="hero__overlay" aria-hidden="true"></div>
 
       <header class="header">
         <button class="menu-button" type="button" aria-label="Open menu" aria-expanded="false">
-          <span class="menu-button__icon" aria-hidden="true"></span>
+          <span class="menu-button__mark" aria-hidden="true"></span>
         </button>
 
         <a class="brand" href="#/">STUDIOMORPHIK</a>
@@ -53,15 +53,12 @@
         </button>
       </header>
 
-      <div class="video-overlay video-overlay--top-right" aria-hidden="true"></div>
-      <div class="video-overlay video-overlay--bottom-left" aria-hidden="true">AI video solutions for your brands, products and campaigns</div>
-
       <!-- home -->
       <main class="view" data-page="home">
         <h1 class="sr-only">STUDIOMORPHIK</h1>
       </main>
 
-      <!-- scene timeline -->
+      <!-- scene timeline (kept, swap CSS to restore) -->
       <nav class="timeline" aria-label="Scene timeline">
         <div class="timeline__track">
           <div class="timeline__progress"></div>
@@ -70,12 +67,47 @@
         <div class="timeline__tooltip" hidden></div>
       </nav>
 
+      <!-- scene map (creative scene nav) -->
+      <nav class="scene-map" aria-label="Scene navigation">
+        <svg class="scene-map__lines" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+          <defs>
+            <linearGradient id="sceneSpectrum" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0" stop-color="#ff4d4d"/>
+              <stop offset="0.2" stop-color="#ff9f40"/>
+              <stop offset="0.4" stop-color="#ffe14d"/>
+              <stop offset="0.6" stop-color="#5dff9b"/>
+              <stop offset="0.8" stop-color="#4dc3ff"/>
+              <stop offset="1" stop-color="#b96bff"/>
+            </linearGradient>
+          </defs>
+          <path class="scene-map__route scene-map__route--base" pathLength="1" fill="none" />
+          <path class="scene-map__route scene-map__route--progress" pathLength="1" fill="none" />
+        </svg>
+      </nav>
+
+      <!-- toggle: show / hide the scene map -->
+      <div class="map-control">
+        <span class="map-control__hint" aria-hidden="true">tap to explore scenes</span>
+        <button class="map-toggle" type="button" aria-label="Show scene map" aria-pressed="false">
+          <span class="map-toggle__icon" aria-hidden="true">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M5 7 L11 12 L9 18 L17 15 L19 6" opacity="0.55"/>
+              <circle cx="5" cy="7" r="1.4" fill="currentColor" stroke="none"/>
+              <circle cx="11" cy="12" r="1.4" fill="currentColor" stroke="none"/>
+              <circle cx="9" cy="18" r="1.4" fill="currentColor" stroke="none"/>
+              <circle cx="17" cy="15" r="1.4" fill="currentColor" stroke="none"/>
+              <circle cx="19" cy="6" r="1.4" fill="currentColor" stroke="none"/>
+            </svg>
+          </span>
+        </button>
+      </div>
+
       <!-- about -->
       <main class="view" data-page="about" hidden>
         <div class="panel">
           <h1 class="panel__title">About</h1>
           <div class="about">
-            <p class="about__text">STUDIOMORPHIK is a creative team crafting AI-driven video and image solutions for brands, products, and campaigns. Founded by photographer and visual artist Wissam Sader and editor and motion designer Teddy Tawil, and working between Europe and the Middle East, we produce everything from custom characters, landscapes, and cinematic transitions to product, food, and automotive shots, beauty, VFX, and hero films — blending true photorealism with the surreal and imaginative. Whether you need a full campaign or a focused VFX solution on any budget, we mix the right styles, models, and techniques to bring your vision to life. We've created work with brands and media companies including Vice Media and KitKat, among many others.</p>
+            <p class="about__text">STUDIOMORPHIK is a creative team crafting AI-driven video and image solutions for brands, products, and campaigns. Founded by photographer and visual artist Wissam Sader and editor and motion designer Teddy Tawil, and working between Europe and the Middle East, we produce everything from custom characters, landscapes, and cinematic transitions to product, food, and automotive shots, beauty, VFX, and hero films, blending true photorealism with the surreal and imaginative. Whether you need a full campaign or a focused VFX solution on any budget, we mix the right styles, models, and techniques to bring your vision to life. We've created work with brands and media companies including Vice Media and KitKat, among many others.</p>
           </div>
           <div class="clients">
             <h2 class="clients__label">selected clients</h2>
@@ -92,13 +124,11 @@
         <div class="panel">
           <h1 class="panel__title">Contact</h1>
           <div class="contact">
-            <p class="contact__lead">Like what you see? Let's create something together.</p>
-            <div class="contact__grid">
-              <div class="contact__block">
-                <h2 class="contact__label">Email</h2>
-                <a class="contact__value" href="mailto:smorphik@gmail.com">smorphik@gmail.com</a>
-              </div>
-            </div>
+            <p class="contact__lead">Like what you see?<br />Let's create something together.</p>
+            <a class="contact__email" href="mailto:smorphik@gmail.com">
+              <span class="contact__email-text">smorphik@gmail.com</span>
+              <span class="contact__email-arrow" aria-hidden="true">→</span>
+            </a>
           </div>
         </div>
       </main>
