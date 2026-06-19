@@ -1,3 +1,11 @@
+@font-face {
+  font-family: 'Integral CF';
+  src: url('fonts/IntegralCF-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
   --bg: #0b0c0e;
   --fg: rgba(255, 255, 255, 0.92);
@@ -157,7 +165,14 @@ a:hover {
   transition: opacity 0.2s ease;
 }
 .header__icon svg {
+  display: block;
   transition: transform 0.4s cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+@media (max-width: 880px) {
+  .header__icon {
+    margin-top: 1px;
+  }
 }
 .header__icon:hover {
   opacity: 1;
