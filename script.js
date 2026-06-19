@@ -113,7 +113,7 @@
     { until: 8,   label: 'Voltage' },     // 0  electric neon dancers
     { until: 14,  label: 'Elixir' },      // 8  green perfume bottle
     { until: 18,  label: 'Solitude' },    // 14 lone man on a quiet street
-    { until: 32,  label: 'Allure', focus: 38 }, // 18 makeup at the vanity (off-centre subject)
+    { until: 32,  label: 'Allure' },      // 18 makeup at the vanity
     { until: 41,  label: 'Underground' }, // 32 neon nocturnal city
     { until: 56,  label: 'Desire' },      // 41 sleek headphones
     { until: 60,  label: 'Genesis' },     // 56 primordial water droplets
@@ -126,30 +126,6 @@
     { until: 145, label: 'Nostalgia' },   // 135 vintage Cairo market
     { until: 151, label: 'Ritual' },      // 145 spotlit finale
   ];
-
-  /* ---- mobile crop focus (portrait 9:16) ---- */
-  // on phones the 16:9 video is cropped to fill 9:16; per-scene `focus`
-  // shifts which slice is shown so off-centre subjects aren't cut off.
-  if (video) {
-    const isPortraitCrop = () => window.matchMedia('(max-width: 880px)').matches;
-    let lastFocus;
-    const updateCropFocus = () => {
-      if (!isPortraitCrop()) {
-        if (lastFocus !== undefined) { video.style.objectPosition = ''; lastFocus = undefined; }
-        return;
-      }
-      const t = video.currentTime;
-      const scene = scenes.find(s => t <= s.until) || scenes[scenes.length - 1];
-      const focus = scene.focus != null ? scene.focus : 50;
-      if (focus !== lastFocus) {
-        video.style.objectPosition = `${focus}% 50%`;
-        lastFocus = focus;
-      }
-    };
-    video.addEventListener('timeupdate', updateCropFocus);
-    window.addEventListener('resize', updateCropFocus);
-    updateCropFocus();
-  }
 
   /* ---- scene timeline ---- */
 
