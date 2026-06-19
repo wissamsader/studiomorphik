@@ -124,31 +124,42 @@
 
   /* ---- mobile crop focus (portrait 9:16) ---- */
 
-  // on phones the 16:9 video is cropped hard to fill 9:16.
-  // each entry shifts object-position so the subject stays in frame.
+  // on phones the 16:9 video is cropped hard to fill a tall portrait frame,
+  // so only ~30% of the width is visible. each entry shifts object-position
+  // so the subject stays in frame for that exact shot.
   // focus: 0 = far-left edge, 50 = centre, 100 = far-right edge.
   // ← lower number = pan left  |  higher number = pan right →
+  // (values set by inspecting the actual frame at each timecode)
   const focusSegments = [
-    // Allure – face at vanity (18–32s)
-    { start: 18.2, end: 19.5, focus: 30 },
-    { start: 20.3, end: 21.2, focus: 30 },
-    { start: 27.7, end: 29.5, focus: 32 },
-    // Desire – face (41–56s)
-    { start: 44.7, end: 46.2, focus: 30 },
-    { start: 51.4, end: 52.8, focus: 28 },
-    // Inferno – subject + fire (60–74s)
-    { start: 62.0, end: 63.3, focus: 35 },
-    { start: 65.8, end: 67.7, focus: 50 },
-    // Inferno → Mirage – subject
-    { start: 72.8, end: 74.2, focus: 32 },
-    // Mirage – girl face on RIGHT (74–82s)
-    { start: 78.4, end: 81.0, focus: 75 },
-    // Couture – one of the girls (128–135s)
-    { start: 128.6, end: 131.0, focus: 28 },
-    // Couture – one eye
-    { start: 134.5, end: 135.2, focus: 35 },
-    // Nostalgia – face (135–145s)
-    { start: 138.3, end: 141.2, focus: 32 },
+    // makeup vanity — face is the MIRROR reflection, far right
+    { start: 18.24, end: 19.64, focus: 90 },
+    // woman lying on the bed — face at the far-left edge
+    { start: 20.36, end: 21.24, focus: 0 },
+    // two women underground — favour the left woman's face
+    { start: 27.84, end: 29.64, focus: 13 },
+    // man in the metro, train behind him — keep him centred (he drifts ~32→45%)
+    { start: 29.64, end: 31.44, focus: 33 },
+    // woman before the pyramids — on the right, drifts further right
+    { start: 44.88, end: 46.28, focus: 73 },
+    // (desert SUV at ~51.5–53s: left at the default centre — it's framed well
+    //  there and an override snapped the walking-columns shot just before it)
+    // torch + pyramid — subject and fire are far left
+    { start: 62.00, end: 63.32, focus: 3 },
+    // fire-breather — face and flame sit left of centre
+    { start: 65.96, end: 67.80, focus: 17 },
+    // woman by the sea — face at ~30%
+    { start: 72.92, end: 74.28, focus: 20 },
+    // split-screen — the girl's face FLIPS right → left → right; track her
+    { start: 78.44, end: 79.60, focus: 82 },
+    { start: 79.60, end: 80.50, focus: 12 },
+    { start: 80.50, end: 81.04, focus: 82 },
+    // two couture women — favour the left woman's face
+    { start: 128.72, end: 131.00, focus: 16 },
+    // extreme close-up — pan hard to keep ONLY one eye in frame
+    { start: 134.56, end: 135.32, focus: 25 },
+    // man playing the oud — seated left; centre him (his own shot only,
+    // the wide bedroom shot before 139.8 stays at the default centre)
+    { start: 139.76, end: 141.24, focus: 8 },
   ];
 
   if (video) {
