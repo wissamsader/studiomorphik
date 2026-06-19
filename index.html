@@ -15,7 +15,7 @@
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <div class="hero" style="--hero-image: url('img/studiomorphik-poster.jpg');">
+    <div class="hero">
       <video
         class="hero__media"
         autoplay
@@ -33,9 +33,25 @@
       <div class="hero__overlay" aria-hidden="true"></div>
 
       <header class="header">
-        <button class="menu-button" type="button" aria-label="Open menu" aria-expanded="false">
-          <span class="menu-button__mark" aria-hidden="true"></span>
-        </button>
+        <div class="header__links">
+          <a href="#/about" aria-label="About" class="header__icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="1.5"
+                 stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="9"/>
+              <line x1="12" y1="11" x2="12" y2="16"/>
+              <circle cx="12" cy="7.5" r="0.6" fill="currentColor"/>
+            </svg>
+          </a>
+          <a href="#/contact" aria-label="Contact" class="header__icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="1.5"
+                 stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="5" width="18" height="14" rx="1.5"/>
+              <path d="M3.5 6.5 L12 13 L20.5 6.5"/>
+            </svg>
+          </a>
+        </div>
 
         <a class="brand" href="#/">STUDIOMORPHIK</a>
 
@@ -133,15 +149,6 @@
         </div>
       </main>
 
-      <div class="menu" aria-label="Menu" hidden>
-        <button class="menu__close" type="button" aria-label="Close menu">
-          <span aria-hidden="true">Close</span>
-        </button>
-        <div class="menu__content">
-          <a class="menu__link" href="#/about">About</a>
-          <a class="menu__link" href="#/contact">Contact</a>
-        </div>
-      </div>
     </div>
 
     <script src="script.js"></script>

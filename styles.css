@@ -12,20 +12,24 @@
   box-sizing: border-box;
 }
 
-html,
-body {
+html {
+  overflow: hidden;
   height: 100%;
 }
 
 body {
   margin: 0;
+  position: fixed;
+  inset: 0;
   font-family: 'Montserrat', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
   color: var(--fg);
   background: var(--bg);
-  overflow-x: hidden;
+  overflow: hidden;
   line-height: 1.6;
   letter-spacing: 0.01em;
   text-align: left;
+  overscroll-behavior: none;
+  -webkit-overflow-scrolling: auto;
 }
 
 .sr-only {
@@ -50,7 +54,7 @@ a:hover {
 }
 
 .hero {
-  min-height: 100svh;
+  height: 100%;
   position: relative;
   isolation: isolate;
   display: grid;
@@ -137,17 +141,26 @@ a:hover {
 .vol-btn:not(.vol-btn--muted) .vol-btn__off { display: none; }
 
 .header__links {
-  margin-left: auto;
-  display: none;
-  gap: 18px;
-  font-size: 12px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--fg);
+  display: flex;
+  align-items: center;
+  gap: 14px;
 }
 
-.header__links a {
+.header__icon {
+  display: flex;
+  align-items: center;
   color: var(--fg);
+  opacity: 0.7;
+  transition: opacity 0.2s ease;
+}
+.header__icon svg {
+  transition: transform 0.4s cubic-bezier(0.65, 0, 0.35, 1);
+}
+.header__icon:hover {
+  opacity: 1;
+}
+.header__icon:hover svg {
+  transform: scale(1.12);
 }
 
 .header__links a.is-active {
@@ -212,6 +225,17 @@ body.is-menu-open .menu-button__mark {
   display: grid;
   grid-template-columns: 1fr;
   align-items: end;
+}
+
+.view[data-page="about"],
+.view[data-page="contact"] {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  overflow-y: auto;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
 }
 
 /* content sections — prevent layout shift when toggling */

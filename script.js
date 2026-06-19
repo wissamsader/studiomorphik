@@ -1,9 +1,6 @@
 (() => {
   const body = document.body;
   const hero = document.querySelector('.hero');
-  const menu = document.querySelector('.menu');
-  const openBtn = document.querySelector('.menu-button');
-  const closeBtn = document.querySelector('.menu__close');
   const views = document.querySelectorAll('.view[data-page]');
 
   /* ---- router ---- */
@@ -38,8 +35,6 @@
 
   function onHashChange() {
     navigate(getRoute());
-    // close menu on navigation
-    setMenuOpen(false);
   }
 
   window.addEventListener('hashchange', onHashChange);
@@ -53,42 +48,27 @@
     brand.addEventListener('click', (e) => {
       if (getRoute() === 'home') {
         e.preventDefault();
-        setMenuOpen(false);
       }
     });
   }
 
-  /* ---- menu ---- */
+  /* ---- header icon toggles ---- */
 
-  function isMenuOpen() {
-    return body.classList.contains('is-menu-open');
-  }
-
-  function setMenuOpen(open) {
-    body.classList.toggle('is-menu-open', open);
-    if (openBtn) openBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
-    if (menu) menu.toggleAttribute('hidden', !open);
-  }
-
-  if (menu && openBtn) {
-    setMenuOpen(false);
-
-    openBtn.addEventListener('click', () => setMenuOpen(!isMenuOpen()));
-
-    if (closeBtn) closeBtn.addEventListener('click', () => setMenuOpen(false));
-
-    window.addEventListener('click', (e) => {
-      if (!isMenuOpen()) return;
-      const target = e.target;
-      if (!(target instanceof Node)) return;
-      if (menu.contains(target) || openBtn.contains(target)) return;
-      setMenuOpen(false);
+  const headerIcons = document.querySelectorAll('.header__icon');
+  headerIcons.forEach(icon => {
+    icon.addEventListener('click', (e) => {
+      const href = icon.getAttribute('href');
+      if (!href || !href.startsWith('#/')) return;
+      const target = href.slice(2);
+      // if already on that page, go back home
+      if (getRoute() === target) {
+        e.preventDefault();
+        navigate('home');
+        window.location.hash = '#/';
+      }
+      // otherwise let the hash change happen naturally
     });
-
-    window.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') setMenuOpen(false);
-    });
-  }
+  });
 
   /* ---- sound toggle / video ---- */
 
