@@ -107,6 +107,59 @@
     { until: 151, label: 'Ritual' },      // 145 spotlit finale
   ];
 
+  /* ---- mobile crop focus (portrait 9:16) ---- */
+
+  // on phones the 16:9 video is cropped hard to fill 9:16.
+  // each entry shifts object-position so the subject stays in frame.
+  // focus: 0 = far-left edge, 50 = centre, 100 = far-right edge.
+  // ← lower number = pan left  |  higher number = pan right →
+  const focusSegments = [
+    // Allure – face at vanity (18–32s)
+    { start: 18.2, end: 19.5, focus: 30 },
+    { start: 20.3, end: 21.2, focus: 30 },
+    { start: 27.7, end: 29.5, focus: 32 },
+    // Desire – face (41–56s)
+    { start: 44.7, end: 46.2, focus: 30 },
+    { start: 51.4, end: 52.8, focus: 28 },
+    // Inferno – subject + fire (60–74s)
+    { start: 62.0, end: 63.3, focus: 35 },
+    { start: 65.8, end: 67.7, focus: 50 },
+    // Inferno → Mirage – subject
+    { start: 72.8, end: 74.2, focus: 32 },
+    // Mirage – girl face on RIGHT (74–82s)
+    { start: 78.4, end: 81.0, focus: 75 },
+    // Couture – one of the girls (128–135s)
+    { start: 128.6, end: 131.0, focus: 28 },
+    // Couture – one eye
+    { start: 134.5, end: 135.2, focus: 35 },
+    // Nostalgia – face (135–145s)
+    { start: 138.3, end: 141.2, focus: 32 },
+  ];
+
+  if (video) {
+    const mq = window.matchMedia('(max-width: 880px)');
+    let lastFocus;
+
+    const updateCrop = () => {
+      if (!mq.matches) {
+        video.style.objectPosition = '';
+        lastFocus = undefined;
+        return;
+      }
+      const t = video.currentTime;
+      const seg = focusSegments.find(s => t >= s.start && t < s.end);
+      const focus = seg ? seg.focus : 50;
+      if (focus !== lastFocus) {
+        video.style.objectPosition = `${focus}% 50%`;
+        lastFocus = focus;
+      }
+    };
+
+    video.addEventListener('timeupdate', updateCrop);
+    mq.addEventListener('change', updateCrop);
+    updateCrop();
+  }
+
   /* ---- scene timeline ---- */
 
   const timeline = document.querySelector('.timeline');
