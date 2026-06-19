@@ -279,6 +279,68 @@
     }
   }
 
+  /* ---- scene-map shapes (a fresh random layout on every open) ---- */
+
+  // each open arranges the scene nodes along a new random shape, and the toggle
+  // button previews exactly the shape the next tap will reveal.
+  const SCENE_COUNT = scenes.filter(s => s.label).length;
+
+  const _r = (a, b) => a + Math.random() * (b - a);
+  const _clampPt = (p) => ({
+    x: Math.max(9, Math.min(89, p.x)),
+    y: Math.max(15, Math.min(85, p.y)),
+  });
+
+  const shapeGenerators = [
+    // wave
+    (n) => { const humps = 2 + Math.floor(Math.random() * 2), ph = _r(0, Math.PI * 2), amp = _r(20, 30);
+      return Array.from({ length: n }, (_, i) => { const t = i / (n - 1);
+        return _clampPt({ x: 11 + 78 * t, y: 50 + amp * Math.sin(ph + t * Math.PI * humps) }); }); },
+    // zigzag
+    (n) => { const hi = _r(24, 32), lo = _r(68, 76);
+      return Array.from({ length: n }, (_, i) => { const t = i / (n - 1);
+        return _clampPt({ x: 11 + 78 * t, y: (i % 2 ? lo : hi) + _r(-3, 3) }); }); },
+    // spiral
+    (n) => { const turns = _r(1.6, 2.4), dir = Math.random() < 0.5 ? 1 : -1, ph = _r(0, Math.PI * 2);
+      return Array.from({ length: n }, (_, i) => { const t = i / (n - 1), a = ph + dir * t * Math.PI * 2 * turns, r = 5 + t * 36;
+        return _clampPt({ x: 50 + r * Math.cos(a) * 1.35, y: 50 + r * Math.sin(a) }); }); },
+    // arc / orbit
+    (n) => { const ph = _r(0, Math.PI * 2), dir = Math.random() < 0.5 ? 1 : -1, span = _r(1.4, 2) * Math.PI;
+      return Array.from({ length: n }, (_, i) => { const t = i / (n - 1), a = ph + dir * t * span;
+        return _clampPt({ x: 50 + 38 * Math.cos(a), y: 50 + 31 * Math.sin(a) }); }); },
+    // staircase / diagonal
+    (n) => { const dir = Math.random() < 0.5 ? 1 : -1;
+      return Array.from({ length: n }, (_, i) => { const t = i / (n - 1), y = dir > 0 ? 80 - 58 * t : 22 + 58 * t;
+        return _clampPt({ x: 11 + 78 * t, y: y + _r(-2.5, 2.5) }); }); },
+    // bounce (decaying)
+    (n) => { const ph = _r(0, Math.PI), k = _r(2.5, 3.5);
+      return Array.from({ length: n }, (_, i) => { const t = i / (n - 1), d = Math.abs(Math.cos(ph + t * Math.PI * k)) * (1 - 0.45 * t);
+        return _clampPt({ x: 11 + 78 * t, y: 80 - 58 * d }); }); },
+    // wandering scatter
+    (n) => Array.from({ length: n }, (_, i) => { const t = i / (n - 1);
+        return _clampPt({ x: 11 + 78 * t + _r(-5, 5), y: _r(18, 82) }); }),
+  ];
+
+  let _lastGen = -1;
+  const makeShapePoints = () => {
+    let g; do { g = Math.floor(Math.random() * shapeGenerators.length); } while (g === _lastGen);
+    _lastGen = g;
+    return shapeGenerators[g](SCENE_COUNT);
+  };
+
+  // a mini SVG of the exact shape, drawn into the toggle button as a preview
+  const shapeIcon = (pts) => {
+    const sx = (p) => (2 + p.x / 100 * 20).toFixed(1);
+    const sy = (p) => (2 + p.y / 100 * 20).toFixed(1);
+    const d = pts.map((p, i) => `${i ? 'L' : 'M'}${sx(p)} ${sy(p)}`).join(' ');
+    return `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="${d}"/></svg>`;
+  };
+
+  // shared between the toggle button and the map itself
+  let reshapeSceneMap = null;   // assigned by the scene-map block
+  let setToggleIcon = null;     // assigned by the toggle block
+  let pendingShape = null;      // the points the next open will use
+
   /* ---- scene map toggle (the circle) ---- */
 
   // shared timer: auto-hide the map a few seconds after a scene is chosen
@@ -288,23 +350,11 @@
 
   if (mapToggle) {
     const iconWrap = mapToggle.querySelector('.map-toggle__icon');
+    setToggleIcon = (pts) => { if (iconWrap) iconWrap.innerHTML = shapeIcon(pts); };
 
-    // svg glyph helpers
-    const ICON = (inner) =>
-      `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">${inner}</svg>`;
-    const DOT = (x, y) => `<circle cx="${x}" cy="${y}" r="1.4" fill="currentColor" stroke="none"/>`;
-
-    // the circle just re-skins on each press (decorative) — the line stays put
-    const skins = [
-      { shape: '50%', icon: ICON(`<path d="M5 7 L11 12 L9 18 L17 15 L19 6" opacity="0.55"/>${DOT(5,7)}${DOT(11,12)}${DOT(9,18)}${DOT(17,15)}${DOT(19,6)}`) },
-      { shape: '30% 70% 70% 30% / 30% 30% 70% 70%', icon: ICON(`<circle cx="12" cy="12" r="6.5"/><circle cx="12" cy="12" r="2.4"/>`) },
-      { shape: '16px', icon: ICON(`<path d="M12 5 L12 19 M5 12 L19 12"/>`) },
-      { shape: '60% 40% 30% 70% / 60% 30% 70% 40%', icon: ICON(`<path d="M4 13 Q8 7 12 13 T20 13"/>`) },
-      { shape: '50% 50% 50% 50% / 60% 60% 40% 40%', icon: ICON(`<rect x="5" y="5" width="5.5" height="5.5"/><rect x="13.5" y="5" width="5.5" height="5.5"/><rect x="5" y="13.5" width="5.5" height="5.5"/><rect x="13.5" y="13.5" width="5.5" height="5.5"/>`) },
-      { shape: '8px', icon: ICON(`<path d="M12 5 L19 18 L5 18 Z"/>`) },
-    ];
-
-    let idx = 0;
+    // the button blob also re-shapes on each press, for fun
+    const radii = ['50%', '30% 70% 70% 30% / 30% 30% 70% 70%', '16px',
+                   '60% 40% 30% 70% / 60% 30% 70% 40%', '50% 50% 50% 50% / 60% 60% 40% 40%', '40%'];
 
     mapToggle.addEventListener('click', () => {
       const open = body.classList.toggle('is-map-open');
@@ -313,12 +363,13 @@
       // once discovered, retire the pulse + hint for this session
       body.classList.add('map-seen');
 
-      // pick a random skin each press (never the same one twice in a row)
-      let next = idx;
-      while (next === idx) next = Math.floor(Math.random() * skins.length);
-      idx = next;
-      mapToggle.style.borderRadius = skins[idx].shape;
-      if (iconWrap) iconWrap.innerHTML = skins[idx].icon;
+      if (open) {
+        // reveal the shape the button was previewing, then prime the next one
+        if (reshapeSceneMap && pendingShape) reshapeSceneMap(pendingShape);
+        pendingShape = makeShapePoints();
+        setToggleIcon(pendingShape);
+        mapToggle.style.borderRadius = radii[Math.floor(Math.random() * radii.length)];
+      }
 
       mapToggle.setAttribute('aria-pressed', open ? 'true' : 'false');
       mapToggle.setAttribute('aria-label', open ? 'Hide scene map' : 'Show scene map');
@@ -339,43 +390,13 @@
       prevUntil = s.until;
     }
 
-    // scattered positions (% of viewport) — a wandering route across the screen
-    const positions = [
-      { x: 13, y: 30 },
-      { x: 22, y: 58 },
-      { x: 17, y: 78 },
-      { x: 32, y: 44 },
-      { x: 30, y: 23 },
-      { x: 44, y: 35 },
-      { x: 41, y: 64 },
-      { x: 52, y: 80 },
-      { x: 57, y: 50 },
-      { x: 54, y: 25 },
-      { x: 67, y: 38 },
-      { x: 71, y: 66 },
-      { x: 81, y: 48 },
-      { x: 85, y: 74 },
-      { x: 79, y: 27 },
-      { x: 90, y: 58 },
-    ];
-
-    const pts = sceneData.map((_, i) => positions[i % positions.length]);
-
-    // ---- route: a clean straight line threading through the scenes ----
-    const verts = pts.slice();
-    const d = 'M ' + verts.map((v, i) => `${i === 0 ? '' : 'L '}${v.x} ${v.y}`).join(' ');
     const routePaths = sceneMap.querySelectorAll('.scene-map__route');
-    routePaths.forEach(path => path.setAttribute('d', d));
     const progressPath = sceneMap.querySelector('.scene-map__route--progress');
 
-    // cumulative length at each node, used to grow the glowing line as it plays
-    const cum = [0];
-    for (let i = 1; i < verts.length; i++) {
-      cum.push(cum[i - 1] + Math.hypot(verts[i].x - verts[i - 1].x, verts[i].y - verts[i - 1].y));
-    }
-    const nodeLen = cum.slice(); // node i sits on vertex i
+    // route geometry — rebuilt every time the map takes a new shape
+    let verts = [], cum = [0], nodeLen = [0];
 
-    // after a scene is chosen, fade the whole map away 5s later
+    // after a scene is chosen, fade the whole map away a few seconds later
     const mapToggleBtn = document.querySelector('.map-toggle');
     const scheduleMapAutoClose = () => {
       clearTimeout(mapAutoClose);
@@ -388,14 +409,11 @@
       }, 3000);
     };
 
-    // create the nodes
-    const nodes = sceneData.map((scene, i) => {
-      const p = pts[i];
+    // create the nodes once — their positions are assigned by applyShape
+    const nodes = sceneData.map((scene) => {
       const node = document.createElement('button');
       node.type = 'button';
-      node.className = 'scene-map__node' + (p.x >= 60 ? ' scene-map__node--left' : '');
-      node.style.left = `${p.x}%`;
-      node.style.top = `${p.y}%`;
+      node.className = 'scene-map__node';
       node.setAttribute('aria-label', `Jump to ${scene.label}`);
 
       const dot = document.createElement('span');
@@ -417,6 +435,32 @@
       sceneMap.appendChild(node);
       return node;
     });
+
+    // lay the route + nodes out along a set of points, and rebuild the
+    // progress-line geometry to match
+    const applyShape = (points) => {
+      const d = 'M ' + points.map((v, i) => `${i === 0 ? '' : 'L '}${v.x} ${v.y}`).join(' ');
+      routePaths.forEach(path => path.setAttribute('d', d));
+
+      verts = points.slice();
+      cum = [0];
+      for (let i = 1; i < verts.length; i++) {
+        cum.push(cum[i - 1] + Math.hypot(verts[i].x - verts[i - 1].x, verts[i].y - verts[i - 1].y));
+      }
+      nodeLen = cum.slice(); // node i sits on vertex i
+
+      nodes.forEach((node, i) => {
+        node.style.left = `${points[i].x}%`;
+        node.style.top = `${points[i].y}%`;
+        node.classList.toggle('scene-map__node--left', points[i].x >= 60);
+      });
+    };
+    reshapeSceneMap = applyShape;
+
+    // first shape + the button's preview of it
+    pendingShape = makeShapePoints();
+    applyShape(pendingShape);
+    if (setToggleIcon) setToggleIcon(pendingShape);
 
     const clamp01 = (v) => Math.min(Math.max(v, 0), 1);
 
