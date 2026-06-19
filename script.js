@@ -1,4 +1,11 @@
 (() => {
+  /* ---- strip /index.html from the URL (clean URLs) ---- */
+  if (window.location.pathname.endsWith('/index.html')) {
+    const clean = window.location.pathname.replace(/\/index\.html$/, '/') + window.location.hash;
+    window.location.replace(clean);
+    return;
+  }
+
   const body = document.body;
   const hero = document.querySelector('.hero');
   const views = document.querySelectorAll('.view[data-page]');
