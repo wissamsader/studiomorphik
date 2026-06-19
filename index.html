@@ -163,10 +163,22 @@
           <h1 class="panel__title">Contact</h1>
           <div class="contact">
             <p class="contact__lead">Like what you see?<br />Let's create something together.</p>
-            <a class="contact__email" href="mailto:hello@studiomorphik.com">
-              <span class="contact__email-text">hello@studiomorphik.com</span>
-              <span class="contact__email-arrow" aria-hidden="true">→</span>
-            </a>
+            <div class="contact__email-row">
+              <a class="contact__email" href="mailto:hello@studiomorphik.com">
+                <span class="contact__email-text">hello@studiomorphik.com</span>
+                <span class="contact__email-arrow" aria-hidden="true">→</span>
+              </a>
+              <button class="contact__copy" type="button" aria-label="Copy email address" title="Copy email">
+                <svg class="contact__copy-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <rect x="9" y="9" width="11" height="11" rx="2"/>
+                  <path d="M5 15V5a2 2 0 0 1 2-2h10"/>
+                </svg>
+                <svg class="contact__copy-check" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <polyline points="20 6 9 17 4 12"/>
+                </svg>
+              </button>
+              <span class="contact__copied" role="status" aria-live="polite"></span>
+            </div>
           </div>
         </div>
       </main>

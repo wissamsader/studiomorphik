@@ -505,4 +505,39 @@
     };
     requestAnimationFrame(render);
   }
+  /* ---- copy email to clipboard ---- */
+
+  const copyBtn = document.querySelector('.contact__copy');
+  const copiedLabel = document.querySelector('.contact__copied');
+
+  if (copyBtn) {
+    let copyTimer;
+
+    copyBtn.addEventListener('click', async () => {
+      clearTimeout(copyTimer);
+
+      try {
+        await navigator.clipboard.writeText('hello@studiomorphik.com');
+      } catch {
+        // fallback for older browsers / non-HTTPS
+        const ta = document.createElement('textarea');
+        ta.value = 'hello@studiomorphik.com';
+        ta.style.position = 'fixed';
+        ta.style.opacity = '0';
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+      }
+
+      copyBtn.classList.add('is-copied');
+      if (copiedLabel) copiedLabel.textContent = 'copied!';
+
+      copyTimer = setTimeout(() => {
+        copyBtn.classList.remove('is-copied');
+        if (copiedLabel) copiedLabel.textContent = '';
+      }, 2200);
+    });
+  }
+
 })();

@@ -355,6 +355,14 @@ body.is-menu-open .menu-button__mark {
   letter-spacing: -0.01em;
 }
 
+/* email + copy button sit on one row */
+.contact__email-row {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
 /* editorial email link — no frame, animated underline + nudging arrow */
 .contact__email {
   display: inline-flex;
@@ -364,6 +372,58 @@ body.is-menu-open .menu-button__mark {
   font-size: 14px;
   letter-spacing: -0.01em;
   color: var(--fg);
+}
+
+/* copy-to-clipboard button next to the email */
+.contact__copy {
+  -webkit-appearance: none;
+  appearance: none;
+  background: none;
+  border: none;
+  padding: 4px;
+  margin: 0;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  color: rgba(255, 255, 255, 0.45);
+  transition: color 0.2s ease, transform 0.15s ease;
+  outline: none;
+}
+
+.contact__copy svg { display: block; }
+.contact__copy-check { display: none; }
+
+.contact__copy:active { transform: scale(0.9); }
+.contact__copy:focus-visible {
+  outline: none;
+  box-shadow: 0 1px 0 currentColor;
+}
+
+@media (hover: hover) {
+  .contact__copy:hover { color: var(--fg); }
+}
+
+/* copied state — swap clipboard for a check, tinted soft green */
+.contact__copy.is-copied { color: #7fdca0; }
+.contact__copy.is-copied .contact__copy-icon { display: none; }
+.contact__copy.is-copied .contact__copy-check { display: block; }
+
+/* little "copied" confirmation that fades in beside the button */
+.contact__copied {
+  font-family: 'Space Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: lowercase;
+  color: rgba(127, 220, 160, 0.9);
+  opacity: 0;
+  transform: translateX(-4px);
+  transition: opacity 0.25s ease, transform 0.25s ease;
+  pointer-events: none;
+}
+
+.contact__copy.is-copied + .contact__copied {
+  opacity: 1;
+  transform: translateX(0);
 }
 
 .contact__email-text {
@@ -512,9 +572,7 @@ body.is-menu-open .view .panel {
 }
 
 .clients__logo--kitkat {
-  filter: contrast(200%) invert(1);
   height: 54px;
-  mix-blend-mode: screen;
 }
 
 @media (hover: hover) {
