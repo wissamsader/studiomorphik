@@ -22,6 +22,12 @@
       v.hidden = v.dataset.page !== page;
     });
 
+    // reset scroll position when opening about/contact
+    if (page === 'about' || page === 'contact') {
+      const view = document.querySelector(`.view[data-page="${page}"]`);
+      if (view) view.scrollTop = 0;
+    }
+
     // body class for css hooks
     body.className = `page page-${page}`;
 
@@ -65,8 +71,10 @@
         e.preventDefault();
         navigate('home');
         window.location.hash = '#/';
+      } else {
+        // let hash change happen, then blur so focus ring doesn't stick
+        setTimeout(() => icon.blur(), 0);
       }
-      // otherwise let the hash change happen naturally
     });
   });
 

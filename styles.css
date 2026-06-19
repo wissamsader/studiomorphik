@@ -38,6 +38,16 @@ body {
   text-align: left;
   overscroll-behavior: none;
   -webkit-overflow-scrolling: auto;
+  -webkit-tap-highlight-color: transparent;
+}
+
+a, button {
+  -webkit-tap-highlight-color: transparent;
+  outline: none;
+}
+a:focus-visible, button:focus-visible {
+  outline: 2px solid rgba(255,255,255,0.5);
+  outline-offset: 2px;
 }
 
 .sr-only {
@@ -57,8 +67,10 @@ a {
   text-decoration: none;
 }
 
-a:hover {
-  opacity: 0.92;
+@media (hover: hover) {
+  a:hover {
+    opacity: 0.92;
+  }
 }
 
 .hero {
@@ -174,11 +186,13 @@ a:hover {
     margin-top: 1px;
   }
 }
-.header__icon:hover {
-  opacity: 1;
-}
-.header__icon:hover svg {
-  transform: scale(1.12);
+@media (hover: hover) {
+  .header__icon:hover {
+    opacity: 1;
+  }
+  .header__icon:hover svg {
+    transform: scale(1.12);
+  }
 }
 
 .header__links a.is-active {
@@ -356,8 +370,10 @@ body.is-menu-open .menu-button__mark {
   transition: background-size 0.45s cubic-bezier(0.65, 0, 0.35, 1);
 }
 
-.contact__email:hover .contact__email-text {
-  background-size: 100% 1px;
+@media (hover: hover) {
+  .contact__email:hover .contact__email-text {
+    background-size: 100% 1px;
+  }
 }
 
 .contact__email-arrow {
@@ -365,8 +381,10 @@ body.is-menu-open .menu-button__mark {
   transition: transform 0.35s ease;
 }
 
-.contact__email:hover .contact__email-arrow {
-  transform: translateX(8px);
+@media (hover: hover) {
+  .contact__email:hover .contact__email-arrow {
+    transform: translateX(8px);
+  }
 }
 
 /* frameless floating menu — aligned under the brand word */
@@ -482,8 +500,10 @@ body.is-menu-open .view .panel {
   transition: opacity 0.3s ease;
 }
 
-.clients__logo:hover {
-  opacity: 1;
+@media (hover: hover) {
+  .clients__logo:hover {
+    opacity: 1;
+  }
 }
 
 .clients__logo--kitkat {
@@ -492,8 +512,10 @@ body.is-menu-open .view .panel {
   mix-blend-mode: screen;
 }
 
-.clients__logo--kitkat:hover {
-  opacity: 1;
+@media (hover: hover) {
+  .clients__logo--kitkat:hover {
+    opacity: 1;
+  }
 }
 
 @media (max-width: 480px) {
@@ -578,12 +600,18 @@ body.page-home .timeline { display: none; }
   border: none;
 }
 
-.timeline__marker:hover,
 .timeline__marker:focus-visible {
   background: rgba(255, 255, 255, 0.9);
   transform: translate(-50%, -50%) scale(1.6);
   box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
   outline: none;
+}
+@media (hover: hover) {
+  .timeline__marker:hover {
+    background: rgba(255, 255, 255, 0.9);
+    transform: translate(-50%, -50%) scale(1.6);
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+  }
 }
 
 .timeline__marker.is-active {
@@ -710,17 +738,26 @@ body.page-home.is-map-open .scene-map {
 }
 
 /* hover / focus highlight */
-.scene-map__node:hover .scene-map__dot,
 .scene-map__node:focus-visible .scene-map__dot {
   background: #fff;
   transform: scale(1.5);
   box-shadow: 0 0 10px rgba(255, 255, 255, 0.4);
 }
-
-.scene-map__node:hover .scene-map__label,
 .scene-map__node:focus-visible .scene-map__label {
   color: #fff;
   transform: translateY(-50%) scale(1.08);
+}
+
+@media (hover: hover) {
+  .scene-map__node:hover .scene-map__dot {
+    background: #fff;
+    transform: scale(1.5);
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.4);
+  }
+  .scene-map__node:hover .scene-map__label {
+    color: #fff;
+    transform: translateY(-50%) scale(1.08);
+  }
 }
 
 .scene-map__node:focus-visible {
@@ -839,10 +876,12 @@ body.is-map-open .map-toggle::before {
   100% { transform: scale(1.9); opacity: 0; }
 }
 
-.map-toggle:hover {
-  color: #fff;
-  transform: scale(1.05);
-  border-color: rgba(255, 255, 255, 0.4);
+@media (hover: hover) {
+  .map-toggle:hover {
+    color: #fff;
+    transform: scale(1.05);
+    border-color: rgba(255, 255, 255, 0.4);
+  }
 }
 
 /* lit-up state when the map is open */
