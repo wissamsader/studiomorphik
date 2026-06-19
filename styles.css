@@ -166,7 +166,7 @@ a {
 .header__links {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 8px;
 }
 
 .header__icon {
