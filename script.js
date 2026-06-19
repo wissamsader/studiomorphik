@@ -2,6 +2,7 @@
   const body = document.body;
   const hero = document.querySelector('.hero');
   const views = document.querySelectorAll('.view[data-page]');
+  const headerIcons = document.querySelectorAll('.header__icon');
 
   /* ---- router ---- */
 
@@ -27,6 +28,13 @@
       const view = document.querySelector(`.view[data-page="${page}"]`);
       if (view) view.scrollTop = 0;
     }
+
+    // highlight the matching header icon
+    headerIcons.forEach(icon => {
+      const href = icon.getAttribute('href');
+      const target = href ? href.slice(2) : '';
+      icon.classList.toggle('is-active', target === page);
+    });
 
     // body class for css hooks
     body.className = `page page-${page}`;
@@ -60,7 +68,6 @@
 
   /* ---- header icon toggles ---- */
 
-  const headerIcons = document.querySelectorAll('.header__icon');
   headerIcons.forEach(icon => {
     icon.addEventListener('click', (e) => {
       const href = icon.getAttribute('href');
