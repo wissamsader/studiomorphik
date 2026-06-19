@@ -96,6 +96,8 @@ a:hover {
 }
 
 .header {
+  position: relative;
+  z-index: 2;
   padding: clamp(16px, 3vw, 28px);
   display: flex;
   align-items: center;
@@ -236,6 +238,7 @@ body.is-menu-open .menu-button__mark {
   display: flex;
   align-items: flex-start;
   justify-content: center;
+  padding-top: clamp(80px, 12vw, 110px);
 }
 
 /* content sections — prevent layout shift when toggling */
