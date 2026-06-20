@@ -8,3 +8,9 @@ img/STUDIOMORPHIK.mp4
 
 # screen recordings
 *.mov
+
+# debug screenshots
+screenshot.jpg
+
+# favicon design scratch / previews
+favicon-options/
