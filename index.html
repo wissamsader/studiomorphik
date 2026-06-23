@@ -53,9 +53,32 @@
         webkit-playsinline
         preload="auto"
         aria-hidden="true"
-      >
-        <source src="img/STUDIOMORPHIK_2026%20showreel_FINAL_2026.mp4" type="video/mp4" />
-      </video>
+      ></video>
+      <script>
+        // serve the portrait (9:16) reel on phones, the wide reel on desktop.
+        // set before any source loads so mobile never downloads the desktop file,
+        // and re-swap live when the viewport crosses the breakpoint.
+        (function () {
+          var v = document.currentScript.previousElementSibling;
+          var mq = window.matchMedia('(max-width: 880px)');
+          var current;
+          function setSrc() {
+            var src = mq.matches
+              ? 'img/STUDIOMORPHIK_2026_MOBILE.mp4'
+              : 'img/STUDIOMORPHIK_2026%20showreel_FINAL_2026.mp4';
+            if (src === current) return;
+            current = src;
+            v.innerHTML = '';
+            var s = document.createElement('source');
+            s.type = 'video/mp4';
+            s.src = src;
+            v.appendChild(s);
+            v.load();
+          }
+          setSrc();
+          mq.addEventListener('change', setSrc);
+        })();
+      </script>
 
       <div class="hero__overlay" aria-hidden="true"></div>
 
