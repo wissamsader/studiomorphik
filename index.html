@@ -41,6 +41,28 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="styles.css" />
+
+    <!-- Video structured data: gives Google a thumbnail so the showreel can be indexed as a video result -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "VideoObject",
+      "name": "STUDIOMORPHIK 2026 Showreel",
+      "description": "The STUDIOMORPHIK 2026 showreel — AI-driven film, photography, and imagery blending true photorealism with the surreal, for brands, products, and campaigns.",
+      "thumbnailUrl": "https://studiomorphik.com/img/og-cover-2026.jpg",
+      "uploadDate": "2026-06-20",
+      "duration": "PT2M32S",
+      "contentUrl": "https://studiomorphik.com/img/STUDIOMORPHIK_2026%20showreel_FINAL_2026.mp4",
+      "publisher": {
+        "@type": "Organization",
+        "name": "STUDIOMORPHIK",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://studiomorphik.com/img/logo-512.png"
+        }
+      }
+    }
+    </script>
   </head>
   <body>
     <div class="hero">
@@ -52,6 +74,7 @@
         playsinline
         webkit-playsinline
         preload="auto"
+        poster="img/og-cover-2026.jpg"
         aria-hidden="true"
       ></video>
       <script>
