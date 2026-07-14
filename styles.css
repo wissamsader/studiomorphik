@@ -553,6 +553,16 @@ body.is-menu-open .view .panel {
   max-width: 560px;
 }
 
+.about__link {
+  color: var(--fg);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  opacity: 0.92;
+}
+.about__link:hover {
+  opacity: 1;
+}
+
 .about__text {
   margin: 0;
   max-width: 30rem;
