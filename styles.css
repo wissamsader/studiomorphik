@@ -192,6 +192,8 @@ a {
   align-items: center;
   gap: 6px;
   margin-left: auto;
+  margin-right: 2px;
+  flex-shrink: 0;
   padding: 5px 11px;
   border: 1px solid rgba(255, 255, 255, 0.38);
   border-radius: 999px;
@@ -209,6 +211,11 @@ a {
   background: var(--fg);
   color: #0b0c0e;
   opacity: 1;
+}
+@media (max-width: 640px) {
+  .brand {
+    font-size: 16.5px;
+  }
 }
 @media (max-width: 520px) {
   .header__pill {
@@ -559,7 +566,7 @@ body.is-menu-open .view .panel {
 
 @media (max-width: 480px) {
   .brand {
-    font-size: 19.5px;
+    font-size: 15px;
   }
 
   .contact__lead {
