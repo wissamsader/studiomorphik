@@ -95,34 +95,18 @@ def source_png(s):
         return p if p.exists() else SHOT_SRC["beirut-rabab"] / f"{slug}.png"
     return SHOT_SRC["bey-cm"] / f"Chiang Mai — {s['name']}.png"
 
-S, M, BAR, RAD = 640, 22, 46, 16
-BG, BAR_BG, EDGE = (11, 12, 14), (34, 36, 40), (46, 50, 56)
-DOTS = [(255, 95, 87), (254, 188, 46), (40, 200, 64)]
+S = 640  # plain top-cropped square screenshot; the frame is drawn in CSS (modern glass/gradient)
 
 def make_tile(src_path, out_path):
     src = Image.open(src_path).convert("RGB")
-    cw = ch = S - 2 * M
-    win_h = ch - BAR
-    target = cw / win_h
     sw, sh = src.size
-    if sw / sh > target:
-        w = int(sh * target); x0 = (sw - w) // 2
-        crop = src.crop((x0, 0, x0 + w, sh))
+    if sw > sh:
+        x0 = (sw - sh) // 2
+        crop = src.crop((x0, 0, x0 + sh, sh))
     else:
-        crop = src.crop((0, 0, sw, int(sw / target)))
-    crop = crop.resize((cw, win_h), Image.LANCZOS)
-    card = Image.new("RGB", (cw, ch), BAR_BG)
-    card.paste(crop, (0, BAR))
-    d = ImageDraw.Draw(card)
-    for i, c in enumerate(DOTS):
-        cx = 24 + i * 20
-        d.ellipse([cx - 5, BAR // 2 - 5, cx + 5, BAR // 2 + 5], fill=c)
-    tile = Image.new("RGB", (S, S), BG)
-    mask = Image.new("L", (cw, ch), 0)
-    ImageDraw.Draw(mask).rounded_rectangle([0, 0, cw - 1, ch - 1], RAD, fill=255)
-    tile.paste(card, (M, M), mask)
-    ImageDraw.Draw(tile).rounded_rectangle([M, M, M + cw - 1, M + ch - 1], RAD, outline=EDGE, width=2)
-    tile.save(out_path, "JPEG", quality=85)
+        crop = src.crop((0, 0, sw, sw))
+    crop = crop.resize((S, S), Image.LANCZOS)
+    crop.save(out_path, "JPEG", quality=86)
 
 def shot(s):
     slug = s["url"].rstrip("/").split("/")[-1]
@@ -135,8 +119,9 @@ def shot(s):
 
 cards = "\n".join(
     f'<a class="card" href="{html.escape(s["url"])}" target="_blank" rel="noopener">'
-    f'<img loading="lazy" src="{shot(s)}" alt="{html.escape(s["name"])} website by StudioMorphik">'
-    f'<span class="meta"><b>{html.escape(s["name"])}</b><i>{s["city"]}</i></span></a>'
+    f'<span class="inner"><span class="chrome" aria-hidden="true"><i></i><i></i><i></i></span>'
+    f'<img loading="lazy" src="{shot(s)}?v=2" alt="{html.escape(s["name"])} website by StudioMorphik">'
+    f'<span class="meta"><b>{html.escape(s["name"])}</b><span style="display:flex;align-items:center;gap:9px"><i>{s["city"]}</i><span class="arr">↗</span></span></span></span></a>'
     for s in order)
 
 n = len(order)
@@ -177,12 +162,19 @@ h1{{font-family:'Integral CF',sans-serif;font-size:clamp(2.4rem,8vw,5.4rem);line
 .note b{{color:var(--fg)}}
 .gridwrap{{padding:clamp(30px,5vw,56px) 0 20px}}
 .grid{{display:grid;grid-template-columns:repeat(auto-fill,minmax(216px,1fr));gap:clamp(12px,1.8vw,20px)}}
-.card{{display:block;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--sur);transition:transform .25s ease,border-color .25s ease}}
-.card:hover{{transform:translateY(-4px);border-color:rgba(255,255,255,.38)}}
+.card{{position:relative;display:block;border-radius:20px;padding:1px;background:linear-gradient(165deg,rgba(255,255,255,.2),rgba(255,255,255,.055) 40%,rgba(255,255,255,.02));box-shadow:0 24px 56px -28px rgba(0,0,0,.8);transition:transform .3s cubic-bezier(.2,.7,.2,1)}}
+.card::before{{content:"";position:absolute;inset:-2px;border-radius:22px;background:conic-gradient(from 210deg,#ff4d4d,#ff9f40,#ffe14d,#5dff9b,#4dc3ff,#b96bff,#ff4d4d);opacity:0;filter:blur(14px);transition:opacity .35s;z-index:0}}
+.card:hover{{transform:translateY(-5px)}}
+.card:hover::before{{opacity:.35}}
+.card .inner{{position:relative;z-index:1;border-radius:19px;overflow:hidden;background:#101114;display:block}}
+.card .chrome{{display:flex;align-items:center;gap:5px;padding:9px 13px;background:linear-gradient(180deg,rgba(255,255,255,.075),rgba(255,255,255,.02));border-bottom:1px solid rgba(255,255,255,.07)}}
+.card .chrome i{{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.22)}}
 .card img{{width:100%;aspect-ratio:1/1;display:block;object-fit:cover;background:#0b0c0e}}
-.card .meta{{display:flex;align-items:baseline;justify-content:space-between;gap:8px;padding:10px 13px 12px;border-top:1px solid var(--line)}}
+.card .meta{{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:11px 14px 12px;border-top:1px solid rgba(255,255,255,.07);background:rgba(255,255,255,.02)}}
 .card .meta b{{font-size:12.5px;font-weight:600;letter-spacing:.02em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}}
 .card .meta i{{font-style:normal;font-family:'JetBrains Mono',ui-monospace,monospace;font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);flex-shrink:0}}
+.card .meta .arr{{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--dim);opacity:0;transform:translate(-4px,4px);transition:opacity .25s,transform .25s;flex-shrink:0}}
+.card:hover .meta .arr{{opacity:1;transform:none;color:var(--fg)}}
 .cta{{margin:clamp(40px,7vw,70px) 0;border:1px solid var(--line);border-radius:14px;background:var(--sur);padding:clamp(26px,5vw,44px);display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}}
 .cta h2{{font-family:'Integral CF',sans-serif;font-size:clamp(1.2rem,3vw,1.8rem);letter-spacing:.03em}}
 .cta p{{color:var(--dim);margin-top:6px;max-width:52ch}}
