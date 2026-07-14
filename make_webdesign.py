@@ -55,20 +55,13 @@ plm = load_mod("plm_kd", WB / "PALERMO" / "tools" / "kitdata.py")
 for b in plm.BIZ:
     add(b["name"], b["url"], "palermo", "Palermo")
 
-# interleave cities round-robin so the grid mixes places (his: one flat list, no categories)
+# grouped per city with jump-nav (07-14 friend feedback via Wissam: "tekbos 3al city, byenzal la 7alo")
+CITY_ORDER = ["Beirut", "Chiang Mai", "Đà Nẵng", "Barcelona", "Palermo"]
+CITY_ID = {"Beirut": "beirut", "Chiang Mai": "chiang-mai", "Đà Nẵng": "da-nang", "Barcelona": "barcelona", "Palermo": "palermo"}
 by_city = {}
 for s in SITES:
     by_city.setdefault(s["city"], []).append(s)
-order = []
-pools = list(by_city.values())
-i = 0
-while any(pools):
-    for p in pools:
-        if i < len(p):
-            order.append(p[i])
-    i += 1
-    if i > 60:
-        break
+order = [s for c in CITY_ORDER for s in by_city.get(c, [])]
 
 # ---- portfolio tiles: generated locally, NO URL text anywhere (his 07-14 ask) ----
 from PIL import Image, ImageDraw
@@ -117,12 +110,19 @@ def shot(s):
         make_tile(src, out)
     return f"shots/{out.name}"
 
-cards = "\n".join(
-    f'<a class="card" href="{html.escape(s["url"])}" target="_blank" rel="noopener">'
-    f'<span class="inner"><span class="chrome" aria-hidden="true"><i></i><i></i><i></i></span>'
-    f'<img loading="lazy" src="{shot(s)}?v=2" alt="{html.escape(s["name"])} website by StudioMorphik">'
-    f'<span class="meta"><b>{html.escape(s["name"])}</b><span style="display:flex;align-items:center;gap:9px"><i>{s["city"]}</i><span class="arr">↗</span></span></span></span></a>'
-    for s in order)
+def card(s):
+    return (f'<a class="card" href="{html.escape(s["url"])}" target="_blank" rel="noopener">'
+            f'<span class="inner"><span class="chrome" aria-hidden="true"><i></i><i></i><i></i></span>'
+            f'<img loading="lazy" src="{shot(s)}?v=2" alt="{html.escape(s["name"])} website by StudioMorphik">'
+            f'<span class="meta"><b>{html.escape(s["name"])}</b><span style="display:flex;align-items:center;gap:9px"><i>{s["city"]}</i><span class="arr">↗</span></span></span></span></a>')
+
+sections = "\n".join(
+    f'<section class="cityblock" id="{CITY_ID[c]}">'
+    f'<h2 class="cityhead">{c.upper()}<span>{len(by_city.get(c, []))} websites</span></h2>'
+    f'<div class="grid">' + "".join(card(s) for s in by_city.get(c, [])) + '</div></section>'
+    for c in CITY_ORDER if by_city.get(c))
+
+citynav = "".join(f'<a href="#{CITY_ID[c]}">{c}</a>' for c in CITY_ORDER if by_city.get(c))
 
 n = len(order)
 cities = "Beirut · Chiang Mai · Đà Nẵng · Barcelona · Palermo"
@@ -150,6 +150,7 @@ page = f"""<!doctype html>
 @font-face{{font-family:'Integral CF';src:url('/fonts/IntegralCF-Bold.woff2') format('woff2');font-weight:700;font-style:normal;font-display:swap}}
 :root{{--bg:#0b0c0e;--fg:rgba(255,255,255,.92);--dim:rgba(255,255,255,.6);--line:rgba(255,255,255,.14);--sur:#121317}}
 *{{box-sizing:border-box;margin:0;-webkit-tap-highlight-color:transparent}}
+html{{scroll-behavior:smooth}}
 body{{overflow-x:clip;background:var(--bg);color:var(--fg);font-family:'Montserrat',system-ui,-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;line-height:1.6;letter-spacing:.01em;-webkit-font-smoothing:antialiased}}
 a{{color:inherit;text-decoration:none}}
 .wrap{{max-width:1280px;margin:0 auto;padding:0 clamp(18px,4vw,44px)}}
@@ -167,7 +168,15 @@ h1{{font-family:'Integral CF',sans-serif;font-size:clamp(2.4rem,8vw,5.4rem);line
 .stats b{{color:var(--fg);font-weight:700}}
 .note{{border:1px solid var(--line);border-left:2px solid rgba(255,255,255,.45);background:var(--sur);border-radius:8px;padding:14px 18px;margin:34px 0 0;max-width:74ch;color:var(--dim);font-size:13.5px;line-height:1.65}}
 .note b{{color:var(--fg)}}
-.gridwrap{{padding:clamp(30px,5vw,56px) 0 20px}}
+.citynav{{position:sticky;top:57px;z-index:15;background:rgba(11,12,14,.86);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}}
+.citynav .in{{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding:10px clamp(18px,4vw,44px);max-width:1280px;margin:0 auto}}
+.citynav .in::-webkit-scrollbar{{display:none}}
+.citynav a{{flex-shrink:0;border:1px solid var(--line);border-radius:999px;padding:7px 16px;font-family:'JetBrains Mono',ui-monospace,monospace;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);transition:color .2s,border-color .2s,background .2s}}
+.citynav a:hover,.citynav a.on{{color:#0b0c0e;background:var(--fg);border-color:var(--fg)}}
+.cityblock{{scroll-margin-top:118px;padding-top:clamp(26px,4vw,44px)}}
+.cityhead{{font-family:'Integral CF',sans-serif;font-size:clamp(1.25rem,3vw,1.9rem);letter-spacing:.06em;display:flex;align-items:baseline;gap:14px;margin-bottom:clamp(14px,2vw,22px)}}
+.cityhead span{{font-family:'JetBrains Mono',ui-monospace,monospace;font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--dim)}}
+.gridwrap{{padding:clamp(10px,2vw,24px) 0 20px}}
 .grid{{display:grid;grid-template-columns:repeat(auto-fill,minmax(216px,1fr));gap:clamp(12px,1.8vw,20px)}}
 .card{{min-width:0;position:relative;display:block;border-radius:20px;padding:1px;background:linear-gradient(165deg,rgba(255,255,255,.2),rgba(255,255,255,.055) 40%,rgba(255,255,255,.02));box-shadow:0 24px 56px -28px rgba(0,0,0,.8);transition:transform .3s cubic-bezier(.2,.7,.2,1)}}
 .card::before{{content:"";position:absolute;inset:-2px;border-radius:22px;background:conic-gradient(from 210deg,#ff4d4d,#ff9f40,#ffe14d,#5dff9b,#4dc3ff,#b96bff,#ff4d4d);opacity:0;filter:blur(14px);transition:opacity .35s;z-index:0}}
@@ -215,10 +224,10 @@ footer a:hover{{color:var(--fg)}}
  <p class="note"><b>About this portfolio:</b> every website below is live. Open any of them. Some are commissioned client work; others are ready-made designs created for real businesses, ready for their owners to claim.</p>
 </div></section>
 
+<nav class="citynav" aria-label="Cities"><div class="in">{citynav}</div></nav>
+
 <section class="gridwrap"><div class="wrap">
- <div class="grid">
-{cards}
- </div>
+{sections}
 </div></section>
 
 <div class="wrap"><div class="cta">
@@ -230,6 +239,16 @@ footer a:hover{{color:var(--fg)}}
  <span>© 2026 STUDIOMORPHIK</span>
  <span><a href="mailto:hello@studiomorphik.com">hello@studiomorphik.com</a> · <a href="/">studiomorphik.com</a></span>
 </footer></div>
+<script>
+(function(){{var links=[].slice.call(document.querySelectorAll('.citynav a'));
+var map={{}};links.forEach(function(a){{map[a.getAttribute('href').slice(1)]=a}});
+if('IntersectionObserver' in window){{
+var io=new IntersectionObserver(function(es){{es.forEach(function(e){{
+ if(e.isIntersecting){{links.forEach(function(a){{a.classList.remove('on')}});
+ var a=map[e.target.id];if(a)a.classList.add('on');}}}})}},{{rootMargin:'-30% 0px -60% 0px'}});
+document.querySelectorAll('.cityblock').forEach(function(s){{io.observe(s)}});}}
+}})();
+</script>
 </body>
 </html>
 """
