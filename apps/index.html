@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Apps — STUDIOMORPHIK</title>
+<meta name="description" content="STUDIOMORPHIK also builds software. momzu is a voice AI that lives on your Mac: press a key and speak, it talks, browses, remembers, builds. Free, open source, nothing leaves your machine.">
+<link rel="canonical" href="https://studiomorphik.com/apps/">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="96x96" href="/img/favicon-96.png">
+<meta property="og:title" content="Apps — STUDIOMORPHIK">
+<meta property="og:description" content="We also build apps. momzu: a voice AI that lives on your Mac. Free, open source, nothing leaves your machine.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://studiomorphik.com/apps/">
+<meta property="og:image" content="https://studiomorphik.com/apps/shots/momzu.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://studiomorphik.com/apps/shots/momzu.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+@font-face{font-family:'Integral CF';src:url('/fonts/IntegralCF-Bold.woff2') format('woff2');font-weight:700;font-style:normal;font-display:swap}
+:root{--bg:#0b0c0e;--fg:rgba(255,255,255,.92);--dim:rgba(255,255,255,.6);--dimmer:rgba(255,255,255,.38);--line:rgba(255,255,255,.14);--sur:#121317}
+*{box-sizing:border-box;margin:0;-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth}
+body{overflow-x:clip;background:var(--bg);color:var(--fg);font-family:'Montserrat',system-ui,-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;line-height:1.6;letter-spacing:.01em;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+img{max-width:100%;display:block}
+.wrap{max-width:1280px;margin:0 auto;padding:0 clamp(18px,4vw,44px)}
+.mono{font-family:'JetBrains Mono',ui-monospace,'SF Mono',Menlo,monospace}
+
+/* ambient spectrum wash */
+body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:radial-gradient(90% 60% at 50% -10%,rgba(77,195,255,.10),transparent 60%),
+             radial-gradient(70% 50% at 100% 100%,rgba(185,107,255,.07),transparent 60%)}
+.wrap,header,footer{position:relative;z-index:1}
+
+/* header — matches /web-design/ */
+header{position:sticky;top:0;z-index:20;background:rgba(11,12,14,.82);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+header .bar{display:flex;align-items:center;justify-content:space-between;padding:16px clamp(18px,4vw,44px);max-width:1280px;margin:0 auto}
+.wordmark{font-family:'Integral CF',sans-serif;font-size:15px;letter-spacing:.22em}
+header nav{display:flex;gap:22px;font-family:'JetBrains Mono',ui-monospace,monospace;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim)}
+header nav a{transition:color .2s}
+header nav a:hover,header nav a.on{color:var(--fg)}
+@media(max-width:560px){header nav{gap:14px;font-size:10px}.wordmark{font-size:13px}}
+
+/* hero — padding-block only: the shorthand would wipe .wrap's side padding */
+.hero{padding-block:clamp(56px,10vw,112px) clamp(30px,4vw,48px)}
+.eyebrow{font-family:'JetBrains Mono',ui-monospace,monospace;font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:var(--dim)}
+h1{font-family:'Integral CF',sans-serif;font-size:clamp(2.3rem,7.6vw,5.2rem);line-height:1.03;letter-spacing:.02em;margin:.35em 0 .32em}
+.sub{max-width:60ch;color:var(--dim);font-size:clamp(15px,1.6vw,17px)}
+.stats{display:flex;gap:10px 26px;flex-wrap:wrap;margin-top:28px;font-family:'JetBrains Mono',ui-monospace,monospace;font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim)}
+.stats b{color:var(--fg);font-weight:700}
+
+/* feature app */
+.feature{padding-block:clamp(24px,4vw,44px) clamp(50px,7vw,90px)}
+.shot{position:relative;border-radius:22px;padding:1px;
+  background:linear-gradient(165deg,rgba(255,255,255,.22),rgba(255,255,255,.06) 42%,rgba(255,255,255,.02));
+  box-shadow:0 40px 90px -34px rgba(0,0,0,.9);transition:transform .45s cubic-bezier(.2,.7,.2,1)}
+.shot::before{content:"";position:absolute;inset:-2px;border-radius:24px;
+  background:conic-gradient(from 210deg,#ff4d4d,#ff9f40,#ffe14d,#5dff9b,#4dc3ff,#b96bff,#ff4d4d);
+  opacity:0;filter:blur(20px);transition:opacity .45s;z-index:0}
+.shot:hover{transform:translateY(-6px)}
+.shot:hover::before{opacity:.34}
+.shot .in{position:relative;z-index:1;border-radius:21px;overflow:hidden;background:#101114}
+.chrome{display:flex;align-items:center;gap:6px;padding:11px 15px;background:linear-gradient(180deg,rgba(255,255,255,.075),rgba(255,255,255,.02));border-bottom:1px solid rgba(255,255,255,.07)}
+.chrome i{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.22)}
+.chrome .url{margin-left:10px;font-family:'JetBrains Mono',ui-monospace,monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--dimmer)}
+.shot img{width:100%;aspect-ratio:1400/880;object-fit:cover;object-position:top center;background:#0b0c0e}
+
+.appgrid{display:grid;grid-template-columns:1.35fr 1fr;gap:clamp(26px,4vw,58px);align-items:center}
+@media(max-width:940px){.appgrid{grid-template-columns:1fr;gap:32px}}
+.appname{font-family:'Integral CF',sans-serif;font-size:clamp(1.9rem,4.6vw,3rem);letter-spacing:.04em;line-height:1.05}
+.appkind{font-family:'JetBrains Mono',ui-monospace,monospace;font-size:10.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--dim);margin-bottom:14px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.badge{border:1px solid var(--line);border-radius:999px;padding:4px 10px;color:var(--dim)}
+.badge.live{color:#5dff9b;border-color:rgba(93,255,155,.35)}
+.appcopy{color:var(--dim);font-size:15px;margin-top:16px;max-width:46ch}
+.appcopy b{color:var(--fg);font-weight:500}
+.chips{display:flex;flex-wrap:wrap;gap:7px;margin-top:22px}
+.chips span{font-family:'JetBrains Mono',ui-monospace,monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);border:1px solid var(--line);border-radius:999px;padding:6px 12px}
+.cta{display:flex;flex-wrap:wrap;gap:10px;margin-top:28px}
+.btn{display:inline-flex;align-items:center;gap:9px;font-family:'JetBrains Mono',ui-monospace,monospace;font-size:11px;letter-spacing:.16em;text-transform:uppercase;border:1px solid rgba(255,255,255,.38);border-radius:999px;padding:11px 20px;transition:background .2s,color .2s,border-color .2s}
+.btn:hover{background:var(--fg);color:#0b0c0e;border-color:var(--fg)}
+.btn.ghost{border-color:var(--line);color:var(--dim)}
+.btn.ghost:hover{background:transparent;color:var(--fg);border-color:rgba(255,255,255,.38)}
+
+/* install line */
+.install{margin-top:26px}
+.install .lbl{font-family:'JetBrains Mono',ui-monospace,monospace;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--dimmer);margin-bottom:9px}
+.shell{display:inline-flex;align-items:center;gap:14px;max-width:100%;cursor:pointer;font:inherit;text-align:left;
+  background:rgba(255,255,255,.04);border:1px solid var(--line);border-radius:10px;padding:12px 16px;transition:border-color .2s,background .2s}
+.shell:hover{border-color:rgba(255,255,255,.34);background:rgba(255,255,255,.06)}
+.shell code{font-family:'JetBrains Mono',ui-monospace,monospace;font-size:12px;color:var(--fg);word-break:break-all}
+.shell i{font-style:normal;font-family:'JetBrains Mono',ui-monospace,monospace;font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--dimmer);flex-shrink:0}
+.shell.copied i{color:#5dff9b}
+
+/* next / footer */
+.next{border-top:1px solid var(--line);padding:clamp(40px,6vw,70px) 0}
+.next h2{font-family:'Integral CF',sans-serif;font-size:clamp(1.3rem,3vw,2rem);letter-spacing:.05em;margin-bottom:14px}
+.next p{color:var(--dim);max-width:60ch;font-size:15px}
+footer{border-top:1px solid var(--line);padding:30px 0 44px;color:var(--dimmer);font-family:'JetBrains Mono',ui-monospace,monospace;font-size:10.5px;letter-spacing:.16em;text-transform:uppercase}
+footer .in{display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;max-width:1280px;margin:0 auto;padding:0 clamp(18px,4vw,44px)}
+footer a:hover{color:var(--fg)}
+
+.rev{opacity:0;transform:translateY(26px);transition:opacity .9s cubic-bezier(.2,.8,.2,1),transform .9s cubic-bezier(.2,.8,.2,1)}
+.rev.in{opacity:1;transform:none}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}html{scroll-behavior:auto}.rev{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="bar">
+    <a class="wordmark" href="/">STUDIOMORPHIK</a>
+    <nav>
+      <a href="/web-design/">Web design</a>
+      <a href="/apps/" class="on">Apps</a>
+      <a href="/#/contact">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero wrap">
+  <div class="eyebrow rev">Software</div>
+  <h1 class="rev">We also<br>build apps.</h1>
+  <p class="sub rev">Between the films and the websites, we make software. Tools we wanted to exist, built properly and given away. They run on your own machine, they don't ask you to make an account, and nothing you feed them leaves your computer.</p>
+  <div class="stats rev">
+    <span><b>1</b> app shipped</span>
+    <span><b>Free</b> to use</span>
+    <span><b>Open source</b></span>
+    <span><b>No accounts, no tracking</b></span>
+  </div>
+</section>
+
+<section class="feature wrap">
+  <div class="appgrid">
+    <a class="shot rev" href="https://momzu.space" target="_blank" rel="noopener" aria-label="Visit momzu.space">
+      <div class="in">
+        <div class="chrome"><i></i><i></i><i></i><span class="url">momzu.space</span></div>
+        <img src="shots/momzu.jpg" alt="momzu — a voice AI that lives on your Mac" loading="lazy">
+      </div>
+    </a>
+
+    <div class="rev">
+      <div class="appkind">
+        <span class="badge live">● Live</span>
+        <span class="badge">macOS</span>
+        <span class="badge">Open source</span>
+      </div>
+      <div class="appname">momzu</div>
+      <p class="appcopy">A voice AI that lives on your Mac. Hold a key, say what you want, let go. It <b>talks back, drives your real browser, reads your screen, remembers you, plays your music, keeps your calendar</b>, and leaves finished work on your disk.</p>
+      <p class="appcopy">Your voice never leaves the machine. Speech recognition runs locally, replies are spoken locally, and the cloud only ever sees text, only if you choose a cloud model.</p>
+
+      <div class="chips">
+        <span>Voice</span><span>Browser control</span><span>Screen vision</span>
+        <span>Memory</span><span>Routines</span><span>Runs offline</span>
+      </div>
+
+      <div class="install">
+        <div class="lbl">Install — one line, does everything</div>
+        <button class="shell" type="button" data-copy="curl -fsSL https://momzu.space/install.sh | bash">
+          <code>curl -fsSL https://momzu.space/install.sh | bash</code><i>copy</i>
+        </button>
+      </div>
+
+      <div class="cta">
+        <a class="btn" href="https://momzu.space" target="_blank" rel="noopener">Visit momzu.space →</a>
+        <a class="btn ghost" href="https://github.com/wissamsader/momzu" target="_blank" rel="noopener">Source on GitHub</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="next">
+  <div class="wrap">
+    <h2 class="rev">More on the bench.</h2>
+    <p class="rev">We're building an image and video effects studio of our own: halftone, dither, ascii, contour, glitch, all rendering live on your own GPU, reacting to whatever music you play. It goes here when it's ready to hand out.</p>
+    <div class="cta rev">
+      <a class="btn" href="/#/contact">Work with us →</a>
+      <a class="btn ghost" href="/web-design/">See the websites</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="in">
+    <span>STUDIOMORPHIK © 2026</span>
+    <span><a href="/">Home</a> · <a href="/web-design/">Web design</a> · <a href="/#/contact">Contact</a></span>
+  </div>
+</footer>
+
+<script>
+(() => {
+  const io = new IntersectionObserver(es => {
+    es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+  }, { threshold: .15 });
+  document.querySelectorAll('.rev').forEach(el => io.observe(el));
+
+  document.querySelectorAll('.shell').forEach(el => {
+    el.addEventListener('click', () => {
+      navigator.clipboard.writeText(el.dataset.copy).then(() => {
+        const i = el.querySelector('i'), old = i.textContent;
+        el.classList.add('copied'); i.textContent = 'copied';
+        setTimeout(() => { i.textContent = old; el.classList.remove('copied'); }, 1600);
+      }).catch(() => {});
+    });
+  });
+})();
+</script>
+</body>
+</html>

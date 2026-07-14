@@ -212,6 +212,10 @@ a {
   color: #0b0c0e;
   opacity: 1;
 }
+/* second pill sits beside the first, not pushed right again */
+.header__pill--apps {
+  margin-left: 6px;
+}
 @media (max-width: 640px) {
   .brand {
     font-size: 16.5px;
