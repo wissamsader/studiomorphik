@@ -5,8 +5,8 @@
 demo/client sites as branded tiles, click-through to each site in a new tab).
 
 Data = the same rosters HQ uses (WEBSITE-BUSINESS kitdata modules + the
-PITCH-KIT xlsx). Thumbnails = the _shots mini demo-cards already hosted on
-each city's GitHub Pages. Rerun after any new city/batch, then commit+push
+PITCH-KIT xlsx). Thumbnails = generated locally into web-design/shots/ (browser dots, NO URL text
+— his ask). Rerun after any new city/batch, then commit+push
 this repo (site = studiomorphik.com via GitHub Pages).
 """
 import html, pathlib, re, sys, importlib.util
@@ -70,13 +70,72 @@ while any(pools):
     if i > 60:
         break
 
+# ---- portfolio tiles: generated locally, NO URL text anywhere (his 07-14 ask) ----
+from PIL import Image, ImageDraw
+SHOT_SRC = {
+    "vietnam": WB / "VIETNAM" / "PITCH-KIT-VIETNAM" / "screenshots",
+    "barcelona": WB / "BARCELONA" / "PITCH-KIT-BARCELONA" / "screenshots",
+    "palermo": WB / "PALERMO" / "PITCH-KIT-PALERMO" / "screenshots",
+    "beirut-rabab": WB / "BEIRUT" / "PITCH-KIT-RABAB" / "screenshots",
+    "bey-cm": WB / "WISSAM-PITCH" / "kit-machine" / "screenshots",
+}
+TILE_DIR = HERE / "web-design" / "shots"
+TILE_DIR.mkdir(parents=True, exist_ok=True)
+
+def source_png(s):
+    slug = s["url"].rstrip("/").split("/")[-1]
+    if s["repo"] == "vietnam":
+        return SHOT_SRC["vietnam"] / f"{slug}.png"
+    if s["repo"] == "barcelona":
+        return SHOT_SRC["barcelona"] / f"{slug}.png"
+    if s["repo"] == "palermo":
+        return SHOT_SRC["palermo"] / f"{slug}.png"
+    if s["repo"] == "beirut":
+        p = SHOT_SRC["bey-cm"] / f"Beirut — {s['name']}.png"
+        return p if p.exists() else SHOT_SRC["beirut-rabab"] / f"{slug}.png"
+    return SHOT_SRC["bey-cm"] / f"Chiang Mai — {s['name']}.png"
+
+S, M, BAR, RAD = 640, 22, 46, 16
+BG, BAR_BG, EDGE = (11, 12, 14), (34, 36, 40), (46, 50, 56)
+DOTS = [(255, 95, 87), (254, 188, 46), (40, 200, 64)]
+
+def make_tile(src_path, out_path):
+    src = Image.open(src_path).convert("RGB")
+    cw = ch = S - 2 * M
+    win_h = ch - BAR
+    target = cw / win_h
+    sw, sh = src.size
+    if sw / sh > target:
+        w = int(sh * target); x0 = (sw - w) // 2
+        crop = src.crop((x0, 0, x0 + w, sh))
+    else:
+        crop = src.crop((0, 0, sw, int(sw / target)))
+    crop = crop.resize((cw, win_h), Image.LANCZOS)
+    card = Image.new("RGB", (cw, ch), BAR_BG)
+    card.paste(crop, (0, BAR))
+    d = ImageDraw.Draw(card)
+    for i, c in enumerate(DOTS):
+        cx = 24 + i * 20
+        d.ellipse([cx - 5, BAR // 2 - 5, cx + 5, BAR // 2 + 5], fill=c)
+    tile = Image.new("RGB", (S, S), BG)
+    mask = Image.new("L", (cw, ch), 0)
+    ImageDraw.Draw(mask).rounded_rectangle([0, 0, cw - 1, ch - 1], RAD, fill=255)
+    tile.paste(card, (M, M), mask)
+    ImageDraw.Draw(tile).rounded_rectangle([M, M, M + cw - 1, M + ch - 1], RAD, outline=EDGE, width=2)
+    tile.save(out_path, "JPEG", quality=85)
+
 def shot(s):
     slug = s["url"].rstrip("/").split("/")[-1]
-    return f"https://wissamsader.github.io/{s['repo']}/_shots/{slug}.jpg"
+    out = TILE_DIR / f"{s['repo']}-{slug}.jpg"
+    if not out.exists():
+        src = source_png(s)
+        assert src.exists(), f"missing screenshot: {src}"
+        make_tile(src, out)
+    return f"shots/{out.name}"
 
 cards = "\n".join(
     f'<a class="card" href="{html.escape(s["url"])}" target="_blank" rel="noopener">'
-    f'<img loading="lazy" src="{shot(s)}" alt="{html.escape(s["name"])} — website by StudioMorphik">'
+    f'<img loading="lazy" src="{shot(s)}" alt="{html.escape(s["name"])} website by StudioMorphik">'
     f'<span class="meta"><b>{html.escape(s["name"])}</b><i>{s["city"]}</i></span></a>'
     for s in order)
 
@@ -89,12 +148,12 @@ page = f"""<!doctype html>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Web Design — STUDIOMORPHIK</title>
-<meta name="description" content="Hand-built websites for restaurants, guesthouses and independent businesses — {n} live builds across {cities} by StudioMorphik.">
+<meta name="description" content="Hand-built websites for restaurants, guesthouses, independent businesses: {n} live builds across {cities} by StudioMorphik.">
 <link rel="canonical" href="https://studiomorphik.com/web-design/">
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="icon" type="image/png" sizes="96x96" href="/img/favicon-96.png">
 <meta property="og:title" content="Web Design — STUDIOMORPHIK">
-<meta property="og:description" content="{n} live websites for restaurants, guesthouses & independent businesses.">
+<meta property="og:description" content="{n} live websites for restaurants, guesthouses, independent businesses.">
 <style>
 @font-face{{font-family:'Integral CF';src:url('/fonts/IntegralCF-Bold.woff2') format('woff2');font-weight:700;font-style:normal;font-display:swap}}
 :root{{--bg:#0b0c0e;--fg:rgba(255,255,255,.92);--dim:rgba(255,255,255,.6);--line:rgba(255,255,255,.14);--sur:#121317}}
@@ -144,9 +203,9 @@ footer a:hover{{color:var(--fg)}}
 <section class="hero"><div class="wrap">
  <span class="eyebrow">Studiomorphik · Web design</span>
  <h1>WEB DESIGN</h1>
- <p class="sub">Hand-built websites for restaurants, guesthouses, bars and independent businesses — designed, built, hosted and cared for by StudioMorphik. One page, your photos, your story, live in days.</p>
+ <p class="sub">Hand-built websites for restaurants, guesthouses, bars, independent businesses. Designed, built, and cared for by StudioMorphik. One page, your photos, your story. Live in days.</p>
  <div class="stats"><span><b>{n}</b>&nbsp;live builds</span><span><b>5</b>&nbsp;cities</span><span>{cities}</span></div>
- <p class="note"><b>About this portfolio:</b> every website below is live — open any of them. Some are commissioned client work; others are ready-made designs we created for real businesses, ready for their owners to claim.</p>
+ <p class="note"><b>About this portfolio:</b> every website below is live. Open any of them. Some are commissioned client work; others are ready-made designs created for real businesses, ready for their owners to claim.</p>
 </div></section>
 
 <section class="gridwrap"><div class="wrap">
@@ -156,7 +215,7 @@ footer a:hover{{color:var(--fg)}}
 </div></section>
 
 <div class="wrap"><div class="cta">
- <div><h2>WANT YOURS?</h2><p>Your restaurant or guesthouse, one beautiful page — your photos, your menu, linked on Google Maps. No monthly fees.</p></div>
+ <div><h2>WANT YOURS?</h2><p>Your restaurant or guesthouse on one beautiful page: your photos, your menu, linked on Google Maps. No monthly fees.</p></div>
  <a class="btn" href="/#/contact">Get in touch</a>
 </div></div>
 
