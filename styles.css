@@ -190,17 +190,17 @@ a {
 .header__pill {
   display: inline-flex;
   align-items: center;
-  gap: 7px;
-  margin-left: 4px;
-  padding: 6px 13px;
-  border: 1px solid rgba(255, 255, 255, 0.42);
+  gap: 6px;
+  margin-left: auto;
+  padding: 5px 11px;
+  border: 1px solid rgba(255, 255, 255, 0.38);
   border-radius: 999px;
   color: var(--fg);
   opacity: 0.85;
   text-decoration: none;
   font-family: 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace;
-  font-size: 10px;
-  letter-spacing: 0.18em;
+  font-size: 9px;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
   white-space: nowrap;
   transition: background 0.2s ease, color 0.2s ease, opacity 0.2s ease;
@@ -212,9 +212,13 @@ a {
 }
 @media (max-width: 520px) {
   .header__pill {
-    padding: 5px 10px;
-    font-size: 9px;
-    gap: 5px;
+    padding: 4px 9px;
+    font-size: 8px;
+    gap: 4px;
+  }
+  .header__pill svg {
+    width: 10px;
+    height: 10px;
   }
 }
 
