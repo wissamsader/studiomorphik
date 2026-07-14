@@ -131,7 +131,7 @@ page = f"""<!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 <title>Web Design — STUDIOMORPHIK</title>
 <meta name="description" content="Hand-built websites for restaurants, guesthouses, independent businesses: {n} live builds across {cities} by StudioMorphik.">
 <link rel="canonical" href="https://studiomorphik.com/web-design/">
