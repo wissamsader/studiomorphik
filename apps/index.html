@@ -74,6 +74,14 @@ h1{font-family:'Integral CF',sans-serif;font-size:clamp(2.3rem,7.6vw,5.2rem);lin
 .appkind{font-family:'JetBrains Mono',ui-monospace,monospace;font-size:10.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--dim);margin-bottom:14px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 .badge{border:1px solid var(--line);border-radius:999px;padding:4px 10px;color:var(--dim)}
 .badge.live{color:#5dff9b;border-color:rgba(93,255,155,.35)}
+.badge.soon{color:#ff9f40;border-color:rgba(255,159,64,.38)}
+.soonline{margin-top:28px;display:inline-flex;align-items:center;gap:10px;
+  font-family:'JetBrains Mono',ui-monospace,monospace;font-size:11px;letter-spacing:.16em;text-transform:uppercase;
+  color:#ff9f40;border:1px solid rgba(255,159,64,.3);background:rgba(255,159,64,.06);
+  border-radius:999px;padding:11px 20px}
+.soonline i{width:7px;height:7px;border-radius:50%;background:#ff9f40;flex:0 0 auto;animation:pulse 1.8s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(255,159,64,.5)}70%{box-shadow:0 0 0 7px rgba(255,159,64,0)}100%{box-shadow:0 0 0 0 rgba(255,159,64,0)}}
+.appsep{border-top:1px solid var(--line);margin:clamp(44px,6vw,80px) 0 0}
 .appcopy{color:var(--dim);font-size:15px;margin-top:16px;max-width:46ch}
 .appcopy b{color:var(--fg);font-weight:500}
 .chips{display:flex;flex-wrap:wrap;gap:7px;margin-top:22px}
@@ -125,9 +133,9 @@ footer a:hover{color:var(--fg)}
   <h1 class="rev">We also<br>build apps.</h1>
   <p class="sub rev">Between the films and the websites, we make software. Tools we wanted to exist, built properly and given away. They run on your own machine, they don't ask you to make an account, and nothing you feed them leaves your computer.</p>
   <div class="stats rev">
-    <span><b>1</b> app shipped</span>
+    <span><b>1</b> shipped</span>
+    <span><b>1</b> in development</span>
     <span><b>Free</b> to use</span>
-    <span><b>Open source</b></span>
     <span><b>No accounts, no tracking</b></span>
   </div>
 </section>
@@ -169,12 +177,40 @@ footer a:hover{color:var(--fg)}
       </div>
     </div>
   </div>
+
+  <div class="appsep"></div>
+
+  <div class="appgrid" style="margin-top:clamp(34px,5vw,64px)">
+    <div class="shot rev">
+      <div class="in">
+        <div class="chrome"><i></i><i></i><i></i><span class="url">morph</span></div>
+        <img src="shots/morph.jpg" alt="MORPH — an image and video effects studio" loading="lazy">
+      </div>
+    </div>
+
+    <div class="rev">
+      <div class="appkind">
+        <span class="badge soon">● In development</span>
+        <span class="badge">macOS</span>
+      </div>
+      <div class="appname">MORPH</div>
+      <p class="appcopy">An image and video effects studio. Drop in a photo or a video, then <b>turn it into something else</b>: halftone, ordered dither, ascii, contour, glitch, riso. Every dial moves while you watch.</p>
+      <p class="appcopy">It renders on your own machine, not on a farm. No account, no uploads, no queue. The engine is ours, written from scratch.</p>
+
+      <div class="chips">
+        <span>Halftone</span><span>Dither</span><span>Ascii</span><span>Contour</span>
+        <span>Glitch</span><span>Riso</span><span>Crosshatch</span><span>Pixel sort</span>
+      </div>
+
+      <div class="soonline"><i></i>Coming soon</div>
+    </div>
+  </div>
 </section>
 
 <section class="next">
   <div class="wrap">
-    <h2 class="rev">More on the bench.</h2>
-    <p class="rev">We're building an image and video effects studio of our own: halftone, dither, ascii, contour, glitch, all rendering live on your own GPU, reacting to whatever music you play. It goes here when it's ready to hand out.</p>
+    <h2 class="rev">Need something built?</h2>
+    <p class="rev">We make the tools we wish existed, then we give them away. If you need software, a website, or a film, we are one email away.</p>
     <div class="cta rev">
       <a class="btn" href="/#/contact">Work with us →</a>
       <a class="btn ghost" href="/web-design/">See the websites</a>
