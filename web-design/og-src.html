@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<style>
+@font-face{font-family:'Integral CF';src:url('../fonts/IntegralCF-Bold.woff2') format('woff2');font-weight:700}
+*{box-sizing:border-box;margin:0}
+html,body{width:1200px;height:630px;overflow:hidden;background:#0b0c0e}
+body{position:relative;font-family:'Montserrat',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;color:rgba(255,255,255,.94)}
+.mosaic{position:absolute;left:-140px;top:-210px;width:1700px;transform:rotate(-9deg);display:grid;grid-template-columns:repeat(9,1fr);gap:14px;filter:brightness(.78) saturate(1.06)}
+.mosaic img{width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:14px;border:1px solid rgba(255,255,255,.14)}
+.shade{position:absolute;inset:0;background:linear-gradient(97deg,rgba(11,12,14,.97) 24%,rgba(11,12,14,.82) 44%,rgba(11,12,14,.38) 72%,rgba(11,12,14,.62) 100%)}
+.vig{position:absolute;inset:0;background:radial-gradient(120% 90% at 30% 46%,transparent 40%,rgba(11,12,14,.55) 100%)}
+.glow{position:absolute;left:-80px;top:170px;width:560px;height:300px;background:conic-gradient(from 210deg,#ff4d4d,#ff9f40,#ffe14d,#5dff9b,#4dc3ff,#b96bff,#ff4d4d);filter:blur(120px);opacity:.24}
+.txt{position:absolute;left:76px;top:118px;z-index:3}
+.eyebrow{font-family:'JetBrains Mono',ui-monospace,'SF Mono',Menlo,monospace;font-size:19px;letter-spacing:.34em;color:rgba(255,255,255,.72)}
+h1{font-family:'Integral CF',sans-serif;font-size:128px;line-height:.98;letter-spacing:.015em;margin:22px 0 26px;text-shadow:0 10px 60px rgba(0,0,0,.6)}
+.bar{width:300px;height:7px;border-radius:99px;background:linear-gradient(90deg,#ff4d4d,#ff9f40,#ffe14d,#5dff9b,#4dc3ff,#b96bff)}
+.stats{margin-top:30px;font-family:'JetBrains Mono',ui-monospace,'SF Mono',Menlo,monospace;font-size:24px;letter-spacing:.2em;color:rgba(255,255,255,.92)}
+.stats b{color:#fff;font-weight:700}
+.cities{margin-top:14px;font-family:'JetBrains Mono',ui-monospace,'SF Mono',Menlo,monospace;font-size:15.5px;letter-spacing:.22em;color:rgba(255,255,255,.6)}
+.mark{position:absolute;right:60px;bottom:44px;z-index:3;font-family:'Integral CF',sans-serif;font-size:20px;letter-spacing:.24em;color:rgba(255,255,255,.9)}
+</style>
+</head>
+<body>
+<div class="mosaic">
+<img src="shots/vietnam-banh-xeo-ba-duong.jpg"><img src="shots/beirut-basterma-mano.jpg"><img src="shots/chiangmai-hoh-guesthouse.jpg"><img src="shots/barcelona-audiodise.jpg"><img src="shots/palermo-osteria-mercede.jpg"><img src="shots/vietnam-bun-cha-ca-109.jpg"><img src="shots/beirut-kahwat-ras-beirut.jpg"><img src="shots/chiangmai-chor-chang-house.jpg"><img src="shots/barcelona-bar-marsella.jpg">
+<img src="shots/palermo-villena.jpg"><img src="shots/vietnam-com-tam-sa-bi-chuong.jpg"><img src="shots/beirut-issa-hummus.jpg"><img src="shots/chiangmai-tangmo-house.jpg"><img src="shots/barcelona-throwback.jpg"><img src="shots/barcelona-bar-oliva.jpg"><img src="shots/vietnam-quan-339.jpg"><img src="shots/beirut-falafel-abou-nabil.jpg"><img src="shots/chiangmai-blue-moon-house.jpg">
+<img src="shots/barcelona-bodega-del-born.jpg"><img src="shots/palermo-trattoria-al-sorriso.jpg"><img src="shots/vietnam-com-sai-gon.jpg"><img src="shots/beirut-al-soussa.jpg"><img src="shots/chiangmai-baan-thalang.jpg"><img src="shots/barcelona-bodega-la-general.jpg"><img src="shots/palermo-trattoria-trapani.jpg"><img src="shots/vietnam-hoi-an-spa.jpg"><img src="shots/beirut-al-hani.jpg">
+<img src="shots/chiangmai-iroom-boutique.jpg"><img src="shots/barcelona-vermuteria-puigmarti.jpg"><img src="shots/barcelona-bodega-marin.jpg"><img src="shots/vietnam-deep-spa.jpg"><img src="shots/beirut-adnan-baik.jpg"><img src="shots/chiangmai-little-siri.jpg"><img src="shots/barcelona-bodega-oliva.jpg"><img src="shots/palermo-antonello-arancine.jpg"><img src="shots/vietnam-john-ho-barber.jpg">
+<img src="shots/beirut-abou-abdallah.jpg"><img src="shots/chiangmai-old-city-rooms.jpg"><img src="shots/barcelona-bar-pastis.jpg"><img src="shots/palermo-la-lapa.jpg"><img src="shots/vietnam-maison-royale.jpg"><img src="shots/beirut-booza-society.jpg"><img src="shots/chiangmai-baan-pisamai.jpg"><img src="shots/barcelona-bodega-salvat.jpg"><img src="shots/palermo-sicily-street-food.jpg">
+</div>
+<div class="shade"></div>
+<div class="vig"></div>
+<div class="glow"></div>
+<div class="txt">
+ <div class="eyebrow">STUDIOMORPHIK · PORTFOLIO</div>
+ <h1>WEB<br>DESIGN</h1>
+ <div class="bar"></div>
+ <div class="stats"><b>138</b> LIVE WEBSITES · <b>5</b> CITIES</div>
+ <div class="cities">BEIRUT · CHIANG MAI · ĐÀ NẴNG · BARCELONA · PALERMO</div>
+</div>
+<div class="mark">STUDIOMORPHIK.COM</div>
+</body>
+</html>

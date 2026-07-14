@@ -139,6 +139,13 @@ page = f"""<!doctype html>
 <link rel="icon" type="image/png" sizes="96x96" href="/img/favicon-96.png">
 <meta property="og:title" content="Web Design — STUDIOMORPHIK">
 <meta property="og:description" content="{n} live websites for restaurants, guesthouses, independent businesses.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://studiomorphik.com/web-design/">
+<meta property="og:image" content="https://studiomorphik.com/web-design/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://studiomorphik.com/web-design/og.jpg">
 <style>
 @font-face{{font-family:'Integral CF';src:url('/fonts/IntegralCF-Bold.woff2') format('woff2');font-weight:700;font-style:normal;font-display:swap}}
 :root{{--bg:#0b0c0e;--fg:rgba(255,255,255,.92);--dim:rgba(255,255,255,.6);--line:rgba(255,255,255,.14);--sur:#121317}}
