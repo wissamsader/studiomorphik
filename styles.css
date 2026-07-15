@@ -237,12 +237,16 @@ a {
   }
   .header__pill svg { width: 10px; height: 10px; }
 }
-/* phones: stack the pills into a column — APPS sits under WEB DESIGN */
+/* phones: stack the pills into a column — APPS sits under WEB DESIGN,
+   both boxes the same width (matched to the wider WEB DESIGN pill) */
 @media (max-width: 480px) {
   .header__pills {
     flex-direction: column;
-    align-items: flex-end;
+    align-items: stretch;
     gap: 6px;
+  }
+  .header__pills .header__pill {
+    justify-content: center;
   }
 }
 /* narrow phones: keep everything on one row, nothing clipped */
