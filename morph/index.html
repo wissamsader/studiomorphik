@@ -1020,9 +1020,11 @@ footer a:hover { color: var(--text); }
   const statusText = document.getElementById('status-text');
 
   let W = 0, H = 0, DPR = 1, cols = 0, rows = 0, cell = 9, wordPx = 10;
-  let px = -1e4, py = -1e4;          // pointer in cell coords
+  let px = -1e4, py = -1e4;
   let fxIndex = 0, fxStart = 0;
   let heroVisible = true, rafId = 0;
+  const isMobile = /Mobi|Android/i.test(navigator.userAgent);
+  let srcCache = null, srcCacheAt = 0;
 
   const WARM = '#ECE7E7', RED = '#B0392E', RED2 = '#C85C4B', HOT = '#E0685A', BG = '#0A0809';
   const NAMES = ['halftone', 'contour drift', 'ascii', 'ordered dither', 'glitch mosaic'];
@@ -1173,10 +1175,14 @@ footer a:hover { color: var(--text); }
     if (!fxStart) fxStart = t;
     if (t - fxStart > CYCLE) advance(t);
     const ramp = prefersReduced ? 1 : Math.min(1, (t - fxStart) / 450);
-    const d = drawSource(t);
+    // mobile: cache source data for 3 frames — getImageData is expensive on iOS
+    if (!isMobile || !srcCache || t - srcCacheAt > 48) {
+      srcCache = drawSource(t);
+      srcCacheAt = t;
+    }
     ctx.fillStyle = BG; ctx.fillRect(0, 0, W, H);
-    FX[fxIndex](d, t, ramp);
-    if (!prefersReduced) rafId = requestAnimationFrame(frame);
+    FX[fxIndex](srcCache, t, ramp);
+    rafId = requestAnimationFrame(frame);
   }
 
   function advance(t) {
@@ -1217,7 +1223,7 @@ footer a:hover { color: var(--text); }
     Promise.race([
       Promise.all([document.fonts.load('800 80px Montserrat'), document.fonts.load('400 12px "JetBrains Mono"')]),
       new Promise(res => setTimeout(res, 1200))
-    ]).then(start);
+    ]).then(start).catch(() => { start(); });
     // if the fonts land after the fallback started us, re-measure the wordmark
     document.fonts.ready.then(() => { resize(); if (prefersReduced) frame(performance.now()); });
   } else start();
