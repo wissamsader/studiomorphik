@@ -244,6 +244,9 @@ a {
     flex-direction: column;
     align-items: stretch;
     gap: 6px;
+    /* drop the stack so WEB DESIGN lines up with the STUDIOMORPHIK wordmark
+       (the column is taller than the wordmark, so centering floats it too high) */
+    transform: translateY(14px);
   }
   .header__pills .header__pill {
     justify-content: center;
