@@ -1,0 +1,1292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MORPH — an effects studio that lives on your mac</title>
+<meta name="description" content="MORPH — a visual effects studio for your Mac. Drop in a photo or a video and turn it into something else: halftone, dither, ascii, glitch, 3D Lab, Motion Lab. Audio-reactive, records itself, exports offline. No account, no uploads, free.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="MORPH">
+<meta property="og:title" content="MORPH — an effects studio that lives on your Mac">
+<meta property="og:description" content="Drop in a photo or a video. Turn it into something else. 44 effects, audio-reactive, records itself, exports offline. Free for macOS.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="MORPH — an effects studio that lives on your Mac">
+<meta name="twitter:description" content="Drop in a photo or a video. Turn it into something else. Free for macOS.">
+<link rel="icon" type="image/png" href="favicon.png">
+<style>
+/* ── self-hosted type (same files the app ships) ─────────── */
+@font-face {
+  font-family: "Montserrat"; font-style: normal; font-weight: 400 800; font-display: swap;
+  src: url("fonts/montserrat-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "Montserrat"; font-style: normal; font-weight: 400 800; font-display: swap;
+  src: url("fonts/montserrat-latin-ext.woff2") format("woff2");
+  unicode-range: U+0100-02AF, U+0304, U+0308, U+0329, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: "JetBrains Mono"; font-style: normal; font-weight: 100 800; font-display: swap;
+  src: url("fonts/jetbrains-mono-normal-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "JetBrains Mono"; font-style: normal; font-weight: 100 800; font-display: swap;
+  src: url("fonts/jetbrains-mono-normal-latin-ext.woff2") format("woff2");
+  unicode-range: U+0100-02AF, U+0304, U+0308, U+0329, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+/* ── tokens: MORPH theme v2 (warm near-black · blood red) ── */
+:root {
+  --bg: #0A0809;
+  --panel: rgba(22,17,18,0.66);
+  --panel-strong: rgba(12,9,10,0.78);
+  --line: rgba(255,255,255,0.07);
+  --line-strong: rgba(255,255,255,0.14);
+  --text: #ECE7E7;
+  --muted: #8E8486;
+  --muted-strong: #C9C0C1;
+  --dimmer: #5C5455;
+  --accent: #B0392E;
+  --accent-2: #C85C4B;
+  --accent-hot: #E0685A;
+  --accent-soft: rgba(176,57,46,0.16);
+  --accent-glow: rgba(176,57,46,0.42);
+  --success: #4FA36B;
+  --display: "Montserrat", ui-sans-serif, system-ui, sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html { scroll-behavior: smooth; overflow-x: clip; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--mono);
+  overflow-x: clip;
+  max-width: 100vw;
+  -webkit-font-smoothing: antialiased;
+}
+::selection { background: rgba(176,57,46,0.35); color: #fff; }
+a { color: inherit; }
+img { max-width: 100%; display: block; }
+.topbar a, .navlinks a, .shellline, .coffee, footer a { user-select: none; -webkit-user-select: none; }
+
+/* ── film grain (whole page, static — cheap) ── */
+body::before {
+  content: ''; position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  background:
+    radial-gradient(120% 90% at 50% 8%, rgba(176,57,46,0.05), transparent 55%),
+    radial-gradient(140% 120% at 50% 120%, rgba(0,0,0,0.55), transparent 60%);
+}
+body::after {
+  content: ''; position: fixed; inset: -50%; pointer-events: none; z-index: 300;
+  opacity: 0.06; mix-blend-mode: soft-light;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 200px 200px;
+  animation: grain .7s steps(4) infinite;
+}
+@keyframes grain {
+  0% { transform: translate(0,0); } 25% { transform: translate(-2%,3%); }
+  50% { transform: translate(3%,-2%); } 75% { transform: translate(-3%,-3%); }
+  100% { transform: translate(2%,2%); }
+}
+
+/* ── topbar ── */
+.topbar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 20px 30px;
+  font-size: 10px; letter-spacing: 0.3em; text-transform: uppercase;
+  color: var(--muted);
+  background: linear-gradient(180deg, rgba(10,8,9,0.85), transparent);
+}
+.topbar .brand {
+  display: flex; align-items: center; gap: 11px;
+  font-family: var(--display); font-weight: 800; font-size: 13px;
+  letter-spacing: 0.24em; color: var(--text);
+}
+.topbar .brand svg { width: 26px; height: 26px; filter: drop-shadow(0 2px 10px rgba(176,57,46,0.55)); }
+.topbar a { text-decoration: none; transition: color .3s; }
+.topbar a:hover { color: var(--text); }
+.navlinks { display: flex; gap: 26px; }
+
+/* ── fixed readouts ── */
+.status {
+  position: fixed; bottom: 24px; left: 30px; z-index: 100;
+  display: flex; align-items: center; gap: 10px;
+  font-size: 10px; letter-spacing: 0.26em; text-transform: uppercase;
+  color: var(--muted);
+  transition: opacity .5s;
+  text-shadow: 0 1px 8px rgba(10,8,9,0.95), 0 0 3px rgba(10,8,9,0.9);
+}
+.status .dot {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 10px var(--accent-glow);
+  animation: recpulse 1.4s infinite;
+}
+@keyframes recpulse {
+  0% { box-shadow: 0 0 0 0 rgba(176,57,46,0.55); }
+  70% { box-shadow: 0 0 0 8px rgba(176,57,46,0); }
+  100% { box-shadow: 0 0 0 0 rgba(176,57,46,0); }
+}
+.morphhint {
+  position: fixed; bottom: 24px; right: 30px; z-index: 100;
+  font-size: 10px; letter-spacing: 0.26em; text-transform: uppercase;
+  color: var(--muted);
+  transition: opacity .5s;
+  text-shadow: 0 1px 8px rgba(10,8,9,0.95), 0 0 3px rgba(10,8,9,0.9);
+}
+body.past-hero .status, body.past-hero .morphhint { opacity: 0; pointer-events: none; }
+
+/* ── hero ── */
+.hero {
+  position: relative;
+  height: 100svh; min-height: 560px;
+  overflow: hidden;
+  cursor: crosshair;
+}
+#fx { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.hero .vise {
+  position: absolute; inset: 0; pointer-events: none;
+  background: radial-gradient(130% 100% at 50% 50%, transparent 55%, rgba(10,8,9,0.8) 100%);
+}
+.hero-foot {
+  position: absolute; left: 22px; right: 22px; bottom: 64px;
+  display: flex; flex-direction: column; align-items: center; gap: 16px;
+  pointer-events: none;
+}
+.hero-line { max-width: 100%; }
+.hero-line {
+  font-size: 11px; letter-spacing: 0.34em; text-transform: uppercase;
+  color: var(--muted-strong);
+  text-align: center;
+  padding: 12px 22px; border-radius: 12px;
+  background: rgba(10,8,9,0.62);
+  border: 1px solid rgba(255,255,255,0.05);
+  backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+  line-height: 2;
+}
+.hero-line b { color: var(--accent-2); font-weight: 400; }
+.sr-only {
+  position: absolute; width: 1px; height: 1px; overflow: hidden;
+  clip: rect(0 0 0 0); white-space: nowrap;
+}
+
+/* ── shared section bits ── */
+section { position: relative; z-index: 2; }
+.wrap { max-width: 1100px; margin: 0 auto; padding-left: 30px; padding-right: 30px; }
+.kicker {
+  font-size: 10px; letter-spacing: 0.32em; text-transform: uppercase;
+  color: var(--muted);
+  display: flex; align-items: center; gap: 14px;
+  margin-bottom: 4.5vh;
+}
+.kicker::after { content: ''; height: 1px; width: 60px; background: rgba(255,255,255,0.16); }
+.big {
+  font-family: var(--display); font-weight: 700;
+  text-transform: uppercase;
+  font-size: clamp(1.25rem, 3vw, 2.1rem);
+  letter-spacing: 0.13em;
+  line-height: 1.75;
+  color: var(--text);
+  max-width: 30ch;
+}
+.big em {
+  font-style: normal; color: var(--accent-2);
+  text-shadow: 0 0 34px rgba(200,92,75,0.45);
+}
+.big .ghost { color: var(--dimmer); }
+.reveal { opacity: 0; transform: translateY(38px); transition: opacity 1s cubic-bezier(.2,.8,.2,1), transform 1s cubic-bezier(.2,.8,.2,1); }
+.reveal.in { opacity: 1; transform: none; }
+
+.statement { min-height: 70vh; display: flex; flex-direction: column; justify-content: center; padding-top: 14vh; padding-bottom: 8vh; }
+
+/* ── effects strip (real renders from the app) ── */
+.effects { padding: 4vh 0 6vh; }
+.effects .kicker { max-width: 1100px; margin-left: auto; margin-right: auto; padding: 0 30px; }
+.marq {
+  display: flex; flex-direction: column; gap: 14px;
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+}
+.mrow { display: flex; gap: 14px; width: max-content; animation: mtick 52s linear infinite; }
+.mrow.rev { animation-duration: 64s; animation-direction: reverse; }
+@keyframes mtick { to { transform: translateX(calc(-50% - 7px)); } }
+.fxcard {
+  position: relative; width: 250px; aspect-ratio: 480/300;
+  border: 1px solid var(--line); border-radius: 12px;
+  overflow: hidden; flex: 0 0 auto;
+  background: #000;
+  transition: border-color .35s, transform .35s;
+}
+.fxcard img { width: 100%; height: 100%; object-fit: cover; }
+.fxcard .lbl {
+  position: absolute; left: 10px; bottom: 8px;
+  font-size: 9px; letter-spacing: 0.26em; text-transform: uppercase;
+  color: var(--muted-strong);
+  background: rgba(10,8,9,0.72); border: 1px solid var(--line);
+  padding: 4px 9px; border-radius: 999px;
+  backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+}
+.fxcard:hover { border-color: rgba(176,57,46,0.55); transform: translateY(-3px); }
+.fxnote {
+  text-align: center; margin-top: 4.5vh;
+  font-size: 10px; letter-spacing: 0.3em; text-transform: uppercase;
+  color: var(--muted);
+  padding: 0 24px;
+}
+.fxnote b { color: var(--accent-2); font-weight: 400; }
+
+/* effect-name ticker */
+.nameticker { padding: 5vh 0 10vh; overflow: hidden;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 15%, #000 85%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 15%, #000 85%, transparent);
+}
+.nrow { display: flex; width: max-content; animation: mtick 74s linear infinite; }
+.nrow > span { font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); white-space: nowrap; }
+.nrow > span::after { content: '·'; margin: 0 26px; color: var(--dimmer); }
+.nrow > span.hi { color: var(--accent-2); text-shadow: 0 0 18px rgba(176,57,46,0.3); }
+
+/* ── abilities ── */
+.abilities { padding-top: 6vh; padding-bottom: 14vh; }
+.ability {
+  display: grid;
+  grid-template-columns: 70px minmax(0,1fr) minmax(280px, 350px);
+  gap: 34px;
+  padding: 5.5vh 0;
+  border-top: 1px solid var(--line);
+  align-items: center;
+}
+.ability:last-of-type { border-bottom: 1px solid var(--line); }
+.ability .num { font-size: 11px; color: var(--dimmer); letter-spacing: 0.2em; align-self: start; padding-top: 8px; }
+.ability h3 {
+  font-family: var(--display); font-weight: 700;
+  text-transform: uppercase;
+  font-size: clamp(1rem, 1.8vw, 1.35rem);
+  letter-spacing: 0.14em;
+  color: var(--text);
+  margin-bottom: 14px;
+}
+.ability p { font-size: 14px; line-height: 1.9; color: var(--muted); max-width: 54ch; letter-spacing: 0.03em; }
+.ability p b { color: var(--muted-strong); font-weight: 400; }
+
+/* sim panels — glass tiles */
+.sim {
+  position: relative; height: 236px;
+  border: 1px solid var(--line); border-radius: 14px;
+  overflow: hidden;
+  background: linear-gradient(165deg, rgba(22,17,18,0.85), rgba(8,6,7,0.92));
+  backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+}
+.sim .tag {
+  position: absolute; top: 12px; right: 14px; z-index: 3;
+  font-size: 8px; letter-spacing: 0.3em; text-transform: uppercase;
+  color: var(--dimmer);
+}
+.sim *, .sim *::before, .sim *::after { animation-play-state: paused !important; }
+.sim.play *, .sim.play *::before, .sim.play *::after { animation-play-state: running !important; }
+
+/* s1 · drop */
+.s1 { display: flex; align-items: center; justify-content: center; }
+.s1zone {
+  position: relative; width: 78%; height: 66%;
+  border: 1px dashed rgba(255,255,255,0.18); border-radius: 12px;
+  overflow: hidden;
+  animation: s1zone 7s infinite;
+}
+@keyframes s1zone {
+  0%, 24% { border-color: rgba(255,255,255,0.18); }
+  28%, 80% { border-color: rgba(176,57,46,0.6); box-shadow: 0 0 26px rgba(176,57,46,0.12); }
+  92%, 100% { border-color: rgba(255,255,255,0.18); }
+}
+.s1chip {
+  position: absolute; left: 50%; top: 12px; transform: translateX(-50%);
+  padding: 6px 13px;
+  border: 1px solid var(--line-strong); border-radius: 7px;
+  background: rgba(20,16,17,0.95);
+  font-size: 9px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--muted-strong);
+  animation: s1chip 7s infinite;
+  z-index: 2;
+}
+@keyframes s1chip {
+  0% { transform: translate(-50%, -56px); opacity: 0; }
+  10% { transform: translate(-50%, 0); opacity: 1; }
+  24% { transform: translate(-50%, 62px); opacity: 1; }
+  30%, 100% { transform: translate(-50%, 62px); opacity: 0; }
+}
+.s1dots {
+  position: absolute; inset: 0;
+  background-image: radial-gradient(circle at center, var(--accent-2) 0 2.2px, transparent 2.6px);
+  background-size: 14px 14px;
+  -webkit-mask-image: radial-gradient(90% 80% at 50% 55%, #000 30%, transparent 75%);
+  mask-image: radial-gradient(90% 80% at 50% 55%, #000 30%, transparent 75%);
+  opacity: 0;
+  animation: s1dots 7s infinite;
+}
+@keyframes s1dots {
+  0%, 26% { opacity: 0; transform: scale(1.25); }
+  36%, 80% { opacity: .85; transform: scale(1); }
+  92%, 100% { opacity: 0; }
+}
+.s1lbl {
+  position: absolute; bottom: 10px; left: 0; right: 0; text-align: center;
+  font-size: 8px; letter-spacing: 0.28em; text-transform: uppercase; color: var(--dimmer);
+}
+
+/* s2 · looks */
+.s2 { display: flex; flex-direction: column; justify-content: center; gap: 10px; padding: 26px 30px; }
+.s2chip {
+  display: flex; justify-content: space-between; align-items: center;
+  border: 1px solid var(--line); border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted-strong);
+  background: rgba(255,255,255,0.015);
+  opacity: 0; transform: translateY(8px);
+  animation: s2in 8s infinite;
+}
+.s2chip:nth-child(2) { animation-delay: .5s; }
+.s2chip:nth-child(3) { animation-delay: 1s; }
+.s2chip .on { color: var(--accent-2); font-size: 9px; letter-spacing: 0.14em; }
+@keyframes s2in {
+  0%, 6% { opacity: 0; transform: translateY(8px); }
+  14%, 86% { opacity: 1; transform: none; }
+  94%, 100% { opacity: 0; }
+}
+.s2slider { display: flex; align-items: center; gap: 12px; margin-top: 6px; opacity: 0; animation: s2in 8s infinite; animation-delay: 1.4s; }
+.s2slider .lbl { font-size: 8px; letter-spacing: 0.26em; text-transform: uppercase; color: var(--dimmer); width: 64px; flex: 0 0 auto; text-align: right; }
+.s2track { flex: 1; height: 5px; border-radius: 999px; background: rgba(255,255,255,0.09); overflow: hidden; }
+.s2fill { height: 100%; border-radius: 999px; background: linear-gradient(90deg, var(--accent), var(--accent-2)); transform-origin: left; animation: s2fill 8s ease-in-out infinite; }
+.s2fill.b { animation-delay: .4s; }
+@keyframes s2fill {
+  0%, 16% { transform: scaleX(0.2); }
+  34% { transform: scaleX(0.82); }
+  52% { transform: scaleX(0.55); }
+  86% { transform: scaleX(0.7); }
+  100% { transform: scaleX(0.2); }
+}
+.s2save {
+  align-self: center; margin-top: 4px;
+  font-size: 9px; letter-spacing: 0.26em; text-transform: uppercase;
+  color: var(--accent-2);
+  border: 1px solid rgba(176,57,46,0.4); border-radius: 999px;
+  padding: 6px 16px;
+  background: var(--accent-soft);
+  opacity: 0; animation: s2in 8s infinite; animation-delay: 1.8s;
+}
+
+/* s3 · audio reactive */
+.s3 { display: flex; align-items: center; justify-content: center; gap: 30px; }
+.s3eq { display: flex; align-items: flex-end; gap: 4px; height: 74px; }
+.s3eq i { width: 5px; border-radius: 3px; background: linear-gradient(180deg, var(--accent-2), var(--accent)); animation: eq 0.9s ease-in-out infinite; }
+.s3eq i:nth-child(1) { height: 34%; }
+.s3eq i:nth-child(2) { height: 88%; animation-delay: .12s; }
+.s3eq i:nth-child(3) { height: 55%; animation-delay: .24s; }
+.s3eq i:nth-child(4) { height: 100%; animation-delay: .36s; }
+.s3eq i:nth-child(5) { height: 62%; animation-delay: .48s; }
+.s3eq i:nth-child(6) { height: 80%; animation-delay: .6s; }
+@keyframes eq { 0%,100% { transform: scaleY(0.35); } 50% { transform: scaleY(1); } }
+.s3grid { display: grid; grid-template-columns: repeat(5, 13px); gap: 9px; }
+.s3grid i {
+  width: 13px; height: 13px; border-radius: 50%;
+  background: var(--text);
+  animation: s3beat 0.9s ease-in-out infinite;
+}
+.s3grid i:nth-child(even) { background: var(--accent-2); animation-delay: .12s; }
+.s3grid i:nth-child(3n) { animation-delay: .3s; }
+.s3grid i:nth-child(5n) { animation-delay: .45s; }
+@keyframes s3beat { 0%,100% { transform: scale(0.45); opacity: .5; } 50% { transform: scale(1); opacity: 1; } }
+.s3react {
+  position: absolute; bottom: 12px; left: 50%; transform: translateX(-50%);
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 6px 14px; border-radius: 999px;
+  border: 1px solid rgba(176,57,46,0.45); background: var(--accent-soft);
+  font-size: 9px; letter-spacing: 0.2em; color: var(--accent-2); text-transform: uppercase;
+}
+.s3react i { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 8px var(--accent-glow); animation: recpulse 1.2s infinite; }
+
+/* s4 · record */
+.s4 { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 18px; }
+.s4rec {
+  display: inline-flex; align-items: center; gap: 10px;
+  padding: 11px 22px; border-radius: 9px;
+  background: var(--accent); color: #fff;
+  font-size: 12px; letter-spacing: 0.16em;
+  box-shadow: 0 10px 34px rgba(176,57,46,0.35);
+  font-variant-numeric: tabular-nums;
+}
+.s4rec i { width: 9px; height: 9px; border-radius: 50%; background: #fff; animation: recpulse 1.1s infinite; }
+.s4modes { display: flex; gap: 8px; }
+.s4mode {
+  font-size: 9px; letter-spacing: 0.22em; text-transform: uppercase;
+  border: 1px solid var(--line); border-radius: 999px;
+  padding: 6px 14px; color: var(--muted);
+}
+.s4mode.on { color: var(--accent-2); border-color: rgba(176,57,46,0.5); background: var(--accent-soft); }
+.s4meta { font-size: 8px; letter-spacing: 0.26em; text-transform: uppercase; color: var(--dimmer); display: flex; gap: 18px; }
+.s4meta b { color: var(--success); font-weight: 400; }
+
+/* s5 · export */
+.s5 { display: flex; flex-direction: column; justify-content: center; gap: 18px; padding: 30px 34px; }
+.s5head { display: flex; justify-content: space-between; font-size: 9px; letter-spacing: 0.26em; text-transform: uppercase; color: var(--muted); }
+.s5head .pct { color: var(--accent-2); }
+.s5track { height: 5px; border-radius: 999px; background: rgba(255,255,255,0.09); overflow: hidden; }
+.s5fill { height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent-2)); transform-origin: left; transform: scaleX(0); animation: s5fill 8s linear infinite; }
+@keyframes s5fill { 0% { transform: scaleX(0); } 52% { transform: scaleX(1); } 100% { transform: scaleX(1); } }
+.s5file {
+  display: flex; justify-content: space-between; align-items: center;
+  border: 1px solid var(--line); border-radius: 9px;
+  padding: 13px 16px;
+  font-size: 10px; letter-spacing: 0.12em; color: var(--muted-strong);
+  opacity: 0; transform: translateY(6px);
+  animation: s5file 8s infinite;
+}
+.s5file b { color: var(--success); font-weight: 400; letter-spacing: 0.2em; font-size: 9px; }
+@keyframes s5file {
+  0%, 52% { opacity: 0; transform: translateY(6px); border-color: var(--line); }
+  58%, 92% { opacity: 1; transform: none; border-color: rgba(79,163,107,0.4); }
+  98%, 100% { opacity: 0; }
+}
+.s5note { text-align: center; font-size: 8px; letter-spacing: 0.28em; text-transform: uppercase; color: var(--dimmer); }
+
+/* s6 · labs */
+.s6 { display: flex; align-items: center; justify-content: center; perspective: 700px; }
+.s6word {
+  font-family: var(--display); font-weight: 800; font-size: 40px; letter-spacing: 0.14em;
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(236,231,231,0.75);
+  text-shadow: 0 0 34px rgba(176,57,46,0.35);
+  transform-style: preserve-3d;
+  animation: s6spin 7s cubic-bezier(.4,0,.6,1) infinite;
+  position: relative;
+}
+.s6word::before, .s6word::after {
+  content: 'MORPH'; position: absolute; left: 0; top: 0;
+  -webkit-text-stroke: 1px rgba(176,57,46,0.5);
+}
+.s6word::before { transform: translateZ(-22px); opacity: .6; }
+.s6word::after { transform: translateZ(-44px); opacity: .3; }
+@keyframes s6spin {
+  0% { transform: rotateY(-26deg) rotateX(8deg); }
+  50% { transform: rotateY(26deg) rotateX(-8deg); }
+  100% { transform: rotateY(-26deg) rotateX(8deg); }
+}
+.s6cap { position: absolute; bottom: 12px; left: 0; right: 0; text-align: center; font-size: 8px; letter-spacing: 0.28em; text-transform: uppercase; color: var(--dimmer); }
+
+/* s7 · privacy */
+.s7 { display: flex; align-items: center; justify-content: center; }
+.s7wrap { position: relative; width: 312px; height: 178px; }
+.s7box {
+  position: absolute; left: 0; top: 0; width: 192px; height: 178px;
+  border: 1px dashed rgba(255,255,255,0.16); border-radius: 14px;
+}
+.s7boxlbl {
+  position: absolute; top: -6px; left: 14px;
+  background: #120e0f; padding: 0 8px;
+  font-size: 8px; letter-spacing: 0.3em; text-transform: uppercase; color: var(--muted);
+}
+.s7node {
+  position: absolute; left: 50%; transform: translateX(-50%);
+  width: 128px; text-align: center; padding: 7px 0;
+  border: 1px solid var(--line); border-radius: 7px;
+  background: #161112;
+  font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted-strong);
+  z-index: 2;
+}
+.s7node.n1 { top: 16px; } .s7node.n2 { top: 74px; } .s7node.n3 { top: 132px; }
+.s7rail { position: absolute; left: 50%; top: 28px; bottom: 26px; width: 1px; background: var(--line); }
+.s7pulse {
+  position: absolute; left: calc(50% - 3px); top: 24px;
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--accent-2);
+  box-shadow: 0 0 12px var(--accent-glow);
+  animation: s7p 2.4s ease-in-out infinite;
+}
+@keyframes s7p {
+  0% { top: 24px; opacity: 0; } 14% { opacity: 1; }
+  86% { opacity: 1; } 100% { top: 146px; opacity: 0; }
+}
+.s7dots { position: absolute; right: 94px; top: 90px; width: 26px; border-top: 1px dashed rgba(255,255,255,0.18); }
+.s7cloud {
+  position: absolute; right: 0; top: 75px; width: 88px; text-align: center;
+  padding: 8px 0;
+  border: 1px solid var(--line); border-radius: 7px;
+  color: var(--dimmer); font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase;
+  opacity: .55;
+}
+.s7cloud .x { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 20px; color: var(--accent-hot); font-style: normal; opacity: .9; }
+.s7cap { position: absolute; bottom: -4px; left: 0; right: 0; text-align: center; font-size: 8px; letter-spacing: 0.26em; text-transform: uppercase; color: var(--dimmer); }
+
+/* ── specs ── */
+.specs { padding-top: 8vh; padding-bottom: 14vh; }
+.spec-term { font-size: 12px; letter-spacing: 0.12em; color: var(--accent-2); margin-bottom: 5vh; }
+.spec-term .prompt { color: var(--dimmer); margin-right: 10px; }
+.spec-term .tcaret::after { content: '▋'; color: var(--accent-2); margin-left: 6px; animation: blinkc 1s steps(1) infinite; }
+@keyframes blinkc { 50% { opacity: 0; } }
+.spec {
+  display: flex; justify-content: space-between; align-items: baseline; gap: 30px;
+  padding: 17px 0; border-top: 1px solid var(--line);
+}
+.spec:last-child { border-bottom: 1px solid var(--line); }
+.spec .sk { font-size: 10px; letter-spacing: 0.28em; text-transform: uppercase; color: var(--muted); white-space: nowrap; }
+.spec .sv { font-size: 12px; letter-spacing: 0.06em; color: var(--text); text-align: right; }
+.spec .sv.good { color: var(--accent-2); text-shadow: 0 0 16px rgba(176,57,46,0.3); }
+
+/* ── studio window mock ── */
+.studioview { padding: 8vh 30px 14vh; display: flex; flex-direction: column; align-items: center; }
+.window {
+  width: min(920px, 100%);
+  background: #070506;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 40px 120px rgba(0,0,0,0.75), 0 0 90px rgba(176,57,46,0.07);
+  font-size: 11px;
+}
+.window .titlebar {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 13px 18px; border-bottom: 1px solid var(--line);
+  background: rgba(12,9,10,0.9);
+}
+.window .lights { display: flex; gap: 8px; }
+.window .lights i { width: 11px; height: 11px; border-radius: 50%; background: #292223; }
+.window .wtitle { display: flex; align-items: center; gap: 10px; font-family: var(--display); font-weight: 800; font-size: 11px; letter-spacing: 0.26em; color: var(--muted-strong); }
+.window .wver { font-size: 9px; color: var(--accent); border: 1px solid rgba(176,57,46,0.35); border-radius: 4px; padding: 2px 7px; letter-spacing: 0.1em; }
+.wbody { display: grid; grid-template-columns: 168px 1fr 176px; min-height: 340px; }
+.wleft, .wright { padding: 16px 14px; display: flex; flex-direction: column; gap: 9px; }
+.wleft { border-right: 1px solid var(--line); background: rgba(12,9,10,0.6); }
+.wright { border-left: 1px solid var(--line); background: rgba(12,9,10,0.6); }
+.wleft .plbl, .wright .plbl { font-size: 8px; letter-spacing: 0.3em; text-transform: uppercase; color: var(--dimmer); margin-bottom: 4px; }
+.wfx {
+  padding: 8px 11px; border-radius: 7px;
+  border: 1px solid transparent;
+  font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted);
+}
+.wfx.on { color: var(--accent-2); border-color: rgba(176,57,46,0.45); background: var(--accent-soft); }
+.wstage { position: relative; overflow: hidden; background: #000; }
+.wstage img { width: 100%; height: 100%; object-fit: cover; opacity: .96; }
+.wstage .wtag {
+  position: absolute; top: 10px; left: 12px;
+  font-size: 8px; letter-spacing: 0.28em; text-transform: uppercase;
+  color: var(--muted-strong);
+  background: rgba(10,8,9,0.7); border: 1px solid var(--line);
+  border-radius: 999px; padding: 4px 10px;
+  backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+}
+.wslider .sl { display: flex; justify-content: space-between; font-size: 8.5px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); margin-bottom: 7px; }
+.wslider .sl b { color: var(--accent-2); font-weight: 400; }
+.wslider .tr { height: 4px; border-radius: 999px; background: rgba(255,255,255,0.09); overflow: hidden; }
+.wslider .fl { height: 100%; border-radius: 999px; background: linear-gradient(90deg, var(--accent), var(--accent-2)); }
+.wslider { margin-bottom: 6px; }
+.wplayer {
+  display: flex; align-items: center; gap: 12px;
+  padding: 12px 16px; border-top: 1px solid var(--line);
+  background: rgba(10,8,9,0.92);
+}
+.wplay {
+  width: 38px; height: 30px; border-radius: 7px; flex: 0 0 auto;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--accent-soft); border: 1px solid rgba(176,57,46,0.4);
+  color: var(--accent-2); font-size: 11px;
+}
+.wseek { flex: 1; height: 6px; border-radius: 999px; background: rgba(255,255,255,0.08); overflow: hidden; }
+.wseek i { display: block; height: 100%; width: 42%; background: linear-gradient(90deg, var(--accent), var(--accent-2)); border-radius: 999px; animation: wseek 9s linear infinite; }
+@keyframes wseek { 0% { width: 12%; } 100% { width: 88%; } }
+.wreact {
+  display: inline-flex; align-items: center; gap: 7px; flex: 0 0 auto;
+  padding: 5px 11px; border-radius: 999px;
+  border: 1px solid rgba(176,57,46,0.45); background: var(--accent-soft);
+  font-size: 8px; letter-spacing: 0.16em; color: var(--accent-2); text-transform: uppercase;
+}
+.wreact i { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 8px var(--accent-glow); }
+.wrec {
+  flex: 0 0 auto; display: inline-flex; align-items: center; gap: 7px;
+  padding: 6px 12px; border-radius: 7px;
+  border: 1px solid rgba(176,57,46,0.4);
+  font-size: 9px; letter-spacing: 0.18em; color: var(--accent-2); text-transform: uppercase;
+}
+.wrec i { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); }
+.studioview .caption {
+  margin-top: 4vh;
+  font-size: 10px; letter-spacing: 0.3em; text-transform: uppercase; color: var(--muted);
+  text-align: center;
+}
+
+/* ── download ── */
+.download {
+  min-height: 100vh;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  text-align: center;
+  padding: 14vh 30px;
+  position: relative; overflow: hidden;
+}
+.download .halo {
+  position: absolute; top: 50%; left: 50%;
+  width: 940px; height: 940px;
+  transform: translate(-50%,-50%);
+  background: radial-gradient(circle, rgba(176,57,46,0.09), transparent 60%);
+  pointer-events: none;
+}
+.download .big { max-width: none; margin-bottom: 7vh; }
+.dl-alt { display: flex; flex-direction: column; align-items: center; gap: 13px; position: relative; }
+.dl-alt-label { font-size: 10px; letter-spacing: 0.24em; text-transform: uppercase; color: var(--muted-strong); }
+.shellline {
+  font-family: inherit; display: inline-flex; align-items: center; gap: 16px;
+  background: rgba(176,57,46,0.07); border: 1px solid rgba(176,57,46,0.3);
+  border-radius: 9px; padding: 15px 24px; cursor: pointer;
+  transition: border-color .25s, background .25s, box-shadow .25s;
+  max-width: calc(100vw - 44px);
+}
+.shellline:hover { border-color: rgba(176,57,46,0.6); background: rgba(176,57,46,0.11); box-shadow: 0 0 40px rgba(176,57,46,0.14); }
+.shellline code { font-size: 13.5px; color: #DCA79D; letter-spacing: 0.02em; word-break: break-all; text-align: left; }
+.shellline i { font-style: normal; font-size: 9px; letter-spacing: 0.28em; text-transform: uppercase; color: var(--muted); flex-shrink: 0; }
+.shellline.copied { border-color: rgba(200,92,75,0.8); }
+.shellline.copied i { color: var(--accent-2); }
+.dl-alt-hint { font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--dimmer); max-width: 540px; line-height: 1.9; }
+.dl-meta { margin-top: 30px; font-size: 10px; letter-spacing: 0.28em; text-transform: uppercase; color: var(--muted); line-height: 2.1; }
+.dl-meta b { color: var(--accent-2); font-weight: 400; }
+.dl-setup {
+  margin: 9vh auto 0; max-width: 640px; text-align: left;
+  border: 1px solid var(--line); border-radius: 14px;
+  padding: 30px 34px;
+  background: rgba(12,9,10,0.5);
+}
+.dl-setup .ds-title { font-size: 10px; letter-spacing: 0.28em; text-transform: uppercase; color: var(--accent-2); margin-bottom: 20px; }
+.dl-setup ol { list-style: none; counter-reset: ds; display: grid; gap: 16px; }
+.dl-setup li { counter-increment: ds; font-size: 12.5px; line-height: 1.85; color: var(--muted); padding-left: 32px; position: relative; }
+.dl-setup li::before {
+  content: counter(ds, decimal-leading-zero);
+  position: absolute; left: 0; top: 3px;
+  font-size: 10px; color: var(--dimmer); letter-spacing: 0.1em;
+}
+.dl-setup li b { color: var(--muted-strong); font-weight: 500; }
+.coffee {
+  margin-top: 7vh;
+  display: inline-flex; align-items: center; gap: 14px;
+  font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase;
+  color: #f0d9b5; text-decoration: none;
+  padding: 14px 26px;
+  border: 1px solid rgba(240,217,181,0.25); border-radius: 999px;
+  transition: color .4s, border-color .4s;
+}
+.coffee:hover { color: #ffe9c9; border-color: rgba(240,217,181,0.5); }
+.coffee svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 1.5; }
+.coffee .steam { animation: steam 1.6s ease-in-out infinite; }
+@keyframes steam { 0%,100% { transform: translateY(0); opacity: .4; } 50% { transform: translateY(-1.5px); opacity: 1; } }
+
+/* footer */
+footer {
+  padding: 40px 30px;
+  display: flex; justify-content: space-between; gap: 12px;
+  font-size: 9px; letter-spacing: 0.3em; text-transform: uppercase;
+  color: var(--dimmer);
+  border-top: 1px solid var(--line);
+}
+footer a { text-decoration: none; transition: color .3s; }
+footer a:hover { color: var(--text); }
+
+/* ── responsive ── */
+@media (max-width: 960px) {
+  .ability { grid-template-columns: 70px minmax(0,1fr); }
+  .ability .sim { grid-column: 2; }
+  .wbody { grid-template-columns: 140px 1fr; }
+  .wright { display: none; }
+}
+@media (max-width: 640px) {
+  .topbar { padding: 16px 20px; }
+  .navlinks { gap: 15px; }
+  .navlinks a.extra { display: none; }
+  .status { left: 20px; bottom: 18px; }
+  .morphhint { display: none; }
+  .hero-foot { bottom: 56px; }
+  .hero-line { font-size: 9px; letter-spacing: 0.2em; padding: 10px 16px; }
+  .wrap { padding-left: 22px; padding-right: 22px; }
+  .statement { min-height: 56vh; padding-top: 12vh; }
+  .big { letter-spacing: 0.1em; font-size: clamp(1.05rem, 5vw, 1.4rem); }
+  .kicker { flex-wrap: wrap; row-gap: 8px; }
+  .fxcard { width: 190px; }
+  .fxnote { letter-spacing: 0.2em; line-height: 2; }
+  .ability { grid-template-columns: 1fr; gap: 14px; padding: 4.5vh 0; }
+  .ability .sim { grid-column: 1; }
+  .ability p { font-size: 12.5px; }
+  .sim { height: 220px; }
+  .s3 { gap: 20px; }
+  .s7wrap { transform: scale(0.86); }
+  .specs { padding-top: 6vh; padding-bottom: 10vh; }
+  .spec { flex-direction: column; gap: 7px; padding: 15px 0; }
+  .spec .sv { text-align: left; }
+  .studioview { padding: 6vh 16px 10vh; }
+  .wbody { grid-template-columns: 1fr; min-height: 0; }
+  .wleft { flex-direction: row; flex-wrap: wrap; border-right: 0; border-bottom: 1px solid var(--line); }
+  .wleft .plbl { width: 100%; }
+  .wstage { height: 210px; }
+  .wplayer .wrec span { display: none; }
+  .studioview .caption { letter-spacing: 0.18em; line-height: 2; padding: 0 8px; }
+  .download { padding: 12vh 22px; }
+  .download .halo { width: 150vw; height: 150vw; }
+  .shellline { padding: 13px 16px; gap: 10px; }
+  .shellline code { font-size: 11.5px; }
+  .dl-setup { padding: 24px 20px; margin-top: 7vh; }
+  .coffee { text-align: center; letter-spacing: 0.14em; }
+  footer { flex-direction: column; gap: 10px; align-items: center; text-align: center; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::after, *::before { animation: none !important; transition: none !important; }
+  html { scroll-behavior: auto; }
+}
+</style>
+</head>
+<body>
+
+<nav class="topbar">
+  <div class="brand">
+    <svg viewBox="0 0 1024 1024" aria-hidden="true">
+      <circle cx="512" cy="512" r="300" fill="none" stroke="#ECE7E7" stroke-width="34" opacity="0.9"/>
+      <g stroke="#ECE7E7" stroke-width="30" fill="none" stroke-linecap="round" opacity="0.95">
+        <path d="M350 500 L445 375"/><path d="M445 375 L578 672"/><path d="M680 405 L600 512"/>
+        <path d="M680 405 L578 672"/><path d="M578 672 L405 628"/><path d="M405 628 L600 512"/>
+      </g>
+      <g fill="#C85C4B">
+        <circle cx="445" cy="375" r="40"/><circle cx="350" cy="500" r="40"/><circle cx="680" cy="405" r="40"/>
+        <circle cx="600" cy="512" r="40"/><circle cx="578" cy="672" r="40"/><circle cx="405" cy="628" r="40"/>
+      </g>
+    </svg>
+    MORPH
+  </div>
+  <div class="navlinks">
+    <a class="extra" href="#effects">effects</a>
+    <a class="extra" href="#studio">studio</a>
+    <a class="extra" href="#specs">specs</a>
+    <a href="#download">download</a>
+  </div>
+</nav>
+
+<div class="status"><i class="dot"></i><span id="status-text">rendering — halftone</span></div>
+<div class="morphhint">click the canvas — it morphs</div>
+
+<!-- ── HERO: the wordmark rendered through live effects ── -->
+<header class="hero" id="hero">
+  <canvas id="fx" aria-hidden="true"></canvas>
+  <div class="vise"></div>
+  <h1 class="sr-only">MORPH — an image &amp; video effects studio that lives on your Mac</h1>
+  <div class="hero-foot">
+    <div class="hero-line">an image &amp; video effects studio<br>that lives on <b>your mac</b></div>
+  </div>
+</header>
+
+<!-- ── STATEMENT ── -->
+<section class="statement wrap">
+  <div class="kicker reveal">what it is</div>
+  <h2 class="big reveal">Drop in a photo<br>or a video.<br>
+  <span class="ghost">Turn it into</span><br><em>something else.</em></h2>
+</section>
+
+<!-- ── EFFECTS: real renders straight from the app ── -->
+<section class="effects" id="effects">
+  <div class="kicker reveal">the effects — rendered by morph itself</div>
+  <div class="marq reveal">
+    <div class="mrow" id="mrow1">
+      <div class="fxcard"><img src="effects/blockMosaic.jpg" alt="block mosaic effect render" loading="lazy"><span class="lbl">block mosaic</span></div>
+      <div class="fxcard"><img src="effects/contourMap.jpg" alt="contour map effect render" loading="lazy"><span class="lbl">contour map</span></div>
+      <div class="fxcard"><img src="effects/ascii.jpg" alt="ascii effect render" loading="lazy"><span class="lbl">ascii</span></div>
+      <div class="fxcard"><img src="effects/stitchPoster.jpg" alt="stitch poster effect render" loading="lazy"><span class="lbl">stitch poster</span></div>
+      <div class="fxcard"><img src="effects/matrix.jpg" alt="matrix effect render" loading="lazy"><span class="lbl">matrix</span></div>
+      <div class="fxcard"><img src="effects/glitch.jpg" alt="glitch effect render" loading="lazy"><span class="lbl">glitch</span></div>
+    </div>
+    <div class="mrow rev" id="mrow2">
+      <div class="fxcard"><img src="effects/kilim.jpg" alt="kilim effect render" loading="lazy"><span class="lbl">kilim</span></div>
+      <div class="fxcard"><img src="effects/toneGeometry.jpg" alt="tone geometry effect render" loading="lazy"><span class="lbl">tone geometry</span></div>
+      <div class="fxcard"><img src="effects/crosshatch.jpg" alt="crosshatch effect render" loading="lazy"><span class="lbl">crosshatch</span></div>
+      <div class="fxcard"><img src="effects/riso.jpg" alt="riso effect render" loading="lazy"><span class="lbl">riso</span></div>
+      <div class="fxcard"><img src="effects/crystal.jpg" alt="crystal effect render" loading="lazy"><span class="lbl">crystal</span></div>
+      <div class="fxcard"><img src="effects/inscribe.jpg" alt="inscribe effect render" loading="lazy"><span class="lbl">inscribe</span></div>
+    </div>
+  </div>
+  <div class="fxnote reveal"><b>44 effects</b> · plus 3d lab &amp; motion lab · every dial tweakable · all on device</div>
+  <div class="nameticker reveal"><div class="nrow" id="namerow"></div></div>
+</section>
+
+<!-- ── ABILITIES ── -->
+<section class="abilities wrap" id="does">
+  <div class="kicker reveal">what it does</div>
+
+  <div class="ability reveal">
+    <div class="num">01</div>
+    <div>
+      <h3>Drop anything in.</h3>
+      <p>A photo, a video — straight onto the canvas. The effect renders <b>live, at full quality</b>, while you drag the dials. No import step, no timeline, no waiting. It reacts like an instrument, not like software.</p>
+    </div>
+    <div class="sim s1">
+      <div class="tag">sim · drop</div>
+      <div class="s1zone">
+        <div class="s1chip">▤ clip.mp4</div>
+        <div class="s1dots"></div>
+      </div>
+      <div class="s1lbl">drop it anywhere — it starts morphing</div>
+    </div>
+  </div>
+
+  <div class="ability reveal">
+    <div class="num">02</div>
+    <div>
+      <h3>Stack a look.</h3>
+      <p>Effects layer on top of each other into <b>looks</b> — halftone under film grain under bloom. Save the ones you love, recall them with one click, tune every slider on the way.</p>
+    </div>
+    <div class="sim s2">
+      <div class="tag">sim · looks</div>
+      <div class="s2chip"><span>halftone</span><span class="on">on</span></div>
+      <div class="s2chip"><span>film grain</span><span class="on">on</span></div>
+      <div class="s2chip"><span>bloom</span><span class="on">on</span></div>
+      <div class="s2slider"><span class="lbl">dot size</span><div class="s2track"><div class="s2fill"></div></div></div>
+      <div class="s2slider"><span class="lbl">glow</span><div class="s2track"><div class="s2fill b"></div></div></div>
+      <div class="s2save">save look</div>
+    </div>
+  </div>
+
+  <div class="ability reveal">
+    <div class="num">03</div>
+    <div>
+      <h3>It hears the music.</h3>
+      <p>Play a track inside MORPH and the image starts moving to it — <b>kick drives the dots, highs shimmer the grain</b>. Your own files, a built-in player, a reactivity panel to decide exactly what the sound touches.</p>
+    </div>
+    <div class="sim s3">
+      <div class="tag">sim · sound</div>
+      <div class="s3eq"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+      <div class="s3grid">
+        <i></i><i></i><i></i><i></i><i></i>
+        <i></i><i></i><i></i><i></i><i></i>
+        <i></i><i></i><i></i><i></i><i></i>
+        <i></i><i></i><i></i><i></i><i></i>
+      </div>
+      <div class="s3react"><i></i>reactive</div>
+    </div>
+  </div>
+
+  <div class="ability reveal">
+    <div class="num">04</div>
+    <div>
+      <h3>Record the show.</h3>
+      <p>One button captures exactly what you see — <b>frame-exact 30fps, music baked into the file</b>. No screen-recording permission dance, no interface in the shot, no dropped frames. Strobe mode for the brave.</p>
+    </div>
+    <div class="sim s4">
+      <div class="tag">sim · record</div>
+      <div class="s4rec"><i></i>REC <span id="tc">00:07</span></div>
+      <div class="s4modes"><span class="s4mode on">clean</span><span class="s4mode">strobe</span></div>
+      <div class="s4meta"><span>30 fps · frame-exact</span><b>0 dropped frames ✓</b></div>
+    </div>
+  </div>
+
+  <div class="ability reveal">
+    <div class="num">05</div>
+    <div>
+      <h3>Export without uploading.</h3>
+      <p>Renders happen on your Mac, not on a farm. Pick a duration, press export, and an <b>MP4 lands on your disk</b> — no queue, no watermark, no account asking to be created.</p>
+    </div>
+    <div class="sim s5">
+      <div class="tag">sim · export</div>
+      <div class="s5head"><span>rendering — offline</span><span class="pct">mp4</span></div>
+      <div class="s5track"><div class="s5fill"></div></div>
+      <div class="s5file"><span>MORPH-export.mp4</span><b>saved to disk ✓</b></div>
+      <div class="s5note">your gpu does the work · nothing leaves</div>
+    </div>
+  </div>
+
+  <div class="ability reveal">
+    <div class="num">06</div>
+    <div>
+      <h3>3D Lab &amp; Motion Lab.</h3>
+      <p>Two more rooms in the same studio. In the <b>3D Lab</b>, type becomes sculpture you can light and spin. In the <b>Motion Lab</b>, still images learn to move — drift, ripple, breathe.</p>
+    </div>
+    <div class="sim s6">
+      <div class="tag">sim · labs</div>
+      <div class="s6word">MORPH</div>
+      <div class="s6cap">type becomes sculpture · stills learn to move</div>
+    </div>
+  </div>
+
+  <div class="ability reveal">
+    <div class="num">07</div>
+    <div>
+      <h3>Nothing leaves your Mac.</h3>
+      <p>No account. No uploads. No telemetry. Your footage is yours — it goes from your disk to your GPU to your screen and <b>never anywhere else</b>. Unplug the internet; MORPH won't notice.</p>
+    </div>
+    <div class="sim s7">
+      <div class="tag">sim · private</div>
+      <div class="s7wrap">
+        <div class="s7box">
+          <span class="s7boxlbl">your mac</span>
+          <div class="s7rail"></div>
+          <i class="s7pulse"></i>
+          <div class="s7node n1">media in</div>
+          <div class="s7node n2">effects engine</div>
+          <div class="s7node n3">your screen</div>
+        </div>
+        <div class="s7dots"></div>
+        <div class="s7cloud">cloud<i class="x">×</i></div>
+        <div class="s7cap">bytes leaving this box: zero</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── SPECS ── -->
+<section class="specs wrap" id="specs">
+  <div class="kicker reveal">under the hood</div>
+  <div class="spec-term reveal"><span class="prompt">$</span>morph --spec<span class="tcaret"></span></div>
+  <div class="spec reveal"><span class="sk">effects</span><span class="sv">44 · plus 3d lab &amp; motion lab</span></div>
+  <div class="spec reveal"><span class="sk">input</span><span class="sv">images + video — dropped straight in</span></div>
+  <div class="spec reveal"><span class="sk">engine</span><span class="sv">gpu, on your machine — renders live</span></div>
+  <div class="spec reveal"><span class="sk">sound</span><span class="sv">audio-reactive — built-in player or your tracks</span></div>
+  <div class="spec reveal"><span class="sk">record</span><span class="sv good">clean 30fps · frame-exact · audio baked in</span></div>
+  <div class="spec reveal"><span class="sk">export</span><span class="sv">offline render → mp4 on disk</span></div>
+  <div class="spec reveal"><span class="sk">looks</span><span class="sv">stack · save · recall</span></div>
+  <div class="spec reveal"><span class="sk">account required</span><span class="sv good">no</span></div>
+  <div class="spec reveal"><span class="sk">uploads</span><span class="sv good">none. ever.</span></div>
+  <div class="spec reveal"><span class="sk">telemetry</span><span class="sv good">none</span></div>
+  <div class="spec reveal"><span class="sk">price</span><span class="sv good">$0</span></div>
+</section>
+
+<!-- ── STUDIO MOCK ── -->
+<section class="studioview" id="studio">
+  <div class="window reveal">
+    <div class="titlebar">
+      <div class="lights"><i></i><i></i><i></i></div>
+      <div class="wtitle">MORPH <span class="wver">v24</span></div>
+      <div style="width:47px"></div>
+    </div>
+    <div class="wbody">
+      <div class="wleft">
+        <span class="plbl">effects</span>
+        <span class="wfx on">stitch poster</span>
+        <span class="wfx">contour map</span>
+        <span class="wfx">ascii</span>
+        <span class="wfx">glitch</span>
+        <span class="wfx">riso</span>
+        <span class="wfx">crystal</span>
+      </div>
+      <div class="wstage">
+        <img src="effects/stitchPoster.jpg" alt="MORPH stage — stitch poster render of a wave under an ember sun">
+        <span class="wtag">live · stitch poster</span>
+      </div>
+      <div class="wright">
+        <span class="plbl">dials</span>
+        <div class="wslider"><div class="sl"><span>dot size</span><b>62</b></div><div class="tr"><div class="fl" style="width:62%"></div></div></div>
+        <div class="wslider"><div class="sl"><span>contrast</span><b>48</b></div><div class="tr"><div class="fl" style="width:48%"></div></div></div>
+        <div class="wslider"><div class="sl"><span>glow</span><b>75</b></div><div class="tr"><div class="fl" style="width:75%"></div></div></div>
+        <div class="wslider"><div class="sl"><span>grain</span><b>30</b></div><div class="tr"><div class="fl" style="width:30%"></div></div></div>
+      </div>
+    </div>
+    <div class="wplayer">
+      <div class="wplay">▶</div>
+      <div class="wseek"><i></i></div>
+      <div class="wreact"><i></i>reactive</div>
+      <div class="wrec"><i></i><span>rec</span></div>
+    </div>
+  </div>
+  <div class="caption reveal">the whole studio. one window. no timeline anxiety.</div>
+</section>
+
+<!-- ── DOWNLOAD ── -->
+<section class="download" id="download">
+  <div class="halo"></div>
+  <h2 class="big reveal">Free.<br><span class="ghost">Offline.</span> <em>Yours.</em></h2>
+  <div class="dl-alt reveal">
+    <span class="dl-alt-label">install for macos — copy this line · it does everything</span>
+    <!-- TODO: placeholder URL — wire the real install.sh + release before publishing -->
+    <button class="shellline" type="button" data-copy="curl -fsSL https://morph.studiomorphik.com/install.sh | bash">
+      <code>curl -fsSL https://morph.studiomorphik.com/install.sh | bash</code><i>copy</i>
+    </button>
+    <span class="dl-alt-hint">open terminal (⌘ space, type "terminal"), paste, press enter. morph installs and opens itself.</span>
+  </div>
+  <div class="dl-meta reveal">free · apple silicon · no account · no uploads · no telemetry</div>
+
+  <a class="coffee reveal" href="https://buymeacoffee.com/wissamsader" target="_blank" rel="noopener">
+    <svg viewBox="0 0 24 24">
+      <path d="M5 10h11v6a4 4 0 0 1-4 4H9a4 4 0 0 1-4-4v-6z"/>
+      <path d="M16 11h1.5a2.5 2.5 0 0 1 0 5H16"/>
+      <path class="steam" d="M8.5 7V5.5M12.5 7V5.5"/>
+    </svg>
+    <span>it made something beautiful? buy me a coffee</span>
+  </a>
+
+  <div class="dl-setup reveal">
+    <div class="ds-title">thirty seconds of setup</div>
+    <ol>
+      <li><b>install</b> — paste the line above into terminal, press enter. morph downloads, installs to applications, and opens itself.</li>
+      <li><b>drop something in</b> — any photo or video, straight onto the window. pick an effect on the left, drag the dials.</li>
+      <li><b>press play</b> — load a track, hit reactive, and watch the image start dancing. when it looks right, press rec.</li>
+    </ol>
+  </div>
+</section>
+
+<footer>
+  <div>morph © 2026</div>
+  <div>made by <a href="https://studiomorphik.com" target="_blank" rel="noopener">studiomorphik</a></div>
+</footer>
+
+<script>
+(() => {
+  const prefersReduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ═══ HERO CANVAS — the wordmark through live effect sims ═══ */
+  const canvas = document.getElementById('fx');
+  const ctx = canvas.getContext('2d', { alpha: false });
+  const src = document.createElement('canvas');
+  const sctx = src.getContext('2d', { willReadFrequently: true });
+  const statusText = document.getElementById('status-text');
+
+  let W = 0, H = 0, DPR = 1, cols = 0, rows = 0, cell = 9, wordPx = 10;
+  let px = -1e4, py = -1e4;          // pointer in cell coords
+  let fxIndex = 0, fxStart = 0;
+  let heroVisible = true, rafId = 0;
+
+  const WARM = '#ECE7E7', RED = '#B0392E', RED2 = '#C85C4B', HOT = '#E0685A', BG = '#0A0809';
+  const NAMES = ['halftone', 'contour drift', 'ascii', 'ordered dither', 'glitch mosaic'];
+  const CYCLE = 4600;
+
+  function resize() {
+    DPR = Math.min(devicePixelRatio || 1, 2);
+    W = canvas.clientWidth; H = canvas.clientHeight;
+    canvas.width = Math.round(W * DPR); canvas.height = Math.round(H * DPR);
+    ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+    const targetCell = W < 640 ? 7 : 9;
+    cols = Math.min(210, Math.max(60, Math.round(W / targetCell)));
+    cell = W / cols;
+    rows = Math.ceil(H / cell);
+    src.width = cols; src.height = rows;
+    // fit the wordmark to ~84% of the grid width
+    sctx.font = '800 10px Montserrat, sans-serif';
+    const w10 = Math.max(1, sctx.measureText('MORPH').width);
+    wordPx = Math.min(rows * 0.42, 10 * (cols * 0.84) / w10);
+  }
+
+  function drawSource(t) {
+    sctx.fillStyle = '#000'; sctx.fillRect(0, 0, cols, rows);
+    const cx = cols / 2, cy = rows / 2;
+    // drifting red blob
+    const bx = cx + Math.cos(t * 0.00023) * cols * 0.27;
+    const by = cy + Math.sin(t * 0.00031) * rows * 0.24;
+    let g = sctx.createRadialGradient(bx, by, 0, bx, by, rows * 0.8);
+    g.addColorStop(0, 'rgba(215,70,52,0.95)'); g.addColorStop(1, 'rgba(215,70,52,0)');
+    sctx.fillStyle = g; sctx.fillRect(0, 0, cols, rows);
+    // drifting warm-white blob
+    const b2x = cx + Math.cos(t * 0.00017 + 2.4) * cols * 0.31;
+    const b2y = cy + Math.sin(t * 0.00021 + 1.2) * rows * 0.28;
+    g = sctx.createRadialGradient(b2x, b2y, 0, b2x, b2y, rows * 0.5);
+    g.addColorStop(0, 'rgba(236,231,231,0.55)'); g.addColorStop(1, 'rgba(236,231,231,0)');
+    sctx.fillStyle = g; sctx.fillRect(0, 0, cols, rows);
+    // pointer energy
+    if (px > -100) {
+      g = sctx.createRadialGradient(px, py, 0, px, py, rows * 0.3);
+      g.addColorStop(0, 'rgba(255,240,235,0.85)'); g.addColorStop(1, 'rgba(255,240,235,0)');
+      sctx.fillStyle = g; sctx.fillRect(0, 0, cols, rows);
+    }
+    // the wordmark
+    sctx.fillStyle = '#fff';
+    sctx.font = `800 ${wordPx.toFixed(1)}px Montserrat, sans-serif`;
+    sctx.textAlign = 'center'; sctx.textBaseline = 'middle';
+    sctx.fillText('MORPH', cx, cy);
+    return sctx.getImageData(0, 0, cols, rows).data;
+  }
+
+  const lumOf = (d, i) => (0.2126 * d[i] + 0.7152 * d[i + 1] + 0.0722 * d[i + 2]) / 255;
+  const isRed = (d, i) => d[i] > 60 && d[i] > d[i + 1] * 1.45;
+
+  /* 1 · halftone */
+  function fxHalftone(d, t, ramp) {
+    for (let y = 0; y < rows; y++) for (let x = 0; x < cols; x++) {
+      const i = (y * cols + x) * 4;
+      const lum = lumOf(d, i);
+      if (lum < 0.05) continue;
+      const r = cell * 0.62 * Math.pow(lum, 0.85) * ramp;
+      if (r < 0.4) continue;
+      ctx.fillStyle = isRed(d, i) ? (lum > 0.62 ? HOT : RED2) : WARM;
+      ctx.globalAlpha = Math.min(1, 0.3 + lum);
+      ctx.beginPath();
+      ctx.arc((x + 0.5) * cell, (y + 0.5) * cell, r, 0, 6.2832);
+      ctx.fill();
+    }
+    ctx.globalAlpha = 1;
+  }
+
+  /* 2 · contour drift — ridgeline rows displaced by luminance */
+  function fxRidge(d, t, ramp) {
+    const lift = cell * 3.6 * ramp;
+    for (let y = 1; y < rows; y += 2) {
+      let pen = false;
+      ctx.beginPath();
+      for (let x = 0; x < cols; x++) {
+        const i = (y * cols + x) * 4;
+        const lum = lumOf(d, i);
+        const yy = (y + 0.5) * cell - lum * lift * (1 + 0.14 * Math.sin(t * 0.002 + x * 0.35));
+        if (!pen) { ctx.moveTo(x * cell, yy); pen = true; }
+        else ctx.lineTo(x * cell, yy);
+      }
+      ctx.strokeStyle = (y % 14 === 1) ? RED2 : WARM;
+      ctx.globalAlpha = (y % 14 === 1) ? 0.8 : 0.34;
+      ctx.lineWidth = 1;
+      ctx.stroke();
+    }
+    ctx.globalAlpha = 1;
+  }
+
+  /* 3 · ascii */
+  const RAMP = ['·', ':', ';', '+', '*', '#', '%', '@'];
+  function fxAscii(d, t, ramp) {
+    ctx.font = `${(cell * 1.1).toFixed(1)}px "JetBrains Mono", monospace`;
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    for (let y = 0; y < rows; y++) for (let x = 0; x < cols; x++) {
+      const i = (y * cols + x) * 4;
+      const lum = lumOf(d, i) * ramp;
+      if (lum < 0.09) continue;
+      ctx.fillStyle = isRed(d, i) ? RED2 : WARM;
+      ctx.globalAlpha = Math.min(1, 0.25 + lum * 0.9);
+      ctx.fillText(RAMP[Math.min(7, (lum * 8.5) | 0)], (x + 0.5) * cell, (y + 0.55) * cell);
+    }
+    ctx.globalAlpha = 1;
+  }
+
+  /* 4 · ordered dither (bayer 4×4, 1-bit) */
+  const BAYER = [0, 8, 2, 10, 12, 4, 14, 6, 3, 11, 1, 9, 15, 7, 13, 5];
+  function fxDither(d, t, ramp) {
+    const s = cell * 0.94;
+    for (let y = 0; y < rows; y++) for (let x = 0; x < cols; x++) {
+      const i = (y * cols + x) * 4;
+      const lum = lumOf(d, i) * ramp;
+      if (lum * 16 <= BAYER[(y & 3) * 4 + (x & 3)]) continue;
+      ctx.fillStyle = isRed(d, i) ? RED : '#DED7D6';
+      ctx.fillRect(x * cell, y * cell, s, s);
+    }
+  }
+
+  /* 5 · glitch mosaic — displaced rows, red slips, scanlines */
+  function fxGlitch(d, t, ramp) {
+    const seed = (t / 130) | 0;
+    const rnd = n => { const v = Math.sin(n * 127.1 + seed * 311.7) * 43758.55; return v - Math.floor(v); };
+    const s = cell * 0.96;
+    for (let y = 0; y < rows; y++) {
+      const rowGlitch = rnd(y) > 0.86;
+      const dx = rowGlitch ? (rnd(y + 40) - 0.5) * cell * 9 * ramp : 0;
+      const redRow = rowGlitch && rnd(y + 80) > 0.6;
+      for (let x = 0; x < cols; x++) {
+        const i = (y * cols + x) * 4;
+        const lum = lumOf(d, i) * ramp;
+        if (lum < 0.06) continue;
+        ctx.fillStyle = redRow ? RED2 : (isRed(d, i) ? RED : WARM);
+        ctx.globalAlpha = Math.min(1, 0.2 + lum);
+        ctx.fillRect(x * cell + dx, y * cell, s, s);
+      }
+    }
+    ctx.globalAlpha = 0.05; ctx.fillStyle = '#fff';
+    for (let k = 0; k < 3; k++) ctx.fillRect(0, rnd(k + 7) * H, W, 1.5);
+    ctx.globalAlpha = 1;
+  }
+
+  const FX = [fxHalftone, fxRidge, fxAscii, fxDither, fxGlitch];
+
+  function frame(t) {
+    if (!heroVisible) { rafId = 0; return; }
+    if (!fxStart) fxStart = t;
+    if (t - fxStart > CYCLE) advance(t);
+    const ramp = prefersReduced ? 1 : Math.min(1, (t - fxStart) / 450);
+    const d = drawSource(t);
+    ctx.fillStyle = BG; ctx.fillRect(0, 0, W, H);
+    FX[fxIndex](d, t, ramp);
+    if (!prefersReduced) rafId = requestAnimationFrame(frame);
+  }
+
+  function advance(t) {
+    fxIndex = (fxIndex + 1) % FX.length;
+    fxStart = t || performance.now();
+    statusText.textContent = 'rendering — ' + NAMES[fxIndex];
+  }
+
+  function kick() { if (!rafId && heroVisible) rafId = requestAnimationFrame(frame); }
+
+  resize();
+  addEventListener('resize', () => { resize(); if (prefersReduced) frame(performance.now()); });
+
+  const hero = document.getElementById('hero');
+  hero.addEventListener('pointermove', e => {
+    const r = canvas.getBoundingClientRect();
+    px = (e.clientX - r.left) / cell; py = (e.clientY - r.top) / cell;
+  });
+  hero.addEventListener('pointerleave', () => { px = py = -1e4; });
+  hero.addEventListener('click', () => { advance(); if (prefersReduced) frame(performance.now()); });
+
+  new IntersectionObserver(en => {
+    heroVisible = en[0].isIntersecting;
+    document.body.classList.toggle('past-hero', !heroVisible);
+    kick();
+  }, { threshold: 0.05 }).observe(hero);
+
+  // start once the display font is in (fallback starts anyway after 1.2s)
+  let started = false;
+  const start = () => {
+    if (started) return; started = true;
+    resize();
+    if (rafId) cancelAnimationFrame(rafId);
+    rafId = 0;
+    frame(performance.now());   // paint at least one frame immediately
+  };
+  if (document.fonts && document.fonts.load) {
+    Promise.race([
+      Promise.all([document.fonts.load('800 80px Montserrat'), document.fonts.load('400 12px "JetBrains Mono"')]),
+      new Promise(res => setTimeout(res, 1200))
+    ]).then(start);
+    // if the fonts land after the fallback started us, re-measure the wordmark
+    document.fonts.ready.then(() => { resize(); if (prefersReduced) frame(performance.now()); });
+  } else start();
+  setTimeout(start, 1500);
+
+  /* ═══ effect-name ticker (real names from the app) ═══ */
+  const names = ['halftone', 'ascii', '*ascii ghost', 'block mosaic', 'bricks', 'contour map', '*contour type', 'cross stitch', 'crosshatch', 'crystal', 'crystal glass', 'data hatch', 'dither', '*dither text', 'drift lines', 'film prism', 'glitch', 'glitch grid', 'glyph matrix', 'grid glyph', 'inscribe', 'kilim', '*matrix', 'matrix rain', 'number field', 'paper print', 'pattern', 'pixel code', 'pixel dither', '*pixel poster', 'pixel sort', 'rain reveal', 'retro matrix', 'ribbon scan', 'riso', '*riso glow', 'scatter mosaic', 'stitch poster', 'symbol matrix', 'tag pills', 'tone geometry', '*voronoi', 'wave', 'word mosaic'];
+  const nrow = document.getElementById('namerow');
+  nrow.innerHTML = [...names, ...names].map(n => {
+    const hi = n.startsWith('*');
+    return `<span${hi ? ' class="hi"' : ''}>${hi ? n.slice(1) : n}</span>`;
+  }).join('');
+
+  /* ═══ reveals ═══ */
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(en => { if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); } });
+  }, { threshold: 0.18 });
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+  // layout-audit hook: ?flat pre-reveals everything + collapses the hero (automated checks only)
+  if (new URLSearchParams(location.search).has('flat')) {
+    document.querySelectorAll('.reveal').forEach(el => el.classList.add('in'));
+    hero.style.height = '420px'; hero.style.minHeight = '0';
+  }
+
+  /* ═══ sims: animate only on screen ═══ */
+  const sio = new IntersectionObserver(entries => {
+    entries.forEach(en => en.target.classList.toggle('play', en.isIntersecting));
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.sim').forEach(el => sio.observe(el));
+
+  /* rec timecode */
+  const tc = document.getElementById('tc');
+  let secs = 7;
+  if (!prefersReduced) setInterval(() => {
+    const sim = tc.closest('.sim');
+    if (!sim || !sim.classList.contains('play')) return;
+    secs = (secs + 1) % 3600;
+    tc.textContent = String((secs / 60) | 0).padStart(2, '0') + ':' + String(secs % 60).padStart(2, '0');
+  }, 1000);
+
+  /* copy line */
+  document.querySelectorAll('.shellline').forEach(el => {
+    el.addEventListener('click', () => {
+      navigator.clipboard.writeText(el.dataset.copy).then(() => {
+        const i = el.querySelector('i'); const old = i.textContent;
+        el.classList.add('copied'); i.textContent = 'copied';
+        setTimeout(() => { i.textContent = old; el.classList.remove('copied'); }, 1600);
+      }).catch(() => {});
+    });
+  });
+})();
+</script>
+</body>
+</html>

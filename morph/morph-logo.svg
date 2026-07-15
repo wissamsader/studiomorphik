@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
+  <defs>
+    <filter id="soft" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="6" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="dotGlow" x="-120%" y="-120%" width="340%" height="340%">
+      <feGaussianBlur stdDeviation="10"/>
+    </filter>
+  </defs>
+
+  <!-- outer ring -->
+  <circle cx="512" cy="512" r="300" fill="none" stroke="#F3F3F5" stroke-width="4" opacity="0.85"/>
+
+  <!-- constellation edges -->
+  <g stroke="#F3F3F5" stroke-width="5" fill="none" stroke-linecap="round" opacity="0.92" filter="url(#soft)">
+    <path d="M350 500 L445 375"/>   <!-- n2 - n1 -->
+    <path d="M445 375 L578 672"/>   <!-- n1 - n5 (long) -->
+    <path d="M680 405 L600 512"/>   <!-- n3 - n4 -->
+    <path d="M680 405 L578 672"/>   <!-- n3 - n5 -->
+    <path d="M578 672 L405 628"/>   <!-- n5 - n6 -->
+    <path d="M405 628 L600 512"/>   <!-- n6 - n4 -->
+  </g>
+
+  <!-- node halos -->
+  <g fill="#FFFFFF" opacity="0.5" filter="url(#dotGlow)">
+    <circle cx="445" cy="375" r="12"/>
+    <circle cx="350" cy="500" r="12"/>
+    <circle cx="680" cy="405" r="12"/>
+    <circle cx="600" cy="512" r="12"/>
+    <circle cx="578" cy="672" r="12"/>
+    <circle cx="405" cy="628" r="12"/>
+  </g>
+  <!-- node cores -->
+  <g fill="#FFFFFF">
+    <circle cx="445" cy="375" r="9"/>
+    <circle cx="350" cy="500" r="9"/>
+    <circle cx="680" cy="405" r="9"/>
+    <circle cx="600" cy="512" r="9"/>
+    <circle cx="578" cy="672" r="9"/>
+    <circle cx="405" cy="628" r="9"/>
+  </g>
+</svg>
