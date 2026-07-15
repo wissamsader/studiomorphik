@@ -187,12 +187,19 @@ a {
   transform: scale(1.12);
 }
 
-.header__pill {
-  display: inline-flex;
+/* pills group: sits at the right of the header; side-by-side on desktop */
+.header__pills {
+  display: flex;
   align-items: center;
   gap: 6px;
   margin-left: auto;
   margin-right: 2px;
+  flex-shrink: 0;
+}
+.header__pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   flex-shrink: 0;
   padding: 5px 11px;
   border: 1px solid rgba(255, 255, 255, 0.38);
@@ -212,25 +219,41 @@ a {
   color: #0b0c0e;
   opacity: 1;
 }
-/* second pill sits beside the first, not pushed right again */
-.header__pill--apps {
-  margin-left: 6px;
-}
 @media (max-width: 640px) {
-  .brand {
-    font-size: 16.5px;
-  }
+  .header { gap: 9px; padding: 15px 16px; }
+  .brand { font-size: 16px; }
+  .header__links { gap: 7px; }
+  .header__icon svg { width: 18px; height: 18px; }
 }
 @media (max-width: 520px) {
+  .header { gap: 8px; padding: 14px 13px; }
+  .brand { font-size: 14px; letter-spacing: 0.05em; }
+  .header__links { gap: 6px; }
+  .header__icon svg { width: 17px; height: 17px; }
   .header__pill {
     padding: 4px 9px;
     font-size: 8px;
     gap: 4px;
   }
-  .header__pill svg {
-    width: 10px;
-    height: 10px;
+  .header__pill svg { width: 10px; height: 10px; }
+}
+/* phones: stack the pills into a column — APPS sits under WEB DESIGN */
+@media (max-width: 480px) {
+  .header__pills {
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 6px;
   }
+}
+/* narrow phones: keep everything on one row, nothing clipped */
+@media (max-width: 400px) {
+  .header { gap: 6px; padding: 13px 11px; }
+  .brand { letter-spacing: 0.04em; }
+  .header__links { gap: 5px; }
+  .header__icon svg { width: 16px; height: 16px; }
+  .vol-btn svg { width: 13px; height: 13px; }
+  .header__pill { padding: 4px 8px; font-size: 7.5px; gap: 3px; }
+  .header__pill svg { width: 9px; height: 9px; }
 }
 
 @media (max-width: 880px) {
@@ -580,11 +603,17 @@ body.is-menu-open .view .panel {
 
 @media (max-width: 480px) {
   .brand {
-    font-size: 15px;
+    font-size: 13px;
   }
 
   .contact__lead {
     font-size: 13px;
+  }
+}
+/* very narrow phones: trim the wordmark a touch more so the row never clips */
+@media (max-width: 360px) {
+  .brand {
+    font-size: 12px;
   }
 }
 
