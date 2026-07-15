@@ -732,10 +732,6 @@ footer a:hover { color: var(--text); }
   .coffee { text-align: center; letter-spacing: 0.14em; }
   footer { flex-direction: column; gap: 10px; align-items: center; text-align: center; }
 }
-@media (prefers-reduced-motion: reduce) {
-  *, *::after, *::before { animation: none !important; transition: none !important; }
-  html { scroll-behavior: auto; }
-}
 </style>
 </head>
 <body>
@@ -1257,7 +1253,7 @@ footer a:hover { color: var(--text); }
   /* rec timecode */
   const tc = document.getElementById('tc');
   let secs = 7;
-  if (!prefersReduced) setInterval(() => {
+  setInterval(() => {
     const sim = tc.closest('.sim');
     if (!sim || !sim.classList.contains('play')) return;
     secs = (secs + 1) % 3600;
