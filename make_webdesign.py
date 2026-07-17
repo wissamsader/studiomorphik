@@ -57,9 +57,11 @@ for b in plm.BIZ:
 dam = load_mod("dam_kd", WB / "DAMASCUS" / "tools" / "kitdata.py")
 for b in dam.BIZ:
     add(b["name"], f"{dam.BASE_URL}/{b['slug']}/", "damascus", "Damascus")
-ber = load_mod("ber_kd", WB / "BERLIN" / "tools" / "kitdata.py")
-for b in ber.BIZ:
-    add(b["name"], b["url"], "berlin", "Berlin")
+_ber_kd = WB / "BERLIN" / "tools" / "kitdata.py"
+if _ber_kd.exists():  # Berlin build may still be in flight — skip until its kitdata lands
+    ber = load_mod("ber_kd", _ber_kd)
+    for b in ber.BIZ:
+        add(b["name"], b["url"], "berlin", "Berlin")
 
 # grouped per city with jump-nav (07-14 friend feedback via Wissam: "tekbos 3al city, byenzal la 7alo")
 CITY_ORDER = ["Beirut", "Chiang Mai", "Đà Nẵng", "Barcelona", "Palermo", "Damascus", "Berlin"]
