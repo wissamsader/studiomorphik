@@ -54,10 +54,16 @@ for b in bey3.BIZ:
 plm = load_mod("plm_kd", WB / "PALERMO" / "tools" / "kitdata.py")
 for b in plm.BIZ:
     add(b["name"], b["url"], "palermo", "Palermo")
+dam = load_mod("dam_kd", WB / "DAMASCUS" / "tools" / "kitdata.py")
+for b in dam.BIZ:
+    add(b["name"], f"{dam.BASE_URL}/{b['slug']}/", "damascus", "Damascus")
+ber = load_mod("ber_kd", WB / "BERLIN" / "tools" / "kitdata.py")
+for b in ber.BIZ:
+    add(b["name"], b["url"], "berlin", "Berlin")
 
 # grouped per city with jump-nav (07-14 friend feedback via Wissam: "tekbos 3al city, byenzal la 7alo")
-CITY_ORDER = ["Beirut", "Chiang Mai", "Đà Nẵng", "Barcelona", "Palermo"]
-CITY_ID = {"Beirut": "beirut", "Chiang Mai": "chiang-mai", "Đà Nẵng": "da-nang", "Barcelona": "barcelona", "Palermo": "palermo"}
+CITY_ORDER = ["Beirut", "Chiang Mai", "Đà Nẵng", "Barcelona", "Palermo", "Damascus", "Berlin"]
+CITY_ID = {"Beirut": "beirut", "Chiang Mai": "chiang-mai", "Đà Nẵng": "da-nang", "Barcelona": "barcelona", "Palermo": "palermo", "Damascus": "damascus", "Berlin": "berlin"}
 by_city = {}
 for s in SITES:
     by_city.setdefault(s["city"], []).append(s)
@@ -71,6 +77,8 @@ SHOT_SRC = {
     "palermo": WB / "PALERMO" / "PITCH-KIT-PALERMO" / "screenshots",
     "beirut-rabab": WB / "BEIRUT" / "PITCH-KIT-RABAB" / "screenshots",
     "bey-cm": WB / "WISSAM-PITCH" / "kit-machine" / "screenshots",
+    "damascus": WB / "DAMASCUS" / "PITCH-KIT-DAMASCUS" / "screenshots",
+    "berlin": WB / "BERLIN" / "PITCH-KIT-BERLIN" / "screenshots",
 }
 TILE_DIR = HERE / "web-design" / "shots"
 TILE_DIR.mkdir(parents=True, exist_ok=True)
@@ -83,6 +91,10 @@ def source_png(s):
         return SHOT_SRC["barcelona"] / f"{slug}.png"
     if s["repo"] == "palermo":
         return SHOT_SRC["palermo"] / f"{slug}.png"
+    if s["repo"] == "damascus":
+        return SHOT_SRC["damascus"] / f"{slug}.png"
+    if s["repo"] == "berlin":
+        return SHOT_SRC["berlin"] / f"{slug}.png"
     if s["repo"] == "beirut":
         p = SHOT_SRC["bey-cm"] / f"Beirut — {s['name']}.png"
         return p if p.exists() else SHOT_SRC["beirut-rabab"] / f"{slug}.png"
