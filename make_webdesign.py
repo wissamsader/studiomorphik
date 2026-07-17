@@ -273,6 +273,20 @@ var io=new IntersectionObserver(function(es){{es.forEach(function(e){{
 document.querySelectorAll('.cityblock').forEach(function(s){{io.observe(s)}});}}
 }})();
 </script>
+<script src="_fx/gsap.min.js"></script>
+<script src="_fx/ScrollTrigger.min.js"></script>
+<script src="_fx/lenis.min.js"></script>
+<script src="_fx/bits.js"></script>
+<script>
+FX.ready(function(){{
+ FX.lenis();
+ FX.heroIntro(['.wordmark','.sub','.stats']);
+ FX.countUp('.stats b');
+ FX.batch('.card', 30);
+ FX.spotlight('.card','rgba(255,255,255,.10)');
+ FX.tilt('.card', 3);
+}});
+</script>
 </body>
 </html>
 """
