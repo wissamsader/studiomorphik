@@ -136,10 +136,15 @@ sections = "\n".join(
     f'<div class="grid">' + "".join(card(s) for s in by_city.get(c, [])) + '</div></section>'
     for c in CITY_ORDER if by_city.get(c))
 
-citynav = "".join(f'<a href="#{CITY_ID[c]}">{c}</a>' for c in CITY_ORDER if by_city.get(c))
+citynav = "".join(f'<a href="#{CITY_ID[c]}">{c}<b>{len(by_city[c])}</b></a>' for c in CITY_ORDER if by_city.get(c))
 
 n = len(order)
-cities = "Beirut · Chiang Mai · Đà Nẵng · Barcelona · Palermo"
+live_cities = [c for c in CITY_ORDER if by_city.get(c)]
+n_cities = len(live_cities)
+CITY_COUNTRY = {"Beirut": "Lebanon", "Chiang Mai": "Thailand", "Đà Nẵng": "Vietnam", "Barcelona": "Spain",
+                "Palermo": "Italy", "Damascus": "Syria", "Berlin": "Germany"}
+n_countries = len({CITY_COUNTRY[c] for c in live_cities if c in CITY_COUNTRY})
+cities = " · ".join(live_cities)
 
 page = f"""<!doctype html>
 <html lang="en">
@@ -178,15 +183,19 @@ header nav a:hover{{color:var(--fg)}}
 .eyebrow{{font-family:'JetBrains Mono',ui-monospace,monospace;font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:var(--dim)}}
 h1{{font-family:'Integral CF',sans-serif;font-size:clamp(2.4rem,8vw,5.4rem);line-height:1.02;letter-spacing:.02em;margin:.35em 0 .3em}}
 .sub{{max-width:62ch;color:var(--dim);font-size:clamp(15px,1.6vw,17px)}}
+.spectrum{{height:3px;max-width:min(340px,52vw);border-radius:999px;margin:2px 0 22px;background:linear-gradient(90deg,#ff4d4d,#ff9f40,#ffe14d,#5dff9b,#4dc3ff,#b96bff)}}
 .stats{{display:flex;gap:10px 26px;flex-wrap:wrap;margin-top:26px;font-family:'JetBrains Mono',ui-monospace,monospace;font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim)}}
 .stats b{{color:var(--fg);font-weight:700}}
+.stats .citylist{{flex-basis:100%;color:rgba(255,255,255,.42);letter-spacing:.12em}}
 .note{{border:1px solid var(--line);border-left:2px solid rgba(255,255,255,.45);background:var(--sur);border-radius:8px;padding:14px 18px;margin:34px 0 0;max-width:74ch;color:var(--dim);font-size:13.5px;line-height:1.65}}
 .note b{{color:var(--fg)}}
 .citynav{{position:sticky;top:57px;z-index:15;background:rgba(11,12,14,.86);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}}
 .citynav .in{{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding:10px clamp(18px,4vw,44px);max-width:1280px;margin:0 auto}}
 .citynav .in::-webkit-scrollbar{{display:none}}
-.citynav a{{flex-shrink:0;border:1px solid var(--line);border-radius:999px;padding:7px 16px;font-family:'JetBrains Mono',ui-monospace,monospace;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);transition:color .2s,border-color .2s,background .2s}}
+.citynav a{{flex-shrink:0;display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);border-radius:999px;padding:7px 16px;font-family:'JetBrains Mono',ui-monospace,monospace;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);transition:color .2s,border-color .2s,background .2s}}
+.citynav a b{{font-weight:700;font-size:9px;color:rgba(255,255,255,.38);transition:color .2s}}
 .citynav a:hover,.citynav a.on{{color:#0b0c0e;background:var(--fg);border-color:var(--fg)}}
+.citynav a:hover b,.citynav a.on b{{color:rgba(11,12,14,.55)}}
 .cityblock{{scroll-margin-top:118px;padding-top:clamp(26px,4vw,44px)}}
 .cityhead{{font-family:'Integral CF',sans-serif;font-size:clamp(1.25rem,3vw,1.9rem);letter-spacing:.06em;display:flex;align-items:baseline;gap:14px;margin-bottom:clamp(14px,2vw,22px)}}
 .cityhead span{{font-family:'JetBrains Mono',ui-monospace,monospace;font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--dim)}}
@@ -233,8 +242,9 @@ footer a:hover{{color:var(--fg)}}
 <section class="hero"><div class="wrap">
  <span class="eyebrow">Studiomorphik · Web design</span>
  <h1>WEB DESIGN</h1>
+ <div class="spectrum" aria-hidden="true"></div>
  <p class="sub">Hand-built websites for restaurants, guesthouses, bars, independent businesses. Designed, built, and cared for by StudioMorphik. One page, your photos, your story. Live in days.</p>
- <div class="stats"><span><b>{n}</b>&nbsp;live builds</span><span><b>5</b>&nbsp;cities</span><span>{cities}</span></div>
+ <div class="stats"><span><b>{n}</b>&nbsp;live builds</span><span><b>{n_cities}</b>&nbsp;cities</span><span><b>{n_countries}</b>&nbsp;countries</span><span class="citylist">{cities}</span></div>
  <p class="note"><b>About this portfolio:</b> every website below is live. Open any of them. Some are commissioned client work; others are ready-made designs created for real businesses, ready for their owners to claim.</p>
 </div></section>
 
