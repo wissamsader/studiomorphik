@@ -309,10 +309,9 @@ import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js'
 const host = document.getElementById('heroFx');
 const canvas = document.getElementById('fx');
 if (host && canvas) {
-  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const hs = () => { const r = host.getBoundingClientRect(); return { w: Math.max(1, r.width), h: Math.max(1, r.height) }; };
   let S = hs(), W = S.w, H = S.h;
-  const COUNT = (W < 640) ? 9000 : 20000;
+  const COUNT = (W < 640) ? 7000 : 20000;
 
   const scene = new THREE.Scene();
   scene.fog = new THREE.FogExp2(0x000000, 0.004);
@@ -320,7 +319,7 @@ if (host && canvas) {
   camera.position.set(0, 0, 235);
 
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, powerPreference: "high-performance" });
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, (W < 640) ? 1.5 : 2));
   renderer.setSize(W, H, false);
   renderer.setClearColor(0x000000, 0);
 
@@ -368,11 +367,12 @@ if (host && canvas) {
   const colAttr = geometry.attributes.color;
 
   const clock = new THREE.Clock();
-  let frameN = 0, visible = true, ticking = false;
+  let visible = true, ticking = false;
 
   function renderFrame() {
-    const time = clock.getElapsedTime() * 0.08;
-    if (!reduce) points.rotation.y = time * 0.16;
+    const elapsed = clock.getElapsedTime();
+    const time = elapsed * 0.08;
+    points.rotation.y = elapsed * 0.045;   // gentle continuous spin, always visible
     const count = COUNT;
     for (let i = 0; i < COUNT; i++) {
       const scale = 165, spread = 1.0, flow = 0.8, morph = 0.45;
@@ -402,12 +402,11 @@ if (host && canvas) {
     posAttr.needsUpdate = true;
     colAttr.needsUpdate = true;
     composer.render();
-    frameN++;
   }
 
   function tick() {
     renderFrame();
-    if (visible && !(reduce && frameN > 260)) { requestAnimationFrame(tick); } else { ticking = false; }
+    if (visible) { requestAnimationFrame(tick); } else { ticking = false; }
   }
   function start() { if (!ticking) { ticking = true; requestAnimationFrame(tick); } }
 
@@ -421,7 +420,7 @@ if (host && canvas) {
     S = hs(); W = S.w; H = S.h;
     camera.aspect = W / H; camera.updateProjectionMatrix();
     renderer.setSize(W, H, false); composer.setSize(W, H);
-    if (reduce) { frameN = 0; start(); }
+    start();
   });
 }
 </script>
