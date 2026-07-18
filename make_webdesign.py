@@ -275,6 +275,167 @@ document.querySelectorAll('.cityblock').forEach(function(s){{io.observe(s)}});}}
 </body>
 </html>
 """
+
+# ---- animated attractor hero background (Three.js particle swarm, brand spectrum) ----
+# Injected after the page string is built so the particle JS keeps its literal
+# braces (the template above is an f-string). Renders behind the hero ONLY; all
+# content sits above it and the portfolio grid is untouched. Degrades to the plain
+# dark hero if WebGL or the CDN are unavailable. Honours prefers-reduced-motion
+# (settles then freezes) and pauses when the hero scrolls off-screen.
+_FX_HEAD = """
+<style data-fx-attractor>
+#heroFx{position:relative;overflow:hidden;min-height:100svh;display:flex;align-items:center}
+#heroFx>.wrap{position:relative;z-index:2;width:100%}
+#fx{position:absolute;inset:0;width:100%;height:100%;z-index:0;display:block;pointer-events:none}
+.heroshade{position:absolute;inset:0;z-index:1;pointer-events:none;
+  background:
+   radial-gradient(130% 110% at 66% 44%, rgba(11,12,14,0) 34%, rgba(11,12,14,.5) 100%),
+   linear-gradient(90deg, rgba(11,12,14,.82) 2%, rgba(11,12,14,.42) 34%, rgba(11,12,14,.1) 60%, rgba(11,12,14,0) 100%),
+   linear-gradient(180deg, rgba(11,12,14,0) 76%, #0b0c0e 99%)}
+@media (max-width:640px){#heroFx{min-height:auto;align-items:flex-start;padding-top:clamp(52px,12svh,120px);padding-bottom:clamp(44px,9svh,110px)}}
+</style>
+<script type="importmap">
+{"imports":{"three":"https://unpkg.com/three@0.160.0/build/three.module.js","three/addons/":"https://unpkg.com/three@0.160.0/examples/jsm/"}}
+</script>
+"""
+
+_FX_MODULE = """
+<script type="module" data-fx-attractor>
+import * as THREE from 'three';
+import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+
+const host = document.getElementById('heroFx');
+const canvas = document.getElementById('fx');
+if (host && canvas) {
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const hs = () => { const r = host.getBoundingClientRect(); return { w: Math.max(1, r.width), h: Math.max(1, r.height) }; };
+  let S = hs(), W = S.w, H = S.h;
+  const COUNT = (W < 640) ? 9000 : 20000;
+
+  const scene = new THREE.Scene();
+  scene.fog = new THREE.FogExp2(0x000000, 0.004);
+  const camera = new THREE.PerspectiveCamera(60, W / H, 0.1, 3000);
+  camera.position.set(0, 0, 235);
+
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, powerPreference: "high-performance" });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+  renderer.setSize(W, H, false);
+  renderer.setClearColor(0x000000, 0);
+
+  const composer = new EffectComposer(renderer);
+  composer.setSize(W, H);
+  composer.addPass(new RenderPass(scene, camera));
+  const bloom = new UnrealBloomPass(new THREE.Vector2(W, H), 1.4, 0.5, 0.0);
+  bloom.strength = 0.45; bloom.radius = 0.5; bloom.threshold = 0.1;
+  composer.addPass(bloom);
+
+  const color = new THREE.Color();
+  const target = new THREE.Vector3();
+
+  const dotCanvas = document.createElement('canvas');
+  dotCanvas.width = dotCanvas.height = 64;
+  const dctx = dotCanvas.getContext('2d');
+  const dgrad = dctx.createRadialGradient(32, 32, 0, 32, 32, 32);
+  dgrad.addColorStop(0.0, 'rgba(255,255,255,1)');
+  dgrad.addColorStop(0.45, 'rgba(255,255,255,0.5)');
+  dgrad.addColorStop(1.0, 'rgba(255,255,255,0)');
+  dctx.fillStyle = dgrad; dctx.fillRect(0, 0, 64, 64);
+  const dotTex = new THREE.CanvasTexture(dotCanvas);
+
+  const geometry = new THREE.BufferGeometry();
+  const posArr = new Float32Array(COUNT * 3);
+  const colArr = new Float32Array(COUNT * 3);
+  for (let i = 0; i < COUNT; i++) {
+    posArr[i * 3] = (Math.random() - 0.5) * 100;
+    posArr[i * 3 + 1] = (Math.random() - 0.5) * 100;
+    posArr[i * 3 + 2] = (Math.random() - 0.5) * 100;
+    colArr[i * 3] = 0.0; colArr[i * 3 + 1] = 1.0; colArr[i * 3 + 2] = 0.53;
+  }
+  geometry.setAttribute('position', new THREE.BufferAttribute(posArr, 3));
+  geometry.setAttribute('color', new THREE.BufferAttribute(colArr, 3));
+
+  const material = new THREE.PointsMaterial({ size: 1.7, map: dotTex, vertexColors: true,
+    transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, sizeAttenuation: true });
+  const points = new THREE.Points(geometry, material);
+  points.position.set(0, 0, 0);
+  scene.add(points);
+
+  const positions = [];
+  for (let i = 0; i < COUNT; i++) { positions.push(new THREE.Vector3(posArr[i * 3], posArr[i * 3 + 1], posArr[i * 3 + 2])); }
+  const posAttr = geometry.attributes.position;
+  const colAttr = geometry.attributes.color;
+
+  const clock = new THREE.Clock();
+  let frameN = 0, visible = true, ticking = false;
+
+  function renderFrame() {
+    const time = clock.getElapsedTime() * 0.08;
+    if (!reduce) points.rotation.y = time * 0.16;
+    const count = COUNT;
+    for (let i = 0; i < COUNT; i++) {
+      const scale = 165, spread = 1.0, flow = 0.8, morph = 0.45;
+      const t = i / count;
+      const theta = t * Math.PI * 40.0;
+      const r0 = 0.35 + 0.65 * Math.sqrt(t);
+      const w1 = Math.sin(theta * 0.7 + time * 0.25);
+      const w2 = Math.sin(theta * 1.9 - time * 0.17);
+      const w3 = Math.cos(theta * 3.3 + time * 0.11);
+      const attract = r0 * (1.0 + 0.25 * w1 + 0.12 * w2 * w3);
+      const bend = 0.8 * Math.sin(theta * 0.5 + time * 0.2) + 0.3 * Math.sin(theta * 2.7 - time * 0.13);
+      const x = scale * attract * Math.cos(theta + bend * spread);
+      const y = scale * attract * Math.sin(theta + bend * spread);
+      const z = scale * (0.55 * Math.sin(theta * 0.55) + 0.28 * Math.sin(theta * 1.73 + time * 0.22) + 0.15 * Math.cos(theta * 4.1));
+      const swirl = flow * Math.sin(Math.sqrt(x * x + y * y) * 0.06 - time * 0.8);
+      const px = x + swirl * y * 0.12;
+      const py = y - swirl * x * 0.12;
+      const pz = z + scale * morph * 0.18 * Math.sin(theta * 0.9 + time * 0.35);
+      target.set(px, py, pz);
+      const hue = (t * 0.85 + time * 0.02) % 1;
+      const light = 0.22 + 0.12 * Math.exp(-Math.abs(attract - 0.75));
+      color.setHSL(hue, 0.78, light);
+      positions[i].lerp(target, 0.045);
+      posAttr.array[i * 3] = positions[i].x; posAttr.array[i * 3 + 1] = positions[i].y; posAttr.array[i * 3 + 2] = positions[i].z;
+      colAttr.array[i * 3] = color.r; colAttr.array[i * 3 + 1] = color.g; colAttr.array[i * 3 + 2] = color.b;
+    }
+    posAttr.needsUpdate = true;
+    colAttr.needsUpdate = true;
+    composer.render();
+    frameN++;
+  }
+
+  function tick() {
+    renderFrame();
+    if (visible && !(reduce && frameN > 260)) { requestAnimationFrame(tick); } else { ticking = false; }
+  }
+  function start() { if (!ticking) { ticking = true; requestAnimationFrame(tick); } }
+
+  if ('IntersectionObserver' in window) {
+    const io = new IntersectionObserver((es) => { visible = es[0].isIntersecting; if (visible) start(); }, { threshold: 0 });
+    io.observe(host);
+  }
+  start();
+
+  window.addEventListener('resize', () => {
+    S = hs(); W = S.w; H = S.h;
+    camera.aspect = W / H; camera.updateProjectionMatrix();
+    renderer.setSize(W, H, false); composer.setSize(W, H);
+    if (reduce) { frameN = 0; start(); }
+  });
+}
+</script>
+"""
+
+page = page.replace(
+    '<section class="hero"><div class="wrap">',
+    '<section class="hero" id="heroFx"><canvas id="fx" aria-hidden="true"></canvas>'
+    '<div class="heroshade" aria-hidden="true"></div><div class="wrap">',
+    1,
+)
+page = page.replace("</head>", _FX_HEAD + "</head>", 1)
+page = page.replace("</body>", _FX_MODULE + "</body>", 1)
+
 out = HERE / "web-design" / "index.html"
 out.parent.mkdir(exist_ok=True)
 out.write_text(page)
