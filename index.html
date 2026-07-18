@@ -63,8 +63,18 @@
       }
     }
     </script>
-  </head>
+  
+<style data-loader-fx>
+.hero__loader{position:fixed;inset:0;z-index:9999;background:#000 url('img/og-cover-2026.jpg') center/cover no-repeat;opacity:1;transition:opacity 1s ease;pointer-events:none}
+.hero__loader.is-hidden{opacity:0}
+.hero__loader canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+</style>
+<script type="importmap">
+{"imports":{"three":"https://unpkg.com/three@0.160.0/build/three.module.js","three/addons/":"https://unpkg.com/three@0.160.0/examples/jsm/"}}
+</script>
+</head>
   <body>
+<div class="hero__loader" id="heroLoader" aria-hidden="true"><canvas id="loaderfx"></canvas></div>
     <div class="hero">
       <video
         class="hero__media"
@@ -270,5 +280,126 @@
     </div>
 
     <script src="script.js"></script>
-  </body>
+  
+<script>
+// Reveal the site when the showreel can play; never let the loader stick.
+// Runs even if the module / CDN fails, so it always falls back to the poster.
+(function(){
+  var loader = document.getElementById('heroLoader');
+  var video = document.querySelector('.hero__media');
+  window.__loaderStarted = false;
+  window.__loaderDone = false;
+  function hide(){
+    if(window.__loaderDone) return; window.__loaderDone = true;
+    if(loader){ loader.classList.add('is-hidden'); setTimeout(function(){ if(loader) loader.style.display='none'; }, 1100); }
+  }
+  window.__hideLoader = hide;
+  if(video){
+    video.addEventListener('playing', hide, {once:true});
+    if(video.readyState >= 3) hide();
+  } else { hide(); }
+  // if WebGL / the CDN never rendered a frame, reveal anyway (poster shows through)
+  setTimeout(function(){ if(!window.__loaderStarted) hide(); }, 4500);
+  // hard safety cap so the loader can never get stuck
+  setTimeout(hide, 15000);
+})();
+</script>
+<script type="module" data-loader-fx>
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+
+const canvas = document.getElementById('loaderfx');
+if (canvas && !window.__loaderDone) {
+  let W = window.innerWidth, H = window.innerHeight;
+  const COUNT = (W < 640) ? 12000 : 20000;
+
+  const scene = new THREE.Scene();
+  scene.fog = new THREE.FogExp2(0x000000, 0.001);
+  const camera = new THREE.PerspectiveCamera(60, W / H, 0.1, 2000);
+  camera.position.set(0, 235, 120);             // pulled back + slight 3/4 tilt into the funnel
+
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, powerPreference: "high-performance" });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+  renderer.setSize(W, H, false);
+
+  const controls = new OrbitControls(camera, renderer.domElement);
+  controls.enableDamping = true; controls.enablePan = false; controls.enableZoom = false; controls.enableRotate = false;
+  controls.autoRotate = true; controls.autoRotateSpeed = 1.4;
+
+  const composer = new EffectComposer(renderer);
+  composer.addPass(new RenderPass(scene, camera));
+  const bloomPass = new UnrealBloomPass(new THREE.Vector2(W, H), 1.5, 0.4, 0.85);
+  bloomPass.strength = 0.85; bloomPass.radius = 0.3; bloomPass.threshold = 0.3;
+  composer.addPass(bloomPass);
+
+  const dummy = new THREE.Object3D();
+  const color = new THREE.Color();
+  const target = new THREE.Vector3();
+  const geometry = new THREE.TetrahedronGeometry(0.55);
+  const material = new THREE.MeshBasicMaterial({ color: 0xffffff });
+  const instancedMesh = new THREE.InstancedMesh(geometry, material, COUNT);
+  instancedMesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
+  scene.add(instancedMesh);
+
+  const positions = [];
+  for (let i = 0; i < COUNT; i++) {
+    positions.push(new THREE.Vector3((Math.random()-0.5)*100, (Math.random()-0.5)*100, (Math.random()-0.5)*100));
+    instancedMesh.setColorAt(i, color.setHex(0x00ff88));
+  }
+
+  const scale = 90, spin = 3.0, accretion = 1.0, warp = 1.2;
+  const clock = new THREE.Clock();
+  let rafId = 0;
+
+  function animate() {
+    rafId = requestAnimationFrame(animate);
+    if (window.__loaderDone) { cancelAnimationFrame(rafId); return; }
+    const time = clock.getElapsedTime();
+    controls.update();
+    const count = COUNT;
+    for (let i = 0; i < COUNT; i++) {
+      const u = (i + 0.5) / count;
+      const ga = 2.399963229728653;
+      const a = i * ga;
+      const t = time * 0.35;
+      const band = u * 24.0 - 12.0;
+      const disk = 1.0 - Math.abs(Math.sin(band * 0.5));
+      const radius = scale * (0.85 + 1.2 * u * u);   // wide central void -> clear dark event horizon
+      const swirl = a + spin * Math.log(radius + 1.0) - t * (2.0 + 3.0 * (1.0 - u));
+      const grav = 1.0 / (1.0 + radius * 0.015);
+      const bend = warp * grav * grav;
+      const x0 = radius * Math.cos(swirl);
+      const z0 = radius * Math.sin(swirl);
+      const x = x0 + bend * z0;
+      const z = z0 - bend * x0;
+      const y = scale * 0.22 * disk * Math.sin(a * 0.17 + t * 4.0) * accretion;
+      target.set(x, y, z);
+      // GREEN/GOLD recolour (matches the reference image; raw export is orange/blue)
+      const heat = 1.0 - Math.min(1.0, radius / (scale * 2.0));   // 1 = inner, 0 = outer
+      const hue = 0.13 + 0.20 * (1.0 - heat);                     // gold inner -> green outer
+      const sat = 0.85;
+      const light = 0.16 + 0.52 * Math.pow(heat, 1.4);           // bright inner ring
+      color.setHSL(hue, sat, light);
+      positions[i].lerp(target, 0.1);
+      dummy.position.copy(positions[i]); dummy.updateMatrix();
+      instancedMesh.setMatrixAt(i, dummy.matrix); instancedMesh.setColorAt(i, color);
+    }
+    instancedMesh.instanceMatrix.needsUpdate = true;
+    instancedMesh.instanceColor.needsUpdate = true;
+    composer.render();
+    window.__loaderStarted = true;
+  }
+  animate();
+
+  window.addEventListener('resize', () => {
+    W = window.innerWidth; H = window.innerHeight;
+    camera.aspect = W / H; camera.updateProjectionMatrix();
+    renderer.setSize(W, H, false); composer.setSize(W, H);
+  });
+}
+</script>
+</body>
 </html>
