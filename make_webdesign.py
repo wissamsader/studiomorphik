@@ -63,10 +63,6 @@ if _ber_kd.exists():  # Berlin build may still be in flight — skip until its k
     for b in ber.BIZ:
         add(b["name"], b["url"], "berlin", "Berlin")
 
-# Chiang Mai batch 3 (2026-07-18) — 4 guesthouse sites, own screenshots dir
-for _nm, _slug in (("Ob-Un Homestay", "ob-un-homestay"), ("Uma House", "uma-house"),
-                   ("Pai Yan Noi Guest Home", "pai-yan-noi"), ("Windsor Garden House", "windsor-garden")):
-    add(_nm, f"https://wissamsader.github.io/chiangmai/{_slug}/", "chiangmai3", "Chiang Mai")
 
 # grouped per city with jump-nav (07-14 friend feedback via Wissam: "tekbos 3al city, byenzal la 7alo")
 CITY_ORDER = ["Beirut", "Chiang Mai", "Đà Nẵng", "Barcelona", "Palermo", "Damascus", "Berlin"]
@@ -86,7 +82,6 @@ SHOT_SRC = {
     "bey-cm": WB / "WISSAM-PITCH" / "kit-machine" / "screenshots",
     "damascus": WB / "DAMASCUS" / "PITCH-KIT-DAMASCUS" / "screenshots",
     "berlin": WB / "BERLIN" / "PITCH-KIT-BERLIN" / "screenshots",
-    "chiangmai3": WB / "CHIANGMAI" / "batch3" / "screenshots",
 }
 TILE_DIR = HERE / "web-design" / "shots"
 TILE_DIR.mkdir(parents=True, exist_ok=True)
@@ -103,8 +98,6 @@ def source_png(s):
         return SHOT_SRC["damascus"] / f"{slug}.png"
     if s["repo"] == "berlin":
         return SHOT_SRC["berlin"] / f"{slug}.png"
-    if s["repo"] == "chiangmai3":
-        return SHOT_SRC["chiangmai3"] / f"{slug}.png"
     if s["repo"] == "beirut":
         p = SHOT_SRC["bey-cm"] / f"Beirut — {s['name']}.png"
         return p if p.exists() else SHOT_SRC["beirut-rabab"] / f"{slug}.png"
