@@ -55,13 +55,16 @@ header nav a:hover,header nav a.on{color:var(--fg)}
    halves sit above the sphere and swallow its mouse events */
 .hero .eyebrow,.hero h1,.hero .sub,.hero .stats{position:relative;z-index:1;width:fit-content}
 
-/* particle sphere (OriginKit) — fills the empty right half of the hero on desktop */
+/* particle sphere (OriginKit) — fills the empty right half of the hero on desktop.
+   .fxclip contains the component's 2.5x overflow canvas inside the hero: without it
+   the canvas sticks past the viewport and phones widen the whole page (nav cut off) */
+.fxclip{position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:0}
 .herofx{position:absolute;right:clamp(18px,4vw,44px);top:0;bottom:0;margin:auto 0;
-  width:min(38vw,500px);aspect-ratio:1/1;z-index:0;cursor:grab}
+  width:min(38vw,500px);aspect-ratio:1/1;cursor:grab;pointer-events:auto}
 .herofx:active{cursor:grabbing}
 .herofx canvas{pointer-events:none}
 /* mobile: small sphere in the free top-right corner beside the headline */
-@media(max-width:940px){.herofx{width:clamp(110px,32vw,170px);right:16px;top:4px;bottom:auto;margin:0}}
+@media(max-width:940px){.herofx{width:clamp(110px,32vw,170px);right:38px;top:10px;bottom:auto;margin:0}}
 .eyebrow{font-family:'JetBrains Mono',ui-monospace,monospace;font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:var(--dim)}
 h1{font-family:'Integral CF',sans-serif;font-size:clamp(2.3rem,7.6vw,5.2rem);line-height:1.03;letter-spacing:.02em;margin:.35em 0 .32em}
 .sub{max-width:60ch;color:var(--dim);font-size:clamp(15px,1.6vw,17px)}
@@ -145,7 +148,7 @@ footer a:hover{color:var(--fg)}
 </header>
 
 <section class="hero wrap">
-  <div class="herofx" id="sphereHolder" aria-hidden="true"></div>
+  <div class="fxclip" aria-hidden="true"><div class="herofx" id="sphereHolder"></div></div>
   <div class="eyebrow rev">Software</div>
   <h1 class="rev">We also<br>build apps.</h1>
   <p class="sub rev">Between the films and the websites, we make software. Tools we wanted to exist, built properly and given away. They run on your own machine, they don't ask you to make an account, and nothing you feed them leaves your computer.</p>
