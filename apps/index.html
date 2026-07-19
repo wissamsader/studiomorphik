@@ -51,14 +51,17 @@ header nav a:hover,header nav a.on{color:var(--fg)}
 
 /* hero — padding-block only: the shorthand would wipe .wrap's side padding */
 .hero{position:relative;padding-block:clamp(56px,10vw,112px) clamp(30px,4vw,48px)}
-.hero .eyebrow,.hero h1,.hero .sub,.hero .stats{position:relative;z-index:1}
+/* fit-content: the text blocks must not span the full row, or their empty right
+   halves sit above the sphere and swallow its mouse events */
+.hero .eyebrow,.hero h1,.hero .sub,.hero .stats{position:relative;z-index:1;width:fit-content}
 
 /* particle sphere (OriginKit) — fills the empty right half of the hero on desktop */
 .herofx{position:absolute;right:clamp(18px,4vw,44px);top:0;bottom:0;margin:auto 0;
   width:min(38vw,500px);aspect-ratio:1/1;z-index:0;cursor:grab}
 .herofx:active{cursor:grabbing}
 .herofx canvas{pointer-events:none}
-@media(max-width:940px){.herofx{display:none}}
+/* mobile: small sphere in the free top-right corner beside the headline */
+@media(max-width:940px){.herofx{width:clamp(110px,32vw,170px);right:16px;top:4px;bottom:auto;margin:0}}
 .eyebrow{font-family:'JetBrains Mono',ui-monospace,monospace;font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:var(--dim)}
 h1{font-family:'Integral CF',sans-serif;font-size:clamp(2.3rem,7.6vw,5.2rem);line-height:1.03;letter-spacing:.02em;margin:.35em 0 .32em}
 .sub{max-width:60ch;color:var(--dim);font-size:clamp(15px,1.6vw,17px)}
@@ -364,7 +367,8 @@ function initParticleSphere() {
   const vertices = [];
   const basePositions = [], displacements = [], scatterVelocities = [];
   const baseColorObj = new Color(PROPS.sphereColor);
-  const N = PROPS.particlesCount;
+  // small mobile sphere: 4k particles look identical at that scale and keep phones smooth
+  const N = matchMedia("(max-width: 940px)").matches ? 4000 : PROPS.particlesCount;
   for (let i = 0; i < N; i++) {
     const y = 1 - (i / (N - 1)) * 2;
     const radius = Math.sqrt(1 - y * y);
