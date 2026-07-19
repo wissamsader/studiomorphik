@@ -18,6 +18,10 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="modulepreload" href="https://unpkg.com/three@0.160.0/build/three.module.js">
+<script type="importmap">
+{"imports":{"three":"https://unpkg.com/three@0.160.0/build/three.module.js"}}
+</script>
 <style>
 @font-face{font-family:'Integral CF';src:url('/fonts/IntegralCF-Bold.woff2') format('woff2');font-weight:700;font-style:normal;font-display:swap}
 :root{--bg:#0b0c0e;--fg:rgba(255,255,255,.92);--dim:rgba(255,255,255,.6);--dimmer:rgba(255,255,255,.38);--line:rgba(255,255,255,.14);--sur:#121317}
@@ -46,7 +50,15 @@ header nav a:hover,header nav a.on{color:var(--fg)}
 @media(max-width:400px){.header .bar,header .bar{gap:12px;padding:14px 16px}.wordmark{font-size:11.5px;letter-spacing:.1em}header nav{gap:10px;font-size:8.5px}}
 
 /* hero — padding-block only: the shorthand would wipe .wrap's side padding */
-.hero{padding-block:clamp(56px,10vw,112px) clamp(30px,4vw,48px)}
+.hero{position:relative;padding-block:clamp(56px,10vw,112px) clamp(30px,4vw,48px)}
+.hero .eyebrow,.hero h1,.hero .sub,.hero .stats{position:relative;z-index:1}
+
+/* particle sphere (OriginKit) — fills the empty right half of the hero on desktop */
+.herofx{position:absolute;right:clamp(18px,4vw,44px);top:0;bottom:0;margin:auto 0;
+  width:min(38vw,500px);aspect-ratio:1/1;z-index:0;cursor:grab}
+.herofx:active{cursor:grabbing}
+.herofx canvas{pointer-events:none}
+@media(max-width:940px){.herofx{display:none}}
 .eyebrow{font-family:'JetBrains Mono',ui-monospace,monospace;font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:var(--dim)}
 h1{font-family:'Integral CF',sans-serif;font-size:clamp(2.3rem,7.6vw,5.2rem);line-height:1.03;letter-spacing:.02em;margin:.35em 0 .32em}
 .sub{max-width:60ch;color:var(--dim);font-size:clamp(15px,1.6vw,17px)}
@@ -130,6 +142,7 @@ footer a:hover{color:var(--fg)}
 </header>
 
 <section class="hero wrap">
+  <div class="herofx" id="sphereHolder" aria-hidden="true"></div>
   <div class="eyebrow rev">Software</div>
   <h1 class="rev">We also<br>build apps.</h1>
   <p class="sub rev">Between the films and the websites, we make software. Tools we wanted to exist, built properly and given away. They run on your own machine, they don't ask you to make an account, and nothing you feed them leaves your computer.</p>
@@ -277,6 +290,356 @@ footer a:hover{color:var(--fg)}
     });
   });
 })();
+</script>
+
+<script type="module">
+// Particle Sphere — OriginKit, ported 1:1 from the React/Framer component to vanilla three.js.
+// Preview props kept exactly: speed 7 · smoothing 10 · sphereColor #656264; the rest are the
+// component's own defaults (10000 particles, particleScale 4, scale 10, drag, cursor + click).
+import { Scene, PerspectiveCamera, WebGLRenderer, Color, Vector3, Matrix4, Group,
+         SphereGeometry, MeshBasicMaterial, InstancedMesh, Float32BufferAttribute,
+         AdditiveBlending } from "three";
+
+const PROPS = { particlesCount: 10000, particleScale: 4, speed: 7, smoothing: 10, scale: 10,
+  stopOnHover: false, rotationDirection: "clockwise", dragSpeed: 5, drag: true,
+  cursorOn: true, cursorRadiusUI: 75, cursorStrengthUI: 10, clickForce: 5,
+  sphereColor: "#656264" };
+
+function mapLinear(value, inMin, inMax, outMin, outMax) {
+  if (inMax === inMin) return outMin;
+  const t = (value - inMin) / (inMax - inMin);
+  return outMin + t * (outMax - outMin);
+}
+const mapSpeedUiToInternal = ui => mapLinear(ui, 0.1, 1.0, 0.01, 0.05);
+const mapScaleUiToMultiplier = ui => mapLinear(Math.max(0, Math.min(1, ui)), 0, 1.0, 0.25, 1.25);
+const mapParticleSizeUiToInternal = ui => mapLinear(Math.max(0.1, Math.min(1, ui)), 0.1, 1.0, 0.01, 0.1);
+const mapCursorStrengthUiToMultiplier = ui => mapLinear(Math.max(0, Math.min(1, ui)), 0, 1.0, 0, 15);
+const CURSOR_PHYSICS = { RETURN_FORCE: 0.015, FRICTION: 0.94 };
+
+function initParticleSphere() {
+  const container = document.getElementById("sphereHolder");
+  if (!container || container.clientWidth === 0) return false;
+
+  const speedN = PROPS.speed / 10, smoothingN = PROPS.smoothing / 10, scaleN = PROPS.scale / 10;
+  const dragN = PROPS.dragSpeed / 10, sizeN = PROPS.particleScale / 10, strengthN = PROPS.cursorStrengthUI / 10;
+  const rotationSpeed = PROPS.rotationDirection === "anticlockwise"
+    ? -mapSpeedUiToInternal(speedN) : mapSpeedUiToInternal(speedN);
+  const scaleMultiplier = mapScaleUiToMultiplier(scaleN);
+  const particleSize = mapParticleSizeUiToInternal(sizeN);
+  const cursorRadius = Math.max(0, Math.min(600, PROPS.cursorRadiusUI));
+  const cursorStrength = mapCursorStrengthUiToMultiplier(strengthN);
+
+  const containerWidth = container.clientWidth || container.offsetWidth || 400;
+  const containerHeight = container.clientHeight || container.offsetHeight || 400;
+  const canvasOverflowMultiplier = 2.5;
+  let canvasWidth = containerWidth * canvasOverflowMultiplier;
+  let canvasHeight = containerHeight * canvasOverflowMultiplier;
+
+  const scene = new Scene();
+  const baseFOV = 50;
+  const adjustedFOV = 2 * Math.atan(Math.tan((baseFOV * Math.PI) / 180 / 2) * canvasOverflowMultiplier) * (180 / Math.PI);
+  const camera = new PerspectiveCamera(adjustedFOV, canvasWidth / canvasHeight, 0.1, 1000);
+  const baseCameraDistance = 3.0;
+  const currentSphereRadius = 1.0 * scaleMultiplier;
+  camera.position.z = Math.max(baseCameraDistance, currentSphereRadius + 1.0);
+
+  const renderer = new WebGLRenderer({ antialias: true, alpha: true });
+  renderer.setSize(canvasWidth, canvasHeight);
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer.outputColorSpace = "srgb";
+  const canvas = renderer.domElement;
+  canvas.style.position = "absolute";
+  let offsetX = (canvasWidth - containerWidth) / 2;
+  let offsetY = (canvasHeight - containerHeight) / 2;
+  canvas.style.left = `-${offsetX}px`;
+  canvas.style.top = `-${offsetY}px`;
+  canvas.style.width = `${canvasWidth}px`;
+  canvas.style.height = `${canvasHeight}px`;
+  canvas.style.display = "block";
+  container.appendChild(canvas);
+
+  // Fibonacci sphere distribution (identical to the component)
+  const goldenAngle = Math.PI * (3 - Math.sqrt(5));
+  const sphereRadius = 1.0 * scaleMultiplier;
+  const vertices = [];
+  const basePositions = [], displacements = [], scatterVelocities = [];
+  const baseColorObj = new Color(PROPS.sphereColor);
+  const N = PROPS.particlesCount;
+  for (let i = 0; i < N; i++) {
+    const y = 1 - (i / (N - 1)) * 2;
+    const radius = Math.sqrt(1 - y * y);
+    const theta = goldenAngle * i;
+    const px = Math.cos(theta) * radius * sphereRadius;
+    const py = y * sphereRadius;
+    const pz = Math.sin(theta) * radius * sphereRadius;
+    vertices.push(px, py, pz);
+    basePositions.push(new Vector3(px, py, pz));
+    displacements.push(new Vector3(0, 0, 0));
+    scatterVelocities.push(new Vector3(0, 0, 0));
+  }
+
+  const sphereGeometry = new SphereGeometry(particleSize * 0.15, 8, 8);
+  const sphereMaterial = new MeshBasicMaterial({ color: 0xffffff, blending: AdditiveBlending });
+  const particles = new InstancedMesh(sphereGeometry, sphereMaterial, N);
+  const matrix = new Matrix4();
+  for (let i = 0; i < N; i++) {
+    matrix.setPosition(vertices[i * 3], vertices[i * 3 + 1], vertices[i * 3 + 2]);
+    particles.setMatrixAt(i, matrix);
+  }
+  particles.instanceMatrix.needsUpdate = true;
+  const instanceColors = new Float32Array(N * 3);
+  for (let i = 0; i < N; i++) {
+    instanceColors[i * 3] = baseColorObj.r;
+    instanceColors[i * 3 + 1] = baseColorObj.g;
+    instanceColors[i * 3 + 2] = baseColorObj.b;
+  }
+  particles.instanceColor = new Float32BufferAttribute(instanceColors, 3);
+  particles.instanceColor.needsUpdate = true;
+
+  const particlesGroup = new Group();
+  particlesGroup.add(particles);
+  scene.add(particlesGroup);
+
+  const rotation = { x: 0, y: 0 }, targetRotation = { x: 0, y: 0 }, velocity = { x: 0, y: 0 };
+  let isDragging = false, isHovering = false;
+  let lastMouseX = 0, lastMouseY = 0, lastDragTime = 0;
+  let animationFrameId = null;
+  let mouse = null;
+  let onScreen = true;
+  let lastFrameTime = performance.now();
+  const targetDeltaTime = 1000 / 60;
+  const lerpFactor = smoothingN === 0 ? 1 : mapLinear(smoothingN, 0, 1, 0.4, 0.03);
+  const velocityDecay = mapLinear(smoothingN, 0, 1, 0.7, 0.96);
+
+  const animate = () => {
+    if (!onScreen || container.offsetParent === null) { animationFrameId = null; return; }
+    const now = performance.now();
+    const deltaFactor = (now - lastFrameTime) / targetDeltaTime;
+    lastFrameTime = now;
+    const threshold = 0.01;
+
+    if (!isDragging && rotationSpeed !== 0 && (!PROPS.stopOnHover || !isHovering)) {
+      targetRotation.x += rotationSpeed * 0.1 * deltaFactor;
+    }
+    if (!isDragging && smoothingN > 0) {
+      if (Math.abs(velocity.x) > threshold || Math.abs(velocity.y) > threshold) {
+        targetRotation.x += velocity.x * deltaFactor;
+        targetRotation.y += velocity.y * deltaFactor;
+        targetRotation.y = Math.max(-Math.PI / 2, Math.min(Math.PI / 2, targetRotation.y));
+        const decayFactor = Math.pow(velocityDecay, deltaFactor);
+        velocity.x *= decayFactor; velocity.y *= decayFactor;
+      } else { velocity.x = 0; velocity.y = 0; }
+    }
+    const dx = targetRotation.x - rotation.x, dy = targetRotation.y - rotation.y;
+    const timeLerpFactor = 1 - Math.pow(1 - lerpFactor, deltaFactor);
+    rotation.x += dx * timeLerpFactor;
+    rotation.y += dy * timeLerpFactor;
+    rotation.y = Math.max(-Math.PI / 2, Math.min(Math.PI / 2, rotation.y));
+
+    particlesGroup.rotation.y = rotation.x;
+    particlesGroup.rotation.x = rotation.y;
+    particlesGroup.updateMatrixWorld(true);
+
+    const cw = container.clientWidth || 400, ch = container.clientHeight || 400;
+    const ccw = cw * canvasOverflowMultiplier, cch = ch * canvasOverflowMultiplier;
+    const cursorRadiusSquared = cursorRadius * cursorRadius;
+
+    if (PROPS.cursorOn) {
+      for (let i = 0; i < N; i++) {
+        const displacement = displacements[i];
+        if (mouse) {
+          const currentLocalPos = new Vector3().copy(basePositions[i]).add(displacement);
+          const worldPos = currentLocalPos.clone().applyMatrix4(particlesGroup.matrixWorld);
+          const projected = worldPos.clone().project(camera);
+          const screenX = (projected.x * 0.5 + 0.5) * ccw;
+          const screenY = (-projected.y * 0.5 + 0.5) * cch;
+          const mdx = mouse.x - screenX, mdy = mouse.y - screenY;
+          const distanceSquared = mdx * mdx + mdy * mdy;
+          if (distanceSquared < cursorRadiusSquared && distanceSquared > 0 && worldPos.z > 0) {
+            const distance = Math.sqrt(distanceSquared);
+            const force = (cursorRadius - distance) / cursorRadius;
+            const angle = Math.atan2(mdy, mdx);
+            const cameraRight = new Vector3().setFromMatrixColumn(camera.matrixWorld, 0).normalize();
+            const cameraUp = new Vector3().setFromMatrixColumn(camera.matrixWorld, 1).normalize();
+            const repulsion2D = force * cursorStrength * speedN * deltaFactor;
+            const repulsionX = -Math.cos(angle) * repulsion2D * 0.01;
+            const repulsionY = Math.sin(angle) * repulsion2D * 0.01;
+            const worldRepulsion = new Vector3()
+              .addScaledVector(cameraRight, repulsionX)
+              .addScaledVector(cameraUp, repulsionY);
+            const localRepulsion = worldRepulsion.clone()
+              .applyMatrix4(new Matrix4().copy(particlesGroup.matrixWorld).invert());
+            displacement.add(localRepulsion);
+          }
+        }
+        const frictionFactor = Math.pow(CURSOR_PHYSICS.FRICTION, deltaFactor);
+        const returnForce = CURSOR_PHYSICS.RETURN_FORCE * speedN * deltaFactor;
+        displacement.multiplyScalar(frictionFactor);
+        displacement.multiplyScalar(1 - returnForce);
+      }
+    }
+
+    for (let i = 0; i < N; i++) {
+      const scatterVelocity = scatterVelocities[i];
+      displacements[i].addScaledVector(scatterVelocity, deltaFactor * 0.1);
+      scatterVelocity.multiplyScalar(Math.pow(0.95, deltaFactor));
+      scatterVelocity.multiplyScalar(1 - CURSOR_PHYSICS.RETURN_FORCE * speedN * deltaFactor);
+    }
+
+    const m = new Matrix4();
+    const finalPos = new Vector3();
+    for (let i = 0; i < N; i++) {
+      finalPos.copy(basePositions[i]).add(displacements[i]);
+      m.setPosition(finalPos.x, finalPos.y, finalPos.z);
+      particles.setMatrixAt(i, m);
+    }
+    particles.instanceMatrix.needsUpdate = true;
+
+    renderer.render(scene, camera);
+    animationFrameId = requestAnimationFrame(animate);
+  };
+
+  const startAnimation = () => {
+    if (animationFrameId === null) {
+      lastFrameTime = performance.now();
+      animationFrameId = requestAnimationFrame(animate);
+    }
+  };
+
+  // pause when the hero is scrolled away (rendering 10k instances offscreen wastes battery)
+  new IntersectionObserver(es => {
+    onScreen = es[0].isIntersecting;
+    if (onScreen) startAnimation();
+  }, { threshold: 0 }).observe(container);
+  startAnimation();
+
+  // interaction listeners live on the CONTAINER (the 1:1 sphere area), not the oversized
+  // canvas — the 2.5x canvas overlaps content below and must never intercept clicks there
+  container.addEventListener("mousedown", event => {
+    if (!PROPS.drag) return;
+    isDragging = true;
+    velocity.x = 0; velocity.y = 0;
+    lastMouseX = event.clientX; lastMouseY = event.clientY;
+    lastDragTime = performance.now();
+    startAnimation();
+    const handleMouseMove = moveEvent => {
+      const currentTime = performance.now();
+      const timeSinceLastMove = currentTime - lastDragTime;
+      const sensitivity = mapLinear(dragN, 0, 1, 0.001, 0.02);
+      const mdx = moveEvent.clientX - lastMouseX;
+      const mdy = moveEvent.clientY - lastMouseY;
+      targetRotation.x += mdx * sensitivity;
+      targetRotation.y += mdy * sensitivity;
+      targetRotation.y = Math.max(-Math.PI / 2, Math.min(Math.PI / 2, targetRotation.y));
+      if (timeSinceLastMove > 0) {
+        const timeNormalization = targetDeltaTime / timeSinceLastMove;
+        velocity.x = mdx * sensitivity * 0.3 * timeNormalization;
+        velocity.y = mdy * sensitivity * 0.3 * timeNormalization;
+      }
+      lastMouseX = moveEvent.clientX; lastMouseY = moveEvent.clientY;
+      lastDragTime = currentTime;
+    };
+    const handleMouseUp = () => {
+      document.removeEventListener("mousemove", handleMouseMove);
+      document.removeEventListener("mouseup", handleMouseUp);
+      isDragging = false;
+    };
+    document.addEventListener("mousemove", handleMouseMove);
+    document.addEventListener("mouseup", handleMouseUp);
+  });
+
+  container.addEventListener("mousemove", event => {
+    const rect = container.getBoundingClientRect();
+    if (PROPS.stopOnHover) isHovering = true;
+    mouse = { x: event.clientX - rect.left + offsetX, y: event.clientY - rect.top + offsetY };
+    startAnimation();
+  });
+  container.addEventListener("mouseleave", () => { mouse = null; isHovering = false; });
+
+  const scatterAt = (pointX, pointY) => {
+    particlesGroup.updateMatrixWorld(true);
+    const rect = container.getBoundingClientRect();
+    const clickX = pointX - rect.left + offsetX;
+    const clickY = pointY - rect.top + offsetY;
+    const cursorRadiusSquared = cursorRadius * cursorRadius;
+    const cw = container.clientWidth || 400, ch = container.clientHeight || 400;
+    const ccw = cw * canvasOverflowMultiplier, cch = ch * canvasOverflowMultiplier;
+    const ndcX = (clickX / ccw) * 2 - 1;
+    const ndcY = 1 - (clickY / cch) * 2;
+    const clickRay = new Vector3(ndcX, ndcY, 0.5).unproject(camera);
+    const cameraWorldPos = new Vector3().setFromMatrixPosition(camera.matrixWorld);
+    const clickDirection = new Vector3().subVectors(clickRay, cameraWorldPos).normalize();
+    const sphereDistance = new Vector3().subVectors(new Vector3(0, 0, 0), cameraWorldPos).length();
+    const clickWorldPos = new Vector3().copy(cameraWorldPos).addScaledVector(clickDirection, sphereDistance);
+    const invGroup = new Matrix4().copy(particlesGroup.matrixWorld).invert();
+    for (let i = 0; i < N; i++) {
+      const worldPos = new Vector3().copy(basePositions[i]).add(displacements[i])
+        .applyMatrix4(particlesGroup.matrixWorld);
+      const projected = worldPos.clone().project(camera);
+      const screenX = (projected.x * 0.5 + 0.5) * ccw;
+      const screenY = (-projected.y * 0.5 + 0.5) * cch;
+      const cdx = clickX - screenX, cdy = clickY - screenY;
+      const distanceSquared = cdx * cdx + cdy * cdy;
+      if (distanceSquared < cursorRadiusSquared && distanceSquared > 0) {
+        const screenDistance = Math.sqrt(distanceSquared);
+        const force = ((cursorRadius - screenDistance) / cursorRadius) * PROPS.clickForce;
+        const radialDirection = new Vector3().subVectors(worldPos, clickWorldPos);
+        if (radialDirection.length() > 0.001) {
+          radialDirection.normalize();
+          const localScatter = radialDirection.multiplyScalar(force * 0.5).applyMatrix4(invGroup);
+          scatterVelocities[i].add(localScatter);
+        }
+      }
+    }
+    startAnimation();
+  };
+  container.addEventListener("click", event => {
+    if (PROPS.cursorOn && PROPS.clickForce) scatterAt(event.clientX, event.clientY);
+  });
+  container.addEventListener("touchstart", event => {
+    if (!PROPS.cursorOn || !PROPS.clickForce) return;
+    event.preventDefault();
+    const touch = event.touches[0];
+    if (touch) scatterAt(touch.clientX, touch.clientY);
+  }, { passive: false });
+  container.addEventListener("touchmove", event => {
+    event.preventDefault();
+    const touch = event.touches[0];
+    if (touch) {
+      const rect = container.getBoundingClientRect();
+      mouse = { x: touch.clientX - rect.left + offsetX, y: touch.clientY - rect.top + offsetY };
+      startAnimation();
+    }
+  }, { passive: false });
+  container.addEventListener("touchend", () => { mouse = null; });
+  container.addEventListener("touchcancel", () => { mouse = null; });
+
+  const handleResize = () => {
+    const newWidth = container.clientWidth || container.offsetWidth;
+    const newHeight = container.clientHeight || container.offsetHeight;
+    if (!newWidth || !newHeight) return;
+    canvasWidth = newWidth * canvasOverflowMultiplier;
+    canvasHeight = newHeight * canvasOverflowMultiplier;
+    offsetX = (canvasWidth - newWidth) / 2;
+    offsetY = (canvasHeight - newHeight) / 2;
+    camera.aspect = canvasWidth / canvasHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(canvasWidth, canvasHeight);
+    canvas.style.left = `-${offsetX}px`;
+    canvas.style.top = `-${offsetY}px`;
+    canvas.style.width = `${canvasWidth}px`;
+    canvas.style.height = `${canvasHeight}px`;
+    renderer.render(scene, camera);
+  };
+  new ResizeObserver(handleResize).observe(container);
+  window.addEventListener("resize", handleResize);
+  return true;
+}
+
+if (!initParticleSphere()) {
+  const mq = matchMedia("(min-width: 941px)");
+  mq.addEventListener("change", e => { if (e.matches) initParticleSphere(); }, { once: true });
+}
 </script>
 </body>
 </html>
