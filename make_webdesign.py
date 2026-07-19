@@ -178,8 +178,11 @@ a{{color:inherit;text-decoration:none}}
 header{{position:sticky;top:0;z-index:20;background:rgba(11,12,14,.82);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}}
 header .bar{{display:flex;align-items:center;justify-content:space-between;padding:16px clamp(18px,4vw,44px);max-width:1280px;margin:0 auto}}
 .wordmark{{font-family:'Integral CF',sans-serif;font-size:15px;letter-spacing:.22em}}
-header nav{{display:flex;gap:22px;font-family:'JetBrains Mono',ui-monospace,monospace;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim)}}
-header nav a:hover{{color:var(--fg)}}
+header nav{{display:flex;gap:22px;flex-shrink:0;font-family:'JetBrains Mono',ui-monospace,monospace;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim)}}
+header nav a{{white-space:nowrap;transition:color .2s}}
+header nav a:hover,header nav a.on{{color:var(--fg)}}
+@media(max-width:560px){{.wordmark{{font-size:13px;letter-spacing:.16em}}header nav{{gap:13px;font-size:9.5px}}}}
+@media(max-width:400px){{header .bar{{gap:12px;padding:14px 16px}}.wordmark{{font-size:11.5px;letter-spacing:.1em}}header nav{{gap:10px;font-size:8.5px}}}}
 .hero{{padding:clamp(56px,10vw,110px) 0 clamp(28px,4vw,44px)}}
 .eyebrow{{font-family:'JetBrains Mono',ui-monospace,monospace;font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:var(--dim)}}
 h1{{font-family:'Integral CF',sans-serif;font-size:clamp(2.4rem,8vw,5.4rem);line-height:1.02;letter-spacing:.02em;margin:.35em 0 .3em}}
@@ -236,7 +239,7 @@ footer a:hover{{color:var(--fg)}}
 <body>
 <header><div class="bar">
  <a class="wordmark" href="/">STUDIOMORPHIK</a>
- <nav><a href="/#/about">About</a><a href="/#/contact">Contact</a></nav>
+ <nav><a href="/web-design/" class="on">Web design</a><a href="/apps/">Apps</a><a href="/#/contact">Contact</a></nav>
 </div></header>
 
 <section class="hero"><div class="wrap">
