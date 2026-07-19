@@ -46,8 +46,15 @@ header .bar{display:flex;align-items:center;justify-content:space-between;gap:16
 header nav{display:flex;gap:22px;flex-shrink:0;font-family:'JetBrains Mono',ui-monospace,monospace;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim)}
 header nav a{transition:color .2s;white-space:nowrap}
 header nav a:hover,header nav a.on{color:var(--fg)}
-@media(max-width:560px){.wordmark{font-size:13px;letter-spacing:.16em}header nav{gap:13px;font-size:9.5px}}
-@media(max-width:400px){.header .bar,header .bar{gap:12px;padding:14px 16px}.wordmark{font-size:11.5px;letter-spacing:.1em}header nav{gap:10px;font-size:8.5px}}
+header nav{margin-left:auto}
+/* home-page icon links (about · vimeo · contact · instagram), same as the main site */
+.hicons{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.hicon{display:flex;align-items:center;color:var(--fg);opacity:.7;transition:opacity .2s ease}
+.hicon:hover,.hicon:active{opacity:1}
+.hicon svg{display:block}
+@media(max-width:560px){.wordmark{font-size:13px;letter-spacing:.16em}header nav{gap:13px;font-size:9.5px}.hicons{gap:6px}.hicon svg{width:17px;height:17px}}
+@media(max-width:430px){header nav a.navcontact{display:none}}
+@media(max-width:400px){.header .bar,header .bar{gap:12px;padding:14px 16px}.wordmark{font-size:11.5px;letter-spacing:.1em}header nav{gap:10px;font-size:8.5px}.hicons{gap:5px}.hicon svg{width:15px;height:15px}}
 
 /* hero — padding-block only: the shorthand would wipe .wrap's side padding */
 .hero{position:relative;padding-block:clamp(56px,10vw,112px) clamp(30px,4vw,48px)}
@@ -138,11 +145,17 @@ footer a:hover{color:var(--fg)}
 
 <header>
   <div class="bar">
+    <div class="hicons">
+      <a href="/#/about" aria-label="About" class="hicon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><line x1="12" y1="7" x2="12" y2="8.5"/><line x1="12" y1="11" x2="12" y2="17"/></svg></a>
+      <a href="https://vimeo.com/studiomorphik" target="_blank" rel="noopener" aria-label="Vimeo portfolio" title="Vimeo portfolio" class="hicon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9.6 C4.6 8.3 5.8 7.5 6.8 8 C8 8.6 8.2 10.4 8.8 12.6 C9.4 14.9 10.2 16.9 11.6 17.3 C13.5 17.8 15.7 15.3 17 12.9 C18.1 10.9 18.7 9 17.9 7.9 C17.2 6.9 15.7 7.1 14.8 8.1"/></svg></a>
+      <a href="/#/contact" aria-label="Contact" class="hicon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="5" width="19" height="14" rx="1"/><polyline points="2.5,5 12,13 21.5,5"/></svg></a>
+      <a href="https://www.instagram.com/studiomorphik/" target="_blank" rel="noopener" aria-label="Instagram" title="Instagram" class="hicon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><line x1="17.2" y1="6.8" x2="17.21" y2="6.8"/></svg></a>
+    </div>
     <a class="wordmark" href="/">STUDIOMORPHIK</a>
     <nav>
       <a href="/web-design/">Web design</a>
       <a href="/apps/" class="on">Apps</a>
-      <a href="/#/contact">Contact</a>
+      <a href="/#/contact" class="navcontact">Contact</a>
     </nav>
   </div>
 </header>
