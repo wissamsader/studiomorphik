@@ -57,6 +57,11 @@ for b in plm.BIZ:
 dam = load_mod("dam_kd", WB / "DAMASCUS" / "tools" / "kitdata.py")
 for b in dam.BIZ:
     add(b["name"], f"{dam.BASE_URL}/{b['slug']}/", "damascus", "Damascus")
+_ath_kd = WB / "ATHENS" / "tools" / "kitdata.py"
+if _ath_kd.exists():
+    ath = load_mod("ath_kd", _ath_kd)
+    for b in ath.BIZ:
+        add(b["name"], b["url"], "athens", "Athens")
 _ber_kd = WB / "BERLIN" / "tools" / "kitdata.py"
 if _ber_kd.exists():  # Berlin build may still be in flight — skip until its kitdata lands
     ber = load_mod("ber_kd", _ber_kd)
@@ -65,8 +70,8 @@ if _ber_kd.exists():  # Berlin build may still be in flight — skip until its k
 
 
 # grouped per city with jump-nav (07-14 friend feedback via Wissam: "tekbos 3al city, byenzal la 7alo")
-CITY_ORDER = ["Beirut", "Chiang Mai", "Đà Nẵng", "Barcelona", "Palermo", "Damascus", "Berlin"]
-CITY_ID = {"Beirut": "beirut", "Chiang Mai": "chiang-mai", "Đà Nẵng": "da-nang", "Barcelona": "barcelona", "Palermo": "palermo", "Damascus": "damascus", "Berlin": "berlin"}
+CITY_ORDER = ["Beirut", "Chiang Mai", "Đà Nẵng", "Barcelona", "Palermo", "Damascus", "Berlin", "Athens"]
+CITY_ID = {"Beirut": "beirut", "Chiang Mai": "chiang-mai", "Đà Nẵng": "da-nang", "Barcelona": "barcelona", "Palermo": "palermo", "Damascus": "damascus", "Berlin": "berlin", "Athens": "athens"}
 by_city = {}
 for s in SITES:
     by_city.setdefault(s["city"], []).append(s)
@@ -82,6 +87,7 @@ SHOT_SRC = {
     "bey-cm": WB / "WISSAM-PITCH" / "kit-machine" / "screenshots",
     "damascus": WB / "DAMASCUS" / "PITCH-KIT-DAMASCUS" / "screenshots",
     "berlin": WB / "BERLIN" / "PITCH-KIT-BERLIN" / "screenshots",
+    "athens": WB / "ATHENS" / "screenshots",
 }
 TILE_DIR = HERE / "web-design" / "shots"
 TILE_DIR.mkdir(parents=True, exist_ok=True)
@@ -98,6 +104,8 @@ def source_png(s):
         return SHOT_SRC["damascus"] / f"{slug}.png"
     if s["repo"] == "berlin":
         return SHOT_SRC["berlin"] / f"{slug}.png"
+    if s["repo"] == "athens":
+        return SHOT_SRC["athens"] / f"{slug}.png"
     if s["repo"] == "beirut":
         p = SHOT_SRC["bey-cm"] / f"Beirut — {s['name']}.png"
         return p if p.exists() else SHOT_SRC["beirut-rabab"] / f"{slug}.png"
