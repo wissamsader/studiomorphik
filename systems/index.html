@@ -63,7 +63,9 @@ header nav::-webkit-scrollbar{display:none}
 @media(max-width:560px){.wordmark{font-size:13px;letter-spacing:.16em}header nav{gap:13px;font-size:9.5px}.hicons{gap:6px}.hicon svg{width:17px;height:17px}}
 @media(max-width:520px){
   header .bar{flex-wrap:wrap;row-gap:10px;padding-top:12px;padding-bottom:12px}
-  header nav{flex-basis:100%;order:3;margin-left:0;justify-content:flex-start;overflow-x:visible}
+  header nav{flex-basis:100%;order:3;margin-left:0;justify-content:flex-start;overflow-x:visible;gap:8px}
+  header nav a{border:1px solid var(--line);border-radius:999px;padding:6px 12px;font-size:9px;letter-spacing:.12em}
+  header nav a.on{border-color:rgba(255,255,255,.55);color:var(--fg)}
 }
 @media(max-width:400px){header .bar{gap:12px;padding:14px 16px}.wordmark{font-size:11.5px;letter-spacing:.1em}header nav{gap:10px;font-size:8.5px}.hicons{gap:5px}.hicon svg{width:15px;height:15px}}
 
@@ -104,7 +106,6 @@ h1{font-family:'Integral CF',sans-serif;font-size:clamp(2.4rem,6.8vw,4.9rem);lin
 .mnode:nth-child(5) .micon{animation:glow 8s linear infinite;animation-delay:4.5s}
 .mnode:nth-child(6) .micon{animation:glow 8s linear infinite;animation-delay:7s}
 @keyframes glow{0%,100%{border-color:var(--line);box-shadow:none}6%{border-color:rgba(255,255,255,.7);box-shadow:0 0 22px rgba(255,255,255,.12)}14%{border-color:var(--line);box-shadow:none}}
-@media (prefers-reduced-motion:reduce){.mdot,.mnode .micon,.notif,.ticket,.kb b,.fdot{animation:none !important}}
 
 /* sections */
 section{padding:84px 0;border-bottom:1px solid var(--line)}
@@ -579,7 +580,7 @@ footer{padding:26px 0 40px;color:var(--fg-dim);font-size:.75rem}
 /* particle system, adapted from the Originkit SVG Particle concept to vanilla JS.
    two layers: hero dust (roam + repulsion) and the lab (chaos assembles into "SYSTEM"). */
 (function(){
-  var reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var reduced = false; /* phones with battery-saver report reduce-motion; the visuals ARE the page */
   var ACCENTS = ['#5dff9b','#4dc3ff','#b96bff','#ff9f40'];
   var easeInOut = function(t){ return t<.5 ? 2*t*t : 1-2*(1-t)*(1-t); };
 
