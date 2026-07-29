@@ -82,7 +82,7 @@ h1{font-family:'Integral CF',sans-serif;font-size:clamp(2.4rem,6.8vw,4.9rem);lin
 .herofx{width:100%;max-width:400px;aspect-ratio:1/1;justify-self:center;cursor:grab;touch-action:none}
 .herofx:active{cursor:grabbing}
 .herofx canvas{width:100%;height:100%;display:block}
-@media(max-width:940px){.hgrid{grid-template-columns:1fr}.herofx{max-width:270px;margin:22px auto 0;justify-self:center}}
+@media(max-width:940px){.hgrid{grid-template-columns:1fr}.herofx{max-width:290px;margin:18px auto 30px;justify-self:center}}
 
 /* ============ THE MACHINE (hero visual) ============ */
 .machine{margin-top:58px;border:1px solid var(--line);background:var(--panel);padding:38px 30px 30px;position:relative;overflow:hidden}
@@ -545,23 +545,6 @@ footer{padding:26px 0 40px;color:var(--fg-dim);font-size:.75rem}
 
 <section class="cta">
   <div class="wrap">
-    <div class="ctaroute" aria-hidden="true">
-      <svg viewBox="0 0 520 44">
-        <defs>
-          <linearGradient id="ctaspec" x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0" stop-color="#ff4d4d"/><stop offset=".2" stop-color="#ff9f40"/>
-            <stop offset=".4" stop-color="#ffe14d"/><stop offset=".6" stop-color="#5dff9b"/>
-            <stop offset=".8" stop-color="#4dc3ff"/><stop offset="1" stop-color="#b96bff"/>
-          </linearGradient>
-        </defs>
-        <path class="trail" stroke="url(#ctaspec)" d="M10 30 C 90 6, 150 40, 240 22 S 420 8, 510 26"/>
-        <circle stroke="url(#ctaspec)" cx="10" cy="30" r="4"/>
-        <circle stroke="url(#ctaspec)" cx="146" cy="31" r="4"/>
-        <circle stroke="url(#ctaspec)" cx="240" cy="22" r="4"/>
-        <circle stroke="url(#ctaspec)" cx="392" cy="14" r="4"/>
-        <circle stroke="url(#ctaspec)" cx="510" cy="26" r="4"/>
-      </svg>
-    </div>
     <div class="ctabox">
       <div>
         <h2>READY FOR YOUR SYSTEM</h2>
@@ -679,18 +662,28 @@ footer{padding:26px 0 40px;color:var(--fg-dim);font-size:.75rem}
       state=s; animStart=Date.now();
       setTimeout(function(){ if(state===s) state=(s==='assembling')?'active':'idle'; }, DUR);
     }
-    panel.addEventListener('pointermove',function(e){
-      var r=canvas.getBoundingClientRect();
-      var mx=e.clientX-r.left, my=e.clientY-r.top;
-      if(prev.x>-9000){ var dx=mx-prev.x, dy=my-prev.y; speed=Math.sqrt(dx*dx+dy*dy); }
-      prev.x=mx; prev.y=my;
-      mouse.x=mx; mouse.y=my; mouse.active=true; everTouched=true;
-      if(state==='idle'||state==='scattering') startAnim('assembling');
-    });
-    panel.addEventListener('pointerleave',function(){
-      mouse.active=false; mouse.x=-9e4; mouse.y=-9e4; sm.x=-9e4; sm.y=-9e4; prev.x=-9e4;
-      if(state==='assembling'||state==='active') startAnim('scattering');
-    });
+    var touchMode = matchMedia('(hover: none)').matches;
+    if(!touchMode){
+      panel.addEventListener('pointermove',function(e){
+        var r=canvas.getBoundingClientRect();
+        var mx=e.clientX-r.left, my=e.clientY-r.top;
+        if(prev.x>-9000){ var dx=mx-prev.x, dy=my-prev.y; speed=Math.sqrt(dx*dx+dy*dy); }
+        prev.x=mx; prev.y=my;
+        mouse.x=mx; mouse.y=my; mouse.active=true; everTouched=true;
+        if(state==='idle'||state==='scattering') startAnim('assembling');
+      });
+      panel.addEventListener('pointerleave',function(){
+        mouse.active=false; mouse.x=-9e4; mouse.y=-9e4; sm.x=-9e4; sm.y=-9e4; prev.x=-9e4;
+        if(state==='assembling'||state==='active') startAnim('scattering');
+      });
+    } else {
+      /* phones: one tap assembles, next tap dissolves */
+      panel.addEventListener('click',function(){
+        everTouched=true;
+        if(state==='idle'||state==='scattering') startAnim('assembling');
+        else startAnim('scattering');
+      });
+    }
     new ResizeObserver(build).observe(panel);
     if(document.fonts&&document.fonts.ready) document.fonts.ready.then(build);
 
@@ -807,7 +800,7 @@ footer{padding:26px 0 40px;color:var(--fg-dim);font-size:.75rem}
       }
       ctx.clearRect(0,0,S,S);
       var cy=Math.cos(rotY), sy=Math.sin(rotY), cx=Math.cos(rotX), sx=Math.sin(rotX);
-      var scale=S*.30, persp=3.4, ci=0;
+      var scale=S*(S<330?.235:.30), persp=3.4, ci=0;
       /* painter-ish: draw far first for nicer overlap */
       var proj=[];
       for(var i=0;i<pts.length;i++){
