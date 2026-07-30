@@ -78,6 +78,7 @@ for s in SITES:
 order = [s for c in CITY_ORDER for s in by_city.get(c, [])]
 
 # ---- portfolio tiles: generated locally, NO URL text anywhere (his 07-14 ask) ----
+import hashlib
 from PIL import Image, ImageDraw
 SHOT_SRC = {
     "vietnam": WB / "VIETNAM" / "PITCH-KIT-VIETNAM" / "screenshots",
@@ -125,18 +126,31 @@ def make_tile(src_path, out_path):
     crop.save(out_path, "JPEG", quality=86)
 
 def shot(s):
+    """Tile is rebuilt whenever the source screenshot is NEWER than the tile.
+
+    It used to be `if not out.exists()`, which meant a tile was generated once and never again:
+    every hero redesign after the first build stayed invisible on the portfolio (Wissam 07-30,
+    looking at the Athens block: "you didn't update them there because they all look different
+    now"). Never go back to exists-only.
+    """
     slug = s["url"].rstrip("/").split("/")[-1]
     out = TILE_DIR / f"{s['repo']}-{slug}.jpg"
-    if not out.exists():
-        src = source_png(s)
-        assert src.exists(), f"missing screenshot: {src}"
+    src = source_png(s)
+    assert src.exists(), f"missing screenshot: {src}"
+    if (not out.exists()) or src.stat().st_mtime > out.stat().st_mtime:
         make_tile(src, out)
     return f"shots/{out.name}"
+
+
+def tile_v(name):
+    """Cache-bust per tile from its own bytes, so a refreshed thumbnail always reloads."""
+    b = (TILE_DIR / name).read_bytes()
+    return hashlib.md5(b).hexdigest()[:8]
 
 def card(s):
     return (f'<a class="card" href="{html.escape(s["url"])}" target="_blank" rel="noopener">'
             f'<span class="inner"><span class="chrome" aria-hidden="true"><i></i><i></i><i></i></span>'
-            f'<img loading="lazy" src="{shot(s)}?v=2" alt="{html.escape(s["name"])} website by StudioMorphik">'
+            f'<img loading="lazy" src="{(_p:=shot(s))}?v={tile_v(_p.split("/")[-1])}" alt="{html.escape(s["name"])} website by StudioMorphik">'
             f'<span class="meta"><b>{html.escape(s["name"])}</b><span style="display:flex;align-items:center;gap:9px"><i>{s["city"]}</i><span class="arr">↗</span></span></span></span></a>')
 
 sections = "\n".join(
