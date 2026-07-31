@@ -210,8 +210,14 @@ header .bar{{gap:16px}}
 .hicon:hover,.hicon:active{{opacity:1}}
 .hicon svg{{display:block}}
 @media(max-width:560px){{.wordmark{{font-size:13px;letter-spacing:.16em}}header nav{{gap:13px;font-size:9.5px}}.hicons{{gap:6px}}.hicon svg{{width:17px;height:17px}}}}
-@media(max-width:430px){{header nav a.navcontact{{display:none}}}}
-@media(max-width:400px){{header .bar{{gap:12px;padding:14px 16px}}.wordmark{{font-size:11.5px;letter-spacing:.1em}}header nav{{gap:10px;font-size:8.5px}}.hicons{{gap:5px}}.hicon svg{{width:15px;height:15px}}}}
+@media(max-width:760px){{header nav{{flex-shrink:1;min-width:0}}}}
+@media(max-width:520px){{
+  header .bar{{flex-wrap:wrap;row-gap:10px;padding-top:12px;padding-bottom:12px}}
+  header nav{{flex-basis:100%;order:3;margin-left:0;justify-content:flex-start;gap:8px}}
+  header nav a{{border:1px solid var(--line);border-radius:999px;padding:6px 12px;font-size:9px;letter-spacing:.12em}}
+  header nav a.on{{border-color:rgba(255,255,255,.55);color:var(--fg)}}
+}}
+@media(max-width:400px){{header .bar{{gap:12px;padding:14px 16px}}.wordmark{{font-size:11.5px;letter-spacing:.1em}}.hicons{{gap:5px}}.hicon svg{{width:15px;height:15px}}}}
 .hero{{padding:clamp(56px,10vw,110px) 0 clamp(28px,4vw,44px)}}
 .eyebrow{{font-family:'JetBrains Mono',ui-monospace,monospace;font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:var(--dim)}}
 h1{{font-family:'Integral CF',sans-serif;font-size:clamp(2.4rem,8vw,5.4rem);line-height:1.02;letter-spacing:.02em;margin:.35em 0 .3em}}
@@ -310,6 +316,7 @@ var io=new IntersectionObserver(function(es){{es.forEach(function(e){{
 document.querySelectorAll('.cityblock').forEach(function(s){{io.observe(s)}});}}
 }})();
 </script>
+<script>(function(){{var f=function(){{var h=document.querySelector('header'),c=document.querySelector('.citynav');if(h&&c)c.style.top=h.offsetHeight+'px';}};addEventListener('load',f);addEventListener('resize',f);f();}})();</script>
 </body>
 </html>
 """
