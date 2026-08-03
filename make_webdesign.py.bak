@@ -62,12 +62,6 @@ if _ath_kd.exists():
     ath = load_mod("ath_kd", _ath_kd)
     for b in ath.BIZ:
         add(b["name"], b["url"], "athens", "Athens")
-_b4_kd = WB / "BEIRUT" / "B4" / "tools" / "kitdata.py"
-if _b4_kd.exists():
-    b4 = load_mod("b4_kd", _b4_kd)
-    for b in b4.BIZ:
-        add(b["name"], b["url"], "beirut-b4", "Beirut")
-
 _ber_kd = WB / "BERLIN" / "tools" / "kitdata.py"
 if _ber_kd.exists():  # Berlin build may still be in flight — skip until its kitdata lands
     ber = load_mod("ber_kd", _ber_kd)
@@ -95,7 +89,6 @@ SHOT_SRC = {
     "damascus": WB / "DAMASCUS" / "PITCH-KIT-DAMASCUS" / "screenshots",
     "berlin": WB / "BERLIN" / "PITCH-KIT-BERLIN" / "screenshots",
     "athens": WB / "ATHENS" / "screenshots",
-    "beirut-b4": WB / "BEIRUT" / "B4" / "PITCH-KIT-UNKNOWN" / "screenshots",
 }
 TILE_DIR = HERE / "web-design" / "shots"
 TILE_DIR.mkdir(parents=True, exist_ok=True)
@@ -114,8 +107,6 @@ def source_png(s):
         return SHOT_SRC["berlin"] / f"{slug}.png"
     if s["repo"] == "athens":
         return SHOT_SRC["athens"] / f"{slug}.png"
-    if s["repo"] == "beirut-b4":
-        return SHOT_SRC["beirut-b4"] / f"{slug}.png"
     if s["repo"] == "beirut":
         p = SHOT_SRC["bey-cm"] / f"Beirut — {s['name']}.png"
         return p if p.exists() else SHOT_SRC["beirut-rabab"] / f"{slug}.png"
