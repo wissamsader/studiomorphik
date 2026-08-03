@@ -95,7 +95,9 @@ SHOT_SRC = {
     "damascus": WB / "DAMASCUS" / "PITCH-KIT-DAMASCUS" / "screenshots",
     "berlin": WB / "BERLIN" / "PITCH-KIT-BERLIN" / "screenshots",
     "athens": WB / "ATHENS" / "screenshots",
-    "beirut-b4": WB / "BEIRUT" / "B4" / "PITCH-KIT-UNKNOWN" / "screenshots",
+    # plain English-page shots, NOT the kit composite: the kit shot carries an Arabic inset
+    # bottom-right, and his 08-03 note was "remove the small picture" from the thumbnails.
+    "beirut-b4": WB / "BEIRUT" / "B4" / "PITCH-KIT-UNKNOWN" / "screenshots-plain",
 }
 TILE_DIR = HERE / "web-design" / "shots"
 TILE_DIR.mkdir(parents=True, exist_ok=True)
