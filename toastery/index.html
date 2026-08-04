@@ -1,0 +1,1038 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>the toastery · Doha</title>
+<meta name="robots" content="noindex,nofollow">
+<meta name="description" content="Ice cream, toast and specialty coffee in Msheireb Downtown Doha and Centro, Lusail. Open from seven in the morning until midnight.">
+<meta name="theme-color" content="#FFF4C7">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Inter:wght@400;500;600&family=Amiri:wght@400;700&family=Noto+Sans+Arabic:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23FFF4C7'/%3E%3Ctext x='16' y='23' font-family='Georgia,serif' font-size='19' fill='%23C4674A' text-anchor='middle'%3Et%3C/text%3E%3C/svg%3E">
+<style>
+/* ============================================================
+   the toastery · Doha
+   Direction derived from the business's own published material.
+   Palette sampled from their photographs. See REFERENCES.md.
+   ============================================================ */
+
+:root{
+  --butter:#FFF4C7;
+  --butter-deep:#F6E49B;
+  --butter-soft:#FFF9DE;
+  --cream:#FBF6E9;
+  --bone:#F1EADC;
+  --ink:#2A2118;
+  --ink-soft:#6F604E;
+  --ink-faint:#9C8C77;
+  --coral:#E29780;
+  --coral-deep:#BC5F42;
+  --navy:#323B4C;
+  --navy-soft:#4A5568;
+  --yellow:#F8D368;
+  --line:rgba(42,33,24,.14);
+  --line-soft:rgba(42,33,24,.08);
+
+  --serif:"Cormorant Garamond",Georgia,serif;
+  --sans:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  --ar-serif:"Amiri",serif;
+  --ar-sans:"Noto Sans Arabic",sans-serif;
+
+  --wrap:1180px;
+  --pad:clamp(20px,5vw,56px);
+  --r:14px;
+}
+
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{
+  font-family:var(--sans);
+  background:var(--cream);
+  color:var(--ink);
+  line-height:1.65;
+  font-size:16px;
+  overflow-x:clip;
+  padding-bottom:calc(78px + env(safe-area-inset-bottom));
+}
+@media(min-width:861px){body{padding-bottom:0}}
+img{max-width:100%;display:block;height:auto}
+a{color:inherit}
+button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
+
+/* ---------- language layer ---------- */
+.ar{display:none}
+html.lang-ar .en{display:none}
+html.lang-ar .ar{display:inline}
+html.lang-ar .ar.blk,html.lang-ar p.ar,html.lang-ar span.ar.blk{display:block}
+html.lang-ar body{font-family:var(--ar-sans);direction:rtl}
+html.lang-ar .display{font-family:var(--ar-serif)}
+html.lang-ar .meta{letter-spacing:.04em}
+
+/* ---------- shared type ---------- */
+.wrap{max-width:var(--wrap);margin-inline:auto;padding-inline:var(--pad)}
+.meta{
+  font-family:var(--sans);
+  font-size:11px;font-weight:600;
+  letter-spacing:.19em;text-transform:uppercase;
+  color:var(--ink-faint);
+}
+.display{
+  font-family:var(--serif);font-weight:300;
+  line-height:1.06;letter-spacing:.01em;
+}
+h2.display{font-size:clamp(34px,5.4vw,58px)}
+h3.display{font-size:clamp(23px,2.6vw,31px);line-height:1.2}
+.lede{
+  font-family:var(--serif);font-size:clamp(19px,2.1vw,25px);
+  font-weight:300;line-height:1.5;color:var(--ink-soft);
+}
+p{max-width:62ch}
+.sec{padding-block:clamp(64px,9vw,120px)}
+.sec-head{margin-bottom:clamp(34px,5vw,58px)}
+.sec-head .meta{display:block;margin-bottom:16px}
+
+/* scalloped awning valance: the one living ornament */
+.awning{
+  height:21px;width:min(342px,64vw);
+  background:
+    radial-gradient(circle at 50% 0, var(--coral) 8.6px, transparent 9.1px) 0 100%/18px 10px repeat-x,
+    linear-gradient(var(--coral),var(--coral)) 0 0/100% 12px no-repeat;
+  opacity:.85;
+  animation:awning-sun 13s ease-in-out infinite;
+}
+@keyframes awning-sun{
+  0%,100%{opacity:.72;transform:translateY(0)}
+  50%{opacity:.95;transform:translateY(2px)}
+}
+@media(prefers-reduced-motion:reduce){
+  .awning{animation:none}
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation-duration:.001ms!important;transition-duration:.001ms!important}
+}
+
+/* ---------- reveal ---------- */
+/* numbers and codes keep LTR order inside the Arabic layer (bidi isolation) */
+.ltr{direction:ltr;unicode-bidi:isolate}
+.rv{opacity:0;transform:translateY(16px);transition:opacity .8s cubic-bezier(.2,.7,.3,1),transform .8s cubic-bezier(.2,.7,.3,1)}
+.rv.in{opacity:1;transform:none}
+
+/* ============ top bar ============ */
+.top{
+  position:sticky;top:0;z-index:60;
+  background:rgba(255,244,199,.93);
+  backdrop-filter:saturate(1.4) blur(12px);
+  border-bottom:1px solid transparent;
+  transition:border-color .3s,box-shadow .3s;
+}
+.top.stuck{border-bottom-color:var(--line-soft);box-shadow:0 6px 24px -18px rgba(42,33,24,.5)}
+.top-in{display:flex;align-items:center;gap:20px;height:60px;max-width:var(--wrap);margin-inline:auto;padding-inline:var(--pad)}
+.brand{
+  font-family:var(--serif);font-size:20px;font-weight:400;
+  letter-spacing:.15em;color:var(--coral-deep);white-space:nowrap;
+  text-decoration:none;
+}
+html.lang-ar .brand{font-family:var(--ar-serif);letter-spacing:0;font-size:21px}
+.top nav{display:none;margin-inline-start:auto;gap:26px}
+@media(min-width:861px){.top nav{display:flex}}
+.top nav a{
+  font-size:12px;font-weight:500;letter-spacing:.13em;text-transform:uppercase;
+  color:var(--ink-soft);text-decoration:none;transition:color .25s;
+}
+.top nav a:hover{color:var(--coral-deep)}
+.lang{
+  margin-inline-start:auto;
+  display:flex;align-items:center;gap:0;
+  border:1px solid var(--line);border-radius:99px;overflow:hidden;flex:none;
+}
+@media(min-width:861px){.lang{margin-inline-start:0}}
+.lang button{
+  padding:6px 13px;font-size:11px;font-weight:600;letter-spacing:.1em;
+  color:var(--ink-faint);transition:background .25s,color .25s;
+}
+.lang button.on{background:var(--coral-deep);color:var(--butter-soft)}
+
+/* ============ hero ============ */
+.hero{
+  background:var(--butter);
+  min-height:clamp(600px,92svh,820px);
+  max-height:860px;
+  display:flex;align-items:center;
+  position:relative;overflow:hidden;
+  text-align:center;
+}
+.hero::after{ /* soft sun wash, pure css */
+  content:"";position:absolute;inset:-20% -10% auto -10%;height:70%;
+  background:radial-gradient(60% 100% at 50% 0,rgba(255,255,255,.75),transparent 70%);
+  pointer-events:none;
+}
+.hero-in{position:relative;z-index:1;width:100%;padding-block:56px}
+.hero .meta{display:block;margin-bottom:clamp(20px,3vw,30px)}
+.wordmark{
+  font-family:var(--serif);font-weight:300;
+  font-size:clamp(52px,12.5vw,148px);
+  line-height:.95;letter-spacing:.06em;
+  color:var(--coral-deep);
+}
+html.lang-ar .wordmark{font-family:var(--ar-serif);letter-spacing:0;font-size:clamp(46px,11vw,124px);line-height:1.3}
+.wordmark-ar{
+  font-family:var(--ar-serif);font-size:clamp(24px,4.4vw,46px);
+  color:#D9846A;margin-top:10px;line-height:1.5;
+}
+html.lang-ar .wordmark-ar{font-family:var(--serif);letter-spacing:.1em;font-size:clamp(20px,3.4vw,34px)}
+.hero .awning{margin:clamp(22px,3.4vw,34px) auto}
+.hero-line{
+  font-family:var(--serif);font-weight:300;
+  font-size:clamp(18px,2.3vw,26px);line-height:1.45;
+  color:var(--ink-soft);max-width:26ch;margin-inline:auto;
+}
+html.lang-ar .hero-line{font-family:var(--ar-sans);font-size:clamp(16px,2vw,21px);max-width:34ch}
+.hero-cta{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-top:clamp(26px,4vw,38px)}
+
+.btn{
+  display:inline-flex;align-items:center;gap:9px;
+  padding:13px 26px;border-radius:99px;
+  font-size:12.5px;font-weight:600;letter-spacing:.11em;text-transform:uppercase;
+  text-decoration:none;transition:transform .3s cubic-bezier(.2,.7,.3,1),background .3s,box-shadow .3s;
+  border:1px solid transparent;
+}
+html.lang-ar .btn{letter-spacing:.02em;font-size:13.5px;text-transform:none}
+.btn-solid{background:var(--coral-deep);color:var(--butter-soft);box-shadow:0 10px 26px -14px rgba(188,95,66,.9)}
+.btn-solid:hover{transform:translateY(-2px);box-shadow:0 16px 32px -14px rgba(188,95,66,.9)}
+.btn-ghost{border-color:rgba(42,33,24,.28);color:var(--ink)}
+.btn-ghost:hover{background:rgba(42,33,24,.06);transform:translateY(-2px)}
+.btn-navy{background:var(--butter);color:var(--navy)}
+.btn-navy:hover{transform:translateY(-2px)}
+
+/* ============ storefront band (contained, never edge to edge) ============ */
+.shopband{background:var(--butter);padding-bottom:clamp(50px,7vw,84px)}
+.shopframe{
+  max-width:var(--wrap);margin-inline:auto;padding-inline:var(--pad);
+}
+.shopframe figure{
+  border-radius:var(--r);overflow:hidden;
+  box-shadow:0 34px 70px -40px rgba(42,33,24,.55);
+  background:var(--bone);
+}
+.shopframe img{width:100%;aspect-ratio:16/10;object-fit:cover}
+.shopcap{
+  display:flex;flex-wrap:wrap;gap:8px 22px;justify-content:center;
+  margin-top:18px;
+}
+.shopcap span{font-size:11.5px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-faint)}
+html.lang-ar .shopcap span{letter-spacing:.02em;text-transform:none;font-size:13px}
+
+/* ============ ticker ============ */
+.ticker{
+  direction:ltr;
+  background:var(--coral-deep);color:var(--butter-soft);
+  padding-block:13px;overflow:hidden;white-space:nowrap;
+  border-block:1px solid rgba(255,255,255,.14);
+}
+.ticker-track{display:inline-flex;gap:0;animation:slide 46s linear infinite;will-change:transform}
+.ticker:hover .ticker-track{animation-play-state:paused}
+.ticker span{
+  font-family:var(--serif);font-size:19px;font-style:italic;font-weight:300;
+  padding-inline:26px;opacity:.94;
+}
+.ticker span::after{content:"·";margin-inline-start:26px;opacity:.5;font-style:normal}
+@keyframes slide{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+
+/* ============ story ============ */
+.story{background:var(--cream)}
+.story-grid{display:grid;gap:clamp(34px,5vw,68px);align-items:center}
+@media(min-width:861px){.story-grid{grid-template-columns:1.05fr .95fr}}
+.story-grid p+p{margin-top:1.1em}
+.story-grid p{color:var(--ink-soft);font-size:16.5px}
+.story-fig{position:relative;min-width:0}
+.story-fig img{border-radius:var(--r);box-shadow:0 30px 60px -38px rgba(42,33,24,.5)}
+.story-badge{
+  position:absolute;inset-block-end:-20px;inset-inline-start:-14px;
+  background:var(--butter);border:1px solid var(--line-soft);
+  border-radius:12px;padding:14px 20px;text-align:center;
+  box-shadow:0 18px 40px -24px rgba(42,33,24,.55);
+}
+@media(max-width:860px){.story-badge{inset-inline-start:12px;inset-block-end:-16px}}
+.story-badge b{display:block;font-family:var(--serif);font-size:31px;font-weight:400;color:var(--coral-deep);line-height:1}
+.story-badge small{font-size:10.5px;font-weight:600;letter-spacing:.13em;text-transform:uppercase;color:var(--ink-faint)}
+html.lang-ar .story-badge small{letter-spacing:.02em;text-transform:none;font-size:12px}
+.story-list{margin-top:30px;display:grid;gap:0;border-top:1px solid var(--line-soft)}
+.story-list div{display:flex;gap:18px;padding-block:13px;border-bottom:1px solid var(--line-soft);align-items:baseline}
+.story-list dt,.story-list b{font-size:11px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-faint);flex:0 0 92px}
+html.lang-ar .story-list b{letter-spacing:.02em;text-transform:none;font-size:13px;flex-basis:96px}
+.story-list span{font-size:15px;color:var(--ink)}
+
+/* ============ flavours ============ */
+.flav{background:var(--bone)}
+.chips{display:flex;flex-wrap:wrap;gap:9px;margin-top:24px}
+.chip{
+  padding:8px 17px;border-radius:99px;border:1px solid var(--line);
+  font-size:11.5px;font-weight:600;letter-spacing:.11em;text-transform:uppercase;
+  color:var(--ink-soft);transition:background .25s,color .25s,border-color .25s;
+}
+html.lang-ar .chip{letter-spacing:.02em;text-transform:none;font-size:13.5px}
+.chip:hover{border-color:var(--ink-faint)}
+.chip.on{background:var(--ink);border-color:var(--ink);color:var(--butter-soft)}
+.flav-grid{
+  display:grid;gap:clamp(18px,2.4vw,30px);
+  grid-template-columns:repeat(2,1fr);
+}
+@media(min-width:620px){.flav-grid{grid-template-columns:repeat(3,1fr)}}
+.flav-card{min-width:0;transition:opacity .4s,transform .4s}
+.flav-card[hidden]{display:none}
+.flav-card figure{
+  border-radius:var(--r);overflow:hidden;background:var(--cream);
+  box-shadow:0 18px 40px -30px rgba(42,33,24,.5);
+}
+.flav-card img{aspect-ratio:1;object-fit:cover;width:100%;transition:transform .8s cubic-bezier(.2,.7,.3,1)}
+.flav-card:hover img{transform:scale(1.045)}
+.flav-name{display:flex;align-items:center;gap:9px;margin-top:14px}
+.dot{width:10px;height:10px;border-radius:99px;flex:none;border:1px solid rgba(42,33,24,.3)}
+.flav-name h3{font-family:var(--serif);font-size:22px;font-weight:400;line-height:1.2}
+html.lang-ar .flav-name h3{font-family:var(--ar-serif);font-size:20px}
+.flav-card p{font-size:13.5px;color:var(--ink-faint);margin-top:3px;padding-inline-start:18px}
+.flav-note{
+  margin-top:clamp(34px,4.6vw,52px);padding-top:24px;border-top:1px solid var(--line-soft);
+  display:flex;flex-wrap:wrap;gap:14px 30px;align-items:baseline;
+}
+.flav-note p{font-family:var(--serif);font-size:19px;font-style:italic;font-weight:300;color:var(--ink-soft);max-width:46ch}
+html.lang-ar .flav-note p{font-family:var(--ar-sans);font-style:normal;font-size:16px}
+
+/* ============ signatures ============ */
+.sig{background:var(--cream)}
+.sig-grid{display:grid;gap:clamp(24px,3.4vw,40px);grid-template-columns:1fr}
+@media(min-width:760px){.sig-grid{grid-template-columns:repeat(3,1fr)}}
+.sig-card{min-width:0}
+.sig-card figure{
+  border-radius:var(--r);overflow:hidden;background:var(--bone);
+  box-shadow:0 24px 54px -36px rgba(42,33,24,.5);
+}
+.sig-card img{aspect-ratio:4/3;object-fit:cover;width:100%}
+.sig-card .meta{display:block;margin:20px 0 8px}
+.sig-card p{font-size:15px;color:var(--ink-soft)}
+
+/* ============ counter / menu ============ */
+.counter{background:var(--butter)}
+.counter-grid{display:grid;gap:clamp(34px,5vw,64px)}
+@media(min-width:861px){.counter-grid{grid-template-columns:1fr 1fr}}
+.menu-card{
+  background:var(--butter-soft);border:1px solid rgba(42,33,24,.1);
+  border-radius:var(--r);padding:clamp(24px,3.4vw,38px);
+  box-shadow:0 26px 60px -42px rgba(42,33,24,.55);
+  min-width:0;
+}
+.menu-card h3{
+  font-family:var(--serif);font-size:26px;font-weight:400;
+  padding-bottom:16px;border-bottom:1px solid var(--line);
+}
+html.lang-ar .menu-card h3{font-family:var(--ar-serif)}
+.menu-card ul{list-style:none;margin-top:6px}
+.menu-card li{
+  display:flex;gap:16px;align-items:baseline;justify-content:space-between;
+  padding-block:11px;border-bottom:1px solid var(--line-soft);
+}
+.menu-card li:last-child{border-bottom:0}
+.menu-card li b{font-weight:500;font-size:15.5px}
+.menu-card li i{font-family:var(--serif);font-style:italic;font-size:14.5px;color:var(--ink-faint);text-align:end;flex:none}
+html.lang-ar .menu-card li i{font-family:var(--ar-sans);font-style:normal;font-size:13.5px}
+.price-note{
+  margin-top:22px;padding:16px 18px;border-radius:11px;
+  background:rgba(188,95,66,.09);border:1px solid rgba(188,95,66,.2);
+  font-size:14.5px;color:var(--ink);
+}
+.price-note b{font-weight:600}
+
+/* ============ reviews ============ */
+.revs{background:var(--bone)}
+.score{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
+.score b{font-family:var(--serif);font-size:56px;font-weight:400;line-height:1;color:var(--coral-deep)}
+.stars{color:var(--yellow);font-size:19px;letter-spacing:2px}
+.revs-grid{display:grid;gap:clamp(20px,2.8vw,32px);grid-template-columns:1fr;margin-top:clamp(34px,4.6vw,52px)}
+@media(min-width:760px){.revs-grid{grid-template-columns:repeat(3,1fr)}}
+.rev{
+  background:var(--cream);border-radius:var(--r);
+  padding:clamp(22px,2.8vw,30px);border:1px solid var(--line-soft);
+  display:flex;flex-direction:column;min-width:0;
+}
+.rev blockquote{
+  font-family:var(--serif);font-size:18.5px;font-weight:300;line-height:1.5;
+  color:var(--ink);flex:1;
+}
+html.lang-ar .rev blockquote{font-family:var(--ar-sans);font-size:15.5px}
+.rev footer{margin-top:20px;padding-top:16px;border-top:1px solid var(--line-soft)}
+.rev footer b{display:block;font-size:14px;font-weight:600}
+.rev footer small{font-size:11.5px;color:var(--ink-faint)}
+
+/* ============ clubs (navy) ============ */
+.clubs{background:var(--navy);color:var(--butter-soft)}
+.clubs .meta{color:rgba(251,246,233,.5)}
+.clubs h2{color:var(--butter-soft)}
+.clubs-grid{display:grid;gap:clamp(24px,3.4vw,44px);grid-template-columns:1fr}
+@media(min-width:760px){.clubs-grid{grid-template-columns:repeat(3,1fr)}}
+.club{min-width:0}
+.club figure{border-radius:var(--r);overflow:hidden;background:var(--navy-soft);border:1px solid rgba(251,246,233,.18)}
+.club img{aspect-ratio:4/3;object-fit:cover;width:100%}
+.club h3{font-family:var(--serif);font-size:25px;font-weight:400;margin:18px 0 7px}
+html.lang-ar .club h3{font-family:var(--ar-serif)}
+.club p{font-size:14.5px;color:rgba(251,246,233,.66)}
+
+/* ============ gallery ============ */
+.gal{background:var(--cream)}
+.gal-grid{display:grid;gap:10px;grid-template-columns:repeat(2,1fr)}
+@media(min-width:620px){.gal-grid{grid-template-columns:repeat(4,1fr)}}
+.gal-grid button{
+  border-radius:10px;overflow:hidden;background:var(--bone);
+  aspect-ratio:1;display:block;width:100%;
+}
+.gal-grid img{width:100%;height:100%;object-fit:cover;transition:transform .7s cubic-bezier(.2,.7,.3,1),opacity .3s}
+.gal-grid button:hover img{transform:scale(1.06);opacity:.93}
+/* 12 tiles: divides evenly by 4 columns and by 2, never an exposed empty cell */
+
+/* lightbox */
+.lb{
+  position:fixed;inset:0;z-index:200;display:none;
+  background:rgba(30,23,16,.93);backdrop-filter:blur(6px);
+  align-items:center;justify-content:center;padding:20px;
+}
+.lb.on{display:flex}
+.lb img{max-width:min(94vw,1100px);max-height:86vh;border-radius:10px;object-fit:contain}
+.lb-x{position:absolute;top:16px;inset-inline-end:18px;color:var(--butter-soft);font-size:32px;line-height:1;padding:10px}
+.lb-nav{position:absolute;top:50%;transform:translateY(-50%);color:var(--butter-soft);font-size:38px;padding:16px;opacity:.75}
+.lb-nav:hover{opacity:1}
+.lb-prev{inset-inline-start:6px}
+.lb-next{inset-inline-end:6px}
+
+/* ============ visit ============ */
+.visit{background:var(--butter)}
+.visit-grid{display:grid;gap:clamp(24px,3.4vw,38px);grid-template-columns:1fr}
+@media(min-width:861px){.visit-grid{grid-template-columns:1.15fr .85fr}}
+.loc{
+  background:var(--butter-soft);border:1px solid rgba(42,33,24,.1);
+  border-radius:var(--r);padding:clamp(24px,3.2vw,36px);
+  box-shadow:0 26px 60px -44px rgba(42,33,24,.55);min-width:0;
+}
+.loc-top{display:flex;flex-wrap:wrap;gap:12px;align-items:baseline;justify-content:space-between}
+.loc h3{font-family:var(--serif);font-size:29px;font-weight:400}
+html.lang-ar .loc h3{font-family:var(--ar-serif)}
+.status{
+  display:inline-flex;align-items:center;gap:7px;flex:none;
+  font-size:11px;font-weight:600;letter-spacing:.11em;text-transform:uppercase;
+  padding:6px 13px;border-radius:99px;
+}
+html.lang-ar .status{letter-spacing:.02em;text-transform:none;font-size:12.5px}
+.status.open{background:rgba(93,138,86,.16);color:#3F6639}
+.status.shut{background:rgba(42,33,24,.09);color:var(--ink-soft)}
+.status i{width:7px;height:7px;border-radius:99px;background:currentColor;flex:none}
+.addr{margin-top:14px;font-size:15px;color:var(--ink-soft)}
+.hours{margin-top:22px;border-top:1px solid var(--line-soft)}
+.hours div{
+  display:flex;justify-content:space-between;gap:16px;
+  padding-block:9px;border-bottom:1px solid var(--line-soft);font-size:14.5px;
+}
+.hours div.today{font-weight:600;color:var(--coral-deep)}
+.hours dt,.hours span:first-child{color:var(--ink-soft)}
+.hours div.today span{color:var(--coral-deep)}
+.loc-links{display:flex;flex-wrap:wrap;gap:10px;margin-top:24px}
+.loc-links a{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:10px 18px;border-radius:99px;border:1px solid rgba(42,33,24,.2);
+  font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;
+  text-decoration:none;transition:background .25s,transform .25s;
+}
+html.lang-ar .loc-links a{letter-spacing:.02em;text-transform:none;font-size:13.5px}
+.loc-links a:hover{background:rgba(42,33,24,.06);transform:translateY(-2px)}
+.loc-links a.wa{background:var(--coral-deep);border-color:var(--coral-deep);color:var(--butter-soft)}
+.loc-links a.wa:hover{background:#a8543a}
+.loc.second{background:transparent;box-shadow:none;border-style:dashed}
+.reach{margin-top:clamp(24px,3vw,32px)}
+.reach a{
+  display:flex;align-items:center;gap:14px;
+  padding:16px 20px;border-radius:12px;background:var(--butter-soft);
+  border:1px solid rgba(42,33,24,.1);text-decoration:none;
+  margin-bottom:10px;transition:transform .25s,box-shadow .25s;
+}
+.reach a:hover{transform:translateY(-2px);box-shadow:0 16px 34px -24px rgba(42,33,24,.5)}
+.reach b{display:block;font-size:15px;font-weight:600}
+.reach small{font-size:12.5px;color:var(--ink-faint)}
+.reach svg{width:21px;height:21px;flex:none;color:var(--coral-deep)}
+
+/* ============ footer ============ */
+.foot{background:var(--ink);color:rgba(251,246,233,.6);padding-block:clamp(44px,6vw,64px)}
+.foot-in{display:flex;flex-wrap:wrap;gap:24px;justify-content:space-between;align-items:center}
+.foot .brand{color:var(--butter);font-size:23px}
+.foot p{font-size:12.5px;letter-spacing:.04em}
+.foot a{color:rgba(251,246,233,.8);text-decoration:none}
+.foot a:hover{color:var(--butter)}
+.foot-links{display:flex;gap:20px;flex-wrap:wrap}
+.foot-links a{font-size:12px;font-weight:500;letter-spacing:.11em;text-transform:uppercase}
+html.lang-ar .foot-links a{letter-spacing:.02em;text-transform:none;font-size:13.5px}
+
+/* ============ sticky awning bar (unique to this site) ============ */
+.bar{
+  position:fixed;inset-inline:0;bottom:0;z-index:80;
+  background:var(--butter);
+  padding:14px var(--pad) calc(14px + env(safe-area-inset-bottom));
+  display:flex;gap:10px;align-items:center;justify-content:center;
+  box-shadow:0 -14px 40px -26px rgba(42,33,24,.7);
+}
+.bar::before{ /* the scalloped awning edge */
+  content:"";position:absolute;inset-inline:0;top:-11px;height:12px;
+  background:radial-gradient(circle at 11px 12px, var(--butter) 10.5px, transparent 11px) 0 0/22px 12px repeat-x;
+}
+@media(min-width:861px){.bar{display:none}}
+.bar a{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  height:46px;border-radius:99px;text-decoration:none;
+  font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;
+  border:1px solid rgba(42,33,24,.22);color:var(--ink);
+  transition:transform .2s;
+}
+html.lang-ar .bar a{letter-spacing:.01em;text-transform:none;font-size:13px}
+.bar a:active{transform:scale(.96)}
+.bar a.wa{flex:1 1 auto;background:var(--coral-deep);border-color:var(--coral-deep);color:var(--butter-soft);padding-inline:20px;min-width:0}
+.bar a.ico{width:46px;flex:none;padding:0}
+.bar a svg{width:19px;height:19px}
+
+/* ============ mobile trims ============ */
+@media(max-width:520px){
+  .flav-grid{gap:14px}
+  .flav-name h3{font-size:19px}
+  .flav-card p{font-size:12.5px}
+  .bar{gap:8px;padding-inline:14px}
+  .bar a.wa{font-size:11px;letter-spacing:.05em}
+}
+</style>
+</head>
+<body>
+
+<!-- ===================== TOP ===================== -->
+<div class="top" id="top">
+  <div class="top-in">
+    <a href="#top" class="brand"><span class="en">the toastery</span><span class="ar">ذا توستريه</span></a>
+    <nav>
+      <a href="#flavours"><span class="en">Flavours</span><span class="ar">النكهات</span></a>
+      <a href="#counter"><span class="en">The counter</span><span class="ar">المنيو</span></a>
+      <a href="#clubs"><span class="en">The clubs</span><span class="ar">النوادي</span></a>
+      <a href="#visit"><span class="en">Visit</span><span class="ar">زورونا</span></a>
+    </nav>
+    <div class="lang" role="group" aria-label="Language">
+      <button type="button" data-lang="en" class="on">EN</button>
+      <button type="button" data-lang="ar" style="font-family:'Noto Sans Arabic',sans-serif;letter-spacing:0">عربي</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== HERO ===================== -->
+<header class="hero">
+  <div class="hero-in wrap">
+    <span class="meta"><span class="en">Msheireb Downtown &middot; Centro, Lusail &middot; Doha, Qatar</span><span class="ar">مشيرب قلب الدوحة &middot; سنترو، لوسيل &middot; الدوحة، قطر</span></span>
+    <h1 class="wordmark"><span class="en">the toastery</span><span class="ar">ذا توستريه</span></h1>
+    <div class="wordmark-ar"><span class="en">ذا توستريه</span><span class="ar">the toastery</span></div>
+    <div class="awning" aria-hidden="true"></div>
+    <p class="hero-line"><span class="en">Ice cream, toast and specialty coffee, from seven in the morning until midnight.</span><span class="ar blk">آيس كريم وتوست وقهوة مختصة، من السابعة صباحاً حتى منتصف الليل.</span></p>
+    <div class="hero-cta">
+      <a class="btn btn-solid" href="#" data-wa><span class="en">Order on WhatsApp</span><span class="ar">اطلب عبر واتساب</span></a>
+      <a class="btn btn-ghost" href="#flavours"><span class="en">See the flavours</span><span class="ar">شوف النكهات</span></a>
+    </div>
+  </div>
+</header>
+
+<!-- storefront: contained, with butter margin on every side -->
+<div class="shopband">
+  <div class="shopframe rv">
+    <figure><img src="img/01.jpg" alt="The toastery storefront in Msheireb Downtown Doha, butter yellow awning over a white counter" width="2200" height="1375" fetchpriority="high"></figure>
+    <div class="shopcap">
+      <span><span class="en">Msheireb Downtown</span><span class="ar">مشيرب</span></span>
+      <span><span class="en">Open daily 7:00 &ndash; 00:00</span><span class="ar">يومياً <span class="ltr">7:00 &ndash; 00:00</span></span></span>
+      <span><span class="en">Takeaway &amp; delivery</span><span class="ar">سفري وتوصيل</span></span>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== TICKER ===================== -->
+<div class="ticker" aria-hidden="true">
+  <div class="ticker-track">
+    <span>pistachio</span><span>ice cream toast</span><span>matcha</span><span>chocolate</span><span>hot chocolate</span><span>kunafa</span><span>vanilla</span><span>hibiscus refresher</span><span>fresh dates</span><span>cinnamon buns</span><span>coffee</span><span>banana</span>
+    <span>pistachio</span><span>ice cream toast</span><span>matcha</span><span>chocolate</span><span>hot chocolate</span><span>kunafa</span><span>vanilla</span><span>hibiscus refresher</span><span>fresh dates</span><span>cinnamon buns</span><span>coffee</span><span>banana</span>
+  </div>
+</div>
+
+<!-- ===================== STORY ===================== -->
+<section class="sec story">
+  <div class="wrap story-grid">
+    <div class="rv">
+      <span class="meta"><span class="en">Since the counter opened</span><span class="ar">من يوم ما فتحنا</span></span>
+      <h2 class="display" style="margin:14px 0 22px">
+        <span class="en">A small counter in the heart of Msheireb</span>
+        <span class="ar">ركن صغير في قلب مشيرب</span>
+      </h2>
+      <p class="en">The toastery is an ice cream counter and coffee shop tucked under a butter yellow awning on Wadi 12. Scoops are churned in small batches and set out in trays behind the glass, so the board changes with what came out of the kitchen that morning.</p>
+      <p class="en">Alongside them: toast built to order, specialty coffee, matcha, hot chocolate, and boxes packed to take home. There is outdoor seating for the cooler months and a second counter inside Centro in Lusail.</p>
+      <p class="ar blk">ذا توستريه ركن آيس كريم ومقهى تحت المظلة الصفراء في وادي 12. نحضّر الآيس كريم بكميات صغيرة ونعرضه في الصواني خلف الزجاج، فتتغير القائمة حسب ما خرج من المطبخ ذلك الصباح.</p>
+      <p class="ar blk">وإلى جانبه: توست يُحضّر عند الطلب، وقهوة مختصة، وماتشا، وشوكولاتة ساخنة، وعلب جاهزة للبيت. لدينا جلسة خارجية في الأشهر اللطيفة، وركن ثانٍ داخل سنترو في لوسيل.</p>
+
+      <div class="story-list">
+        <div><b><span class="en">Hours</span><span class="ar">الأوقات</span></b><span class="ltr">7:00 &ndash; 00:00</span></div>
+        <div><b><span class="en">Friday</span><span class="ar">الجمعة</span></b><span class="ltr">7:00 &ndash; 11:00, 13:00 &ndash; 00:00</span></div>
+        <div><b><span class="en">Counters</span><span class="ar">الفروع</span></b><span><span class="en">Msheireb Downtown &middot; Centro, Lusail</span><span class="ar">مشيرب &middot; سنترو، لوسيل</span></span></div>
+      </div>
+    </div>
+
+    <div class="story-fig rv">
+      <img src="img/02.jpg" alt="The toastery counter seen straight on, yellow sign above a white service counter with plants" width="1120" height="1400" loading="lazy">
+      <div class="story-badge">
+        <b>4.3</b>
+        <small><span class="en">71 Google reviews</span><span class="ar">71 تقييم على جوجل</span></small>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== FLAVOURS ===================== -->
+<section class="sec flav" id="flavours">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <span class="meta"><span class="en">Behind the glass</span><span class="ar">خلف الزجاج</span></span>
+      <h2 class="display"><span class="en">The flavour counter</span><span class="ar">قائمة النكهات</span></h2>
+      <div class="chips" role="group" aria-label="Filter flavours">
+        <button class="chip on" data-f="all"><span class="en">Everything</span><span class="ar">الكل</span></button>
+        <button class="chip" data-f="cream"><span class="en">Creams</span><span class="ar">كريمات</span></button>
+        <button class="chip" data-f="nut"><span class="en">Nuts</span><span class="ar">مكسرات</span></button>
+        <button class="chip" data-f="choc"><span class="en">Chocolate</span><span class="ar">شوكولاتة</span></button>
+        <button class="chip" data-f="seasonal"><span class="en">Seasonal</span><span class="ar">موسمية</span></button>
+      </div>
+    </div>
+
+    <div class="flav-grid">
+      <article class="flav-card rv" data-t="cream">
+        <figure><img src="img/06.jpg" alt="A scoop of vanilla ice cream lifted from the tray" width="1100" height="1100" loading="lazy"></figure>
+        <div class="flav-name"><i class="dot" style="background:#EFE7D4"></i><h3><span class="en">Vanilla</span><span class="ar">فانيليا</span></h3></div>
+        <p><span class="en">The plain one everything else is measured against.</span><span class="ar">الأساس الذي تُقاس عليه بقية النكهات.</span></p>
+      </article>
+
+      <article class="flav-card rv" data-t="nut">
+        <figure><img src="img/07.jpg" alt="A scoop of pistachio ice cream on the scoop" width="1100" height="1100" loading="lazy"></figure>
+        <div class="flav-name"><i class="dot" style="background:#A6A782"></i><h3><span class="en">Pistachio</span><span class="ar">فستق</span></h3></div>
+        <p><span class="en">Deep green, ground fine, not sweetened into candy.</span><span class="ar">أخضر غامق، مطحون ناعم، وغير محلّى بإفراط.</span></p>
+      </article>
+
+      <article class="flav-card rv" data-t="choc">
+        <figure><img src="img/08.jpg" alt="A scoop of dark chocolate ice cream with chocolate shards" width="1100" height="1100" loading="lazy"></figure>
+        <div class="flav-name"><i class="dot" style="background:#4F322D"></i><h3><span class="en">Chocolate</span><span class="ar">شوكولاتة</span></h3></div>
+        <p><span class="en">Dark, with shards folded through it.</span><span class="ar">غامقة، مع قطع شوكولاتة داخلها.</span></p>
+      </article>
+
+      <article class="flav-card rv" data-t="cream">
+        <figure><img src="img/09.jpg" alt="A scoop of coffee ice cream" width="1100" height="1100" loading="lazy"></figure>
+        <div class="flav-name"><i class="dot" style="background:#B0814E"></i><h3><span class="en">Coffee</span><span class="ar">قهوة</span></h3></div>
+        <p><span class="en">Made with the same beans we pull shots from.</span><span class="ar">من نفس البن الذي نحضّر منه القهوة.</span></p>
+      </article>
+
+      <article class="flav-card rv" data-t="cream">
+        <figure><img src="img/10.jpg" alt="Pale yellow banana ice cream rippled in the tray" width="1100" height="1100" loading="lazy"></figure>
+        <div class="flav-name"><i class="dot" style="background:#F0DE9B"></i><h3><span class="en">Banana</span><span class="ar">موز</span></h3></div>
+        <p><span class="en">Soft and pale, from ripe fruit.</span><span class="ar">ناعمة وفاتحة، من فاكهة ناضجة.</span></p>
+      </article>
+
+      <article class="flav-card rv" data-t="nut">
+        <figure><img src="img/11.jpg" alt="Peanut caramel ice cream with caramel pieces" width="1100" height="1100" loading="lazy"></figure>
+        <div class="flav-name"><i class="dot" style="background:#C9954F"></i><h3><span class="en">Peanut caramel</span><span class="ar">فول سوداني بالكراميل</span></h3></div>
+        <p><span class="en">Salted peanut with caramel cut through it.</span><span class="ar">فول سوداني مملّح مع كراميل.</span></p>
+      </article>
+
+      <article class="flav-card rv" data-t="seasonal">
+        <figure><img src="img/12.jpg" alt="Fresh dates rutab ice cream, the Ramadan seasonal flavour" width="1100" height="1100" loading="lazy"></figure>
+        <div class="flav-name"><i class="dot" style="background:#C0A374"></i><h3><span class="en">Fresh dates &middot; rutab</span><span class="ar">رطب</span></h3></div>
+        <p><span class="en">Our Ramadan seasonal flavour. Taste it, experience it.</span><span class="ar">نكهتنا الموسمية في رمضان. ذوقها وجرّبها.</span></p>
+      </article>
+
+      <article class="flav-card rv" data-t="choc">
+        <figure><img src="img/13.jpg" alt="Chocolate chip ice cream in the tray" width="1100" height="1100" loading="lazy"></figure>
+        <div class="flav-name"><i class="dot" style="background:#7A5449"></i><h3><span class="en">Chocolate chip</span><span class="ar">شوكولاتة تشيبس</span></h3></div>
+        <p><span class="en">Cream base, dark chips right through.</span><span class="ar">قاعدة كريمة مع قطع شوكولاتة غامقة.</span></p>
+      </article>
+
+      <article class="flav-card rv" data-t="nut">
+        <figure><img src="img/14.jpg" alt="Pistachio ice cream finished with crushed pistachio" width="1100" height="1100" loading="lazy"></figure>
+        <div class="flav-name"><i class="dot" style="background:#8E9463"></i><h3><span class="en">Pistachio crush</span><span class="ar">فستق مجروش</span></h3></div>
+        <p><span class="en">Finished with crushed pistachio over the top.</span><span class="ar">مزيّنة بالفستق المجروش من فوق.</span></p>
+      </article>
+    </div>
+
+    <div class="flav-note rv">
+      <p><span class="en">The trays change. Kunafa, matcha and the hibiscus refresher come and go with the season, so ask what is churning today.</span><span class="ar">الصواني تتغيّر. الكنافة والماتشا ومشروب الكركديه تأتي وتذهب مع الموسم، فاسأل عن الجديد اليوم.</span></p>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== SIGNATURES ===================== -->
+<section class="sec sig">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <span class="meta"><span class="en">Made to order</span><span class="ar">يُحضّر عند الطلب</span></span>
+      <h2 class="display"><span class="en">Three things we are known for</span><span class="ar">ثلاثة أشياء نُعرف بها</span></h2>
+    </div>
+    <div class="sig-grid">
+      <article class="sig-card rv">
+        <figure><img src="img/15.jpg" alt="Pink and green swirled toast bread, close up" width="1400" height="1050" loading="lazy"></figure>
+        <span class="meta"><span class="en">The signature</span><span class="ar">الطبق المميز</span></span>
+        <h3 class="display"><span class="en">Ice cream toast</span><span class="ar">توست بالآيس كريم</span></h3>
+        <p style="margin-top:10px"><span class="en">Our own swirled bread, toasted, with a scoop pressed between the slices.</span><span class="ar">خبزنا الملوّن، محمّص، مع سكوب آيس كريم بين الشرائح.</span></p>
+      </article>
+
+      <article class="sig-card rv">
+        <figure><img src="img/04.jpg" alt="A cappuccino in a toastery cup on the counter" width="1200" height="1200" loading="lazy"></figure>
+        <span class="meta"><span class="en">From the machine</span><span class="ar">من الماكينة</span></span>
+        <h3 class="display"><span class="en">Specialty coffee</span><span class="ar">قهوة مختصة</span></h3>
+        <p style="margin-top:10px"><span class="en">Cappuccino, matcha and the hot chocolate our regulars keep writing about.</span><span class="ar">كابتشينو وماتشا والشوكولاتة الساخنة التي يكتب عنها زبائننا دائماً.</span></p>
+      </article>
+
+      <article class="sig-card rv">
+        <figure><img src="img/23.jpg" alt="A pale yellow toastery box being carried" width="1200" height="1200" loading="lazy"></figure>
+        <span class="meta"><span class="en">To take home</span><span class="ar">للبيت</span></span>
+        <h3 class="display"><span class="en">Boxes</span><span class="ar">علب</span></h3>
+        <p style="margin-top:10px"><span class="en">Packed to order and sent out the same day. Message us on WhatsApp.</span><span class="ar">تُجهّز حسب الطلب وتُرسل في نفس اليوم. راسلنا على واتساب.</span></p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== THE COUNTER / MENU ===================== -->
+<section class="sec counter" id="counter">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <span class="meta"><span class="en">What is on</span><span class="ar">ماذا يوجد</span></span>
+      <h2 class="display"><span class="en">The counter</span><span class="ar">المنيو</span></h2>
+    </div>
+    <div class="counter-grid">
+      <div class="menu-card rv">
+        <h3><span class="en">Cold</span><span class="ar">بارد</span></h3>
+        <ul>
+          <li><b><span class="en">Ice cream cup</span><span class="ar">كوب آيس كريم</span></b><i><span class="en">one, two or three scoops</span><span class="ar">سكوب، اثنان أو ثلاثة</span></i></li>
+          <li><b><span class="en">Ice cream toast</span><span class="ar">توست بالآيس كريم</span></b><i><span class="en">our signature</span><span class="ar">طبقنا المميز</span></i></li>
+          <li><b><span class="en">Ice cream sandwich</span><span class="ar">ساندويش آيس كريم</span></b><i><span class="en">pressed between slices</span><span class="ar">بين شريحتين</span></i></li>
+          <li><b><span class="en">Boxes</span><span class="ar">علب</span></b><i><span class="en">packed to take home</span><span class="ar">جاهزة للبيت</span></i></li>
+          <li><b><span class="en">Yogurt</span><span class="ar">زبادي</span></b><i><span class="en">with toppings</span><span class="ar">مع إضافات</span></i></li>
+        </ul>
+      </div>
+
+      <div class="menu-card rv">
+        <h3><span class="en">Hot &amp; sweet</span><span class="ar">ساخن وحلو</span></h3>
+        <ul>
+          <li><b><span class="en">Coffee</span><span class="ar">قهوة</span></b><i><span class="en">espresso, cappuccino, filter</span><span class="ar">إسبريسو، كابتشينو، فلتر</span></i></li>
+          <li><b><span class="en">Matcha</span><span class="ar">ماتشا</span></b><i><span class="en">hot or iced</span><span class="ar">ساخن أو مثلج</span></i></li>
+          <li><b><span class="en">Hot chocolate</span><span class="ar">شوكولاتة ساخنة</span></b><i><span class="en">to keep you warm</span><span class="ar">تدفّيك</span></i></li>
+          <li><b><span class="en">Pastries &amp; sandwiches</span><span class="ar">معجنات وسندويشات</span></b><i><span class="en">cinnamon buns and more</span><span class="ar">سينامون رول وغيرها</span></i></li>
+          <li><b><span class="en">Desserts</span><span class="ar">حلويات</span></b><i><span class="en">from the case</span><span class="ar">من الفاترينة</span></i></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="price-note rv" style="margin-top:26px;max-width:none">
+      <span class="en"><b>Prices are on the board at the counter.</b> For boxes, catering and anything you want packed, message us on WhatsApp and we will send you the current list.</span>
+      <span class="ar blk"><b>الأسعار معروضة على اللوحة عند الكاونتر.</b> للعلب والطلبات الخاصة، راسلنا على واتساب ونرسل لك القائمة الحالية.</span>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== REVIEWS ===================== -->
+<section class="sec revs">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <span class="meta"><span class="en">What people write</span><span class="ar">ماذا يكتب الناس</span></span>
+      <div class="score">
+        <b>4.3</b>
+        <span class="stars" aria-hidden="true">&#9733;&#9733;&#9733;&#9733;&#9734;</span>
+        <span style="font-size:14px;color:var(--ink-soft)"><span class="en">from 71 Google reviews</span><span class="ar">من 71 تقييم على جوجل</span></span>
+      </div>
+    </div>
+    <div class="revs-grid">
+      <figure class="rev rv">
+        <blockquote><span class="en">Lovely and cozy coffee shop with a warm atmosphere. It's a great place to relax or read a book. The team was friendly and welcoming, the decor is beautiful.</span><span class="ar blk">مقهى جميل ومريح بأجواء دافئة. مكان رائع للاسترخاء أو قراءة كتاب. الفريق ودود ومرحّب، والديكور جميل.</span></blockquote>
+        <footer><b>Saeed Harib</b><small><span class="en">Local Guide &middot; 107 reviews</span><span class="ar">مرشد محلي &middot; 107 تقييم</span></small></footer>
+      </figure>
+      <figure class="rev rv">
+        <blockquote><span class="en">The cafe has a warm, modern, and inviting atmosphere that makes it the perfect place for breakfast, brunch, or a casual coffee break.</span><span class="ar blk">المقهى بأجواء دافئة وعصرية وجذابة، مما يجعله المكان المثالي للفطور أو البرانش أو استراحة قهوة.</span></blockquote>
+        <footer><b>Lara Ali</b><small><span class="en">Local Guide &middot; 226 reviews</span><span class="ar">مرشدة محلية &middot; 226 تقييم</span></small></footer>
+      </figure>
+      <figure class="rev rv">
+        <blockquote><span class="en">One of my favorite cafes to go to. Such cute vibes with so many beautiful little details everywhere. It feels super cozy inside, and the outdoor seating is perfect during winter.</span><span class="ar blk">من مقاهيي المفضلة. أجواء لطيفة وتفاصيل صغيرة جميلة في كل مكان. الداخل مريح جداً، والجلسة الخارجية مثالية في الشتاء.</span></blockquote>
+        <footer><b>Aisha</b><small><span class="en">Local Guide &middot; 58 reviews</span><span class="ar">مرشدة محلية &middot; 58 تقييم</span></small></footer>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== CLUBS ===================== -->
+<section class="sec clubs" id="clubs">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <span class="meta"><span class="en">Beyond the counter</span><span class="ar">أبعد من الكاونتر</span></span>
+      <h2 class="display"><span class="en">The clubs</span><span class="ar">النوادي</span></h2>
+    </div>
+    <div class="clubs-grid">
+      <article class="club rv">
+        <figure><img src="img/27.jpg" alt="The toastery club card, coral lettering on butter yellow" width="1100" height="1100" loading="lazy"></figure>
+        <h3><span class="en">the toastery club</span><span class="ar">نادي ذا توستريه</span></h3>
+        <p><span class="en">Doha, Qatar. The side of the house that makes the things you cannot eat.</span><span class="ar">الدوحة، قطر. الجانب الذي يصنع الأشياء التي لا تؤكل.</span></p>
+      </article>
+      <article class="club rv">
+        <figure><img src="img/28.jpg" alt="The toastery beach club mark, a lobster drawn in one line on navy" width="1300" height="975" loading="lazy"></figure>
+        <h3><span class="en">the toastery beach club</span><span class="ar">بيتش كلوب</span></h3>
+        <p><span class="en">Summer. Nautilus and lobster drawn in a line, printed on navy.</span><span class="ar">الصيف. رسومات بحرية بخط واحد، مطبوعة على الكحلي.</span></p>
+      </article>
+      <article class="club rv">
+        <figure><img src="img/31.jpg" alt="A SLOW LIFE tee embroidered by the toastery beach club" width="1300" height="974" loading="lazy"></figure>
+        <h3><span class="en">slow life</span><span class="ar">سلو لايف</span></h3>
+        <p><span class="en">Caps, totes and tees, embroidered and sold at the counter.</span><span class="ar">كابات وحقائب وتيشيرتات مطرّزة، تُباع عند الكاونتر.</span></p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== GALLERY ===================== -->
+<section class="sec gal">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <span class="meta"><span class="en">The place</span><span class="ar">المكان</span></span>
+      <h2 class="display"><span class="en">Look around</span><span class="ar">تجوّل معنا</span></h2>
+    </div>
+    <div class="gal-grid" id="gal">
+      <button type="button"><img src="img/21.jpg" alt="Warm wood retail shelving inside the toastery with cups and caps" width="1120" height="1400" loading="lazy"></button>
+      <button type="button"><img src="img/05.jpg" alt="A hand holding a toastery cup of hot chocolate over a yellow surface" width="1200" height="1200" loading="lazy"></button>
+      <button type="button"><img src="img/17.jpg" alt="A cup of ice cream topped with a cookie" width="1200" height="1200" loading="lazy"></button>
+      <button type="button"><img src="img/18.jpg" alt="Trays of ice cream flavours lined up behind the glass" width="1120" height="1400" loading="lazy"></button>
+      <button type="button"><img src="img/16.jpg" alt="An ice cream sandwich between two slices of swirled toast" width="1400" height="1050" loading="lazy"></button>
+      <button type="button"><img src="img/24.jpg" alt="The toastery counter on a rainy day in Msheireb" width="1440" height="1080" loading="lazy"></button>
+      <button type="button"><img src="img/20.jpg" alt="Interior corner with vintage posters and a model car on the shelf" width="972" height="1215" loading="lazy"></button>
+      <button type="button"><img src="img/29.jpg" alt="Trays of vanilla and pistachio ice cream side by side" width="1100" height="1100" loading="lazy"></button>
+      <button type="button"><img src="img/26.jpg" alt="Yellow stools against the perforated limestone wall outside" width="1300" height="1300" loading="lazy"></button>
+      <button type="button"><img src="img/32.jpg" alt="A rail of toastery beach club shirts and caps against an ochre curtain" width="1200" height="1200" loading="lazy"></button>
+      <button type="button"><img src="img/30.jpg" alt="Stacked toastery takeaway cups" width="960" height="1200" loading="lazy"></button>
+      <button type="button"><img src="img/19.jpg" alt="Strawberries and cream served in green glass coupes" width="769" height="576" loading="lazy"></button>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== VISIT ===================== -->
+<section class="sec visit" id="visit">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <span class="meta"><span class="en">Come by</span><span class="ar">تعال عندنا</span></span>
+      <h2 class="display"><span class="en">Two counters</span><span class="ar">فرعان</span></h2>
+    </div>
+
+    <div class="visit-grid">
+      <div>
+        <div class="loc rv">
+          <div class="loc-top">
+            <h3><span class="en">Msheireb Downtown</span><span class="ar">مشيرب</span></h3>
+            <span class="status" id="status"><i></i><span data-status-text></span></span>
+          </div>
+          <p class="addr"><span class="ltr">7GMG+96P, Wadi 12, Doha, Qatar</span></p>
+
+          <div class="hours" id="hours">
+            <div data-d="0"><span><span class="en">Sunday</span><span class="ar">الأحد</span></span><span class="ltr">7:00 &ndash; 00:00</span></div>
+            <div data-d="1"><span><span class="en">Monday</span><span class="ar">الاثنين</span></span><span class="ltr">7:00 &ndash; 00:00</span></div>
+            <div data-d="2"><span><span class="en">Tuesday</span><span class="ar">الثلاثاء</span></span><span class="ltr">7:00 &ndash; 00:00</span></div>
+            <div data-d="3"><span><span class="en">Wednesday</span><span class="ar">الأربعاء</span></span><span class="ltr">7:00 &ndash; 00:00</span></div>
+            <div data-d="4"><span><span class="en">Thursday</span><span class="ar">الخميس</span></span><span class="ltr">7:00 &ndash; 00:00</span></div>
+            <div data-d="5"><span><span class="en">Friday</span><span class="ar">الجمعة</span></span><span class="ltr">7:00 &ndash; 11:00, 13:00 &ndash; 00:00</span></div>
+            <div data-d="6"><span><span class="en">Saturday</span><span class="ar">السبت</span></span><span class="ltr">7:00 &ndash; 00:00</span></div>
+          </div>
+
+          <div class="loc-links">
+            <a class="wa" href="#" data-wa><span class="en">WhatsApp</span><span class="ar">واتساب</span></a>
+            <a href="tel:+97451313151"><span class="en">Call</span><span class="ar">اتصل</span></a>
+            <a href="https://www.google.com/maps/place/the+toastery/@25.2834634,51.5256406,17z" target="_blank" rel="noopener"><span class="en">Directions</span><span class="ar">الاتجاهات</span></a>
+          </div>
+        </div>
+
+        <div class="loc second rv" style="margin-top:20px">
+          <div class="loc-top">
+            <h3><span class="en">Centro, Lusail</span><span class="ar">سنترو، لوسيل</span></h3>
+          </div>
+          <p class="addr"><span class="ltr">CFFJ+VRH, Lusail, Qatar</span> <span class="en">&middot; inside Centro</span><span class="ar">&middot; داخل سنترو</span></p>
+          <div class="loc-links">
+            <a href="https://www.google.com/maps/search/the+toastery+Centro+Lusail" target="_blank" rel="noopener"><span class="en">Directions</span><span class="ar">الاتجاهات</span></a>
+          </div>
+        </div>
+      </div>
+
+      <div class="reach rv" style="margin-top:0">
+        <a href="#" data-wa>
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.47 14.38c-.3-.15-1.75-.86-2.02-.96-.27-.1-.47-.15-.67.15-.2.3-.77.96-.94 1.16-.17.2-.35.22-.64.07-.3-.15-1.25-.46-2.38-1.47-.88-.78-1.47-1.75-1.64-2.05-.17-.3-.02-.46.13-.6.13-.14.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.08-.15-.67-1.6-.92-2.2-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.79.37s-1.04 1.01-1.04 2.47 1.06 2.86 1.21 3.06c.15.2 2.1 3.2 5.08 4.49.71.3 1.26.49 1.69.63.71.22 1.36.19 1.87.12.57-.09 1.75-.72 2-1.41.25-.69.25-1.28.17-1.41-.07-.13-.27-.2-.57-.35zM12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.87 9.87 0 0 0 4.79 1.22h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2z"/></svg>
+          <span><b><span class="en">WhatsApp</span><span class="ar">واتساب</span></b><small class="ltr">+974 5131 3151</small></span>
+        </a>
+        <a href="tel:+97451313151">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6.62 10.79a15.05 15.05 0 0 0 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.24.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
+          <span><b><span class="en">Call the counter</span><span class="ar">اتصل بالكاونتر</span></b><small class="ltr">+974 5131 3151</small></span>
+        </a>
+        <a href="https://www.instagram.com/thetoastery.qa/" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.16c3.2 0 3.58.01 4.85.07 1.17.05 1.8.25 2.23.41.56.22.96.48 1.38.9.42.42.68.82.9 1.38.16.42.36 1.06.41 2.23.06 1.27.07 1.65.07 4.85s-.01 3.58-.07 4.85c-.05 1.17-.25 1.8-.41 2.23-.22.56-.48.96-.9 1.38-.42.42-.82.68-1.38.9-.42.16-1.06.36-2.23.41-1.27.06-1.65.07-4.85.07s-3.58-.01-4.85-.07c-1.17-.05-1.8-.25-2.23-.41a3.8 3.8 0 0 1-1.38-.9 3.8 3.8 0 0 1-.9-1.38c-.16-.42-.36-1.06-.41-2.23C2.17 15.58 2.16 15.2 2.16 12s.01-3.58.07-4.85c.05-1.17.25-1.8.41-2.23.22-.56.48-.96.9-1.38.42-.42.82-.68 1.38-.9.42-.16 1.06-.36 2.23-.41C8.42 2.17 8.8 2.16 12 2.16zm0 3.24a6.6 6.6 0 1 0 0 13.2 6.6 6.6 0 0 0 0-13.2zm0 10.89a4.29 4.29 0 1 1 0-8.58 4.29 4.29 0 0 1 0 8.58zm8.4-11.15a1.54 1.54 0 1 1-3.08 0 1.54 1.54 0 0 1 3.08 0z"/></svg>
+          <span><b>Instagram</b><small class="ltr">@thetoastery.qa</small></span>
+        </a>
+        <a href="https://www.google.com/maps/place/the+toastery/@25.2834634,51.5256406,17z" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a7 7 0 0 0-7 7c0 5.25 7 13 7 13s7-7.75 7-13a7 7 0 0 0-7-7zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5z"/></svg>
+          <span><b><span class="en">Find us on the map</span><span class="ar">موقعنا على الخريطة</span></b><small><span class="en">Wadi 12, Msheireb Downtown</span><span class="ar">وادي 12، مشيرب</span></small></span>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== FOOTER ===================== -->
+<footer class="foot">
+  <div class="wrap foot-in">
+    <div>
+      <div class="brand"><span class="en">the toastery</span><span class="ar">ذا توستريه</span></div>
+      <p style="margin-top:8px"><span class="en">Msheireb Downtown &middot; Centro, Lusail &middot; Doha, Qatar</span><span class="ar">مشيرب &middot; سنترو، لوسيل &middot; الدوحة، قطر</span></p>
+    </div>
+    <div class="foot-links">
+      <a href="https://www.instagram.com/thetoastery.qa/" target="_blank" rel="noopener">Instagram</a>
+      <a href="#" data-wa><span class="en">WhatsApp</span><span class="ar">واتساب</span></a>
+      <a href="tel:+97451313151"><span class="en">Call</span><span class="ar">اتصل</span></a>
+    </div>
+  </div>
+</footer>
+
+<!-- ===================== STICKY AWNING BAR ===================== -->
+<div class="bar">
+  <a class="wa" href="#" data-wa>
+    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.47 14.38c-.3-.15-1.75-.86-2.02-.96-.27-.1-.47-.15-.67.15-.2.3-.77.96-.94 1.16-.17.2-.35.22-.64.07-.3-.15-1.25-.46-2.38-1.47-.88-.78-1.47-1.75-1.64-2.05-.17-.3-.02-.46.13-.6.13-.14.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.08-.15-.67-1.6-.92-2.2-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.79.37s-1.04 1.01-1.04 2.47 1.06 2.86 1.21 3.06c.15.2 2.1 3.2 5.08 4.49.71.3 1.26.49 1.69.63.71.22 1.36.19 1.87.12.57-.09 1.75-.72 2-1.41.25-.69.25-1.28.17-1.41-.07-.13-.27-.2-.57-.35zM12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.87 9.87 0 0 0 4.79 1.22h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2z"/></svg>
+    <span class="en">Order</span><span class="ar">اطلب</span>
+  </a>
+  <a class="ico" href="tel:+97451313151" aria-label="Call">
+    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6.62 10.79a15.05 15.05 0 0 0 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.24.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
+  </a>
+  <a class="ico" href="https://www.instagram.com/thetoastery.qa/" target="_blank" rel="noopener" aria-label="Instagram">
+    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.16c3.2 0 3.58.01 4.85.07 1.17.05 1.8.25 2.23.41.56.22.96.48 1.38.9.42.42.68.82.9 1.38.16.42.36 1.06.41 2.23.06 1.27.07 1.65.07 4.85s-.01 3.58-.07 4.85c-.05 1.17-.25 1.8-.41 2.23-.22.56-.48.96-.9 1.38-.42.42-.82.68-1.38.9-.42.16-1.06.36-2.23.41-1.27.06-1.65.07-4.85.07s-3.58-.01-4.85-.07c-1.17-.05-1.8-.25-2.23-.41a3.8 3.8 0 0 1-1.38-.9 3.8 3.8 0 0 1-.9-1.38c-.16-.42-.36-1.06-.41-2.23C2.17 15.58 2.16 15.2 2.16 12s.01-3.58.07-4.85c.05-1.17.25-1.8.41-2.23.22-.56.48-.96.9-1.38.42-.42.82-.68 1.38-.9.42-.16 1.06-.36 2.23-.41C8.42 2.17 8.8 2.16 12 2.16zm0 3.24a6.6 6.6 0 1 0 0 13.2 6.6 6.6 0 0 0 0-13.2zm0 10.89a4.29 4.29 0 1 1 0-8.58 4.29 4.29 0 0 1 0 8.58zm8.4-11.15a1.54 1.54 0 1 1-3.08 0 1.54 1.54 0 0 1 3.08 0z"/></svg>
+  </a>
+  <a class="ico" href="https://www.google.com/maps/place/the+toastery/@25.2834634,51.5256406,17z" target="_blank" rel="noopener" aria-label="Map">
+    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a7 7 0 0 0-7 7c0 5.25 7 13 7 13s7-7.75 7-13a7 7 0 0 0-7-7zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5z"/></svg>
+  </a>
+</div>
+
+<!-- ===================== LIGHTBOX ===================== -->
+<div class="lb" id="lb" role="dialog" aria-modal="true" aria-label="Photo">
+  <button class="lb-x" type="button" aria-label="Close">&times;</button>
+  <button class="lb-nav lb-prev" type="button" aria-label="Previous">&#8249;</button>
+  <img src="" alt="">
+  <button class="lb-nav lb-next" type="button" aria-label="Next">&#8250;</button>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ---------- WhatsApp, prefilled ---------- */
+  var WA = "97451313151";
+  var MSG = {
+    en:"Hello the toastery, I would like to order.",
+    ar:"مرحباً ذا توستريه، أحب أطلب."
+  };
+  function waHref(){
+    return "https://wa.me/"+WA+"?text="+encodeURIComponent(MSG[document.documentElement.classList.contains("lang-ar")?"ar":"en"]);
+  }
+  function syncWa(){
+    var h = waHref();
+    document.querySelectorAll("[data-wa]").forEach(function(a){
+      a.href = h; a.target = "_blank"; a.rel = "noopener";
+    });
+  }
+
+  /* ---------- language ---------- */
+  var root = document.documentElement;
+  document.querySelectorAll(".lang button").forEach(function(b){
+    b.addEventListener("click", function(){
+      var ar = b.dataset.lang === "ar";
+      root.classList.toggle("lang-ar", ar);
+      root.lang = ar ? "ar" : "en";
+      root.dir  = ar ? "rtl" : "ltr";
+      document.querySelectorAll(".lang button").forEach(function(x){ x.classList.toggle("on", x === b); });
+      syncWa(); paintStatus();
+    });
+  });
+  syncWa();
+
+  /* ---------- open / closed, computed in Doha time (UTC+3) ---------- */
+  /* minutes from midnight; Friday has the prayer break */
+  var WINDOWS = {
+    0:[[420,1440]], 1:[[420,1440]], 2:[[420,1440]], 3:[[420,1440]], 4:[[420,1440]],
+    5:[[420,660],[780,1440]],
+    6:[[420,1440]]
+  };
+  function dohaNow(){
+    var d = new Date();
+    return new Date(d.getTime() + (d.getTimezoneOffset() * 60000) + (3 * 3600000));
+  }
+  function paintStatus(){
+    var now = dohaNow(), day = now.getDay(), mins = now.getHours()*60 + now.getMinutes();
+    var open = (WINDOWS[day]||[]).some(function(w){ return mins >= w[0] && mins < w[1]; });
+    var el = document.getElementById("status");
+    if (el){
+      el.className = "status " + (open ? "open" : "shut");
+      var ar = root.classList.contains("lang-ar");
+      el.querySelector("[data-status-text]").textContent =
+        open ? (ar ? "مفتوح الآن" : "Open now") : (ar ? "مغلق الآن" : "Closed now");
+    }
+    document.querySelectorAll("#hours div").forEach(function(r){
+      r.classList.toggle("today", Number(r.dataset.d) === day);
+    });
+  }
+  paintStatus();
+  setInterval(paintStatus, 60000);
+
+  /* ---------- flavour filter ---------- */
+  var chips = document.querySelectorAll(".chip");
+  chips.forEach(function(c){
+    c.addEventListener("click", function(){
+      chips.forEach(function(x){ x.classList.toggle("on", x === c); });
+      var f = c.dataset.f;
+      document.querySelectorAll(".flav-card").forEach(function(card){
+        card.hidden = !(f === "all" || card.dataset.t === f);
+      });
+    });
+  });
+
+  /* ---------- reveals, with a hard fallback ---------- */
+  var rv = document.querySelectorAll(".rv");
+  if ("IntersectionObserver" in window){
+    var io = new IntersectionObserver(function(es){
+      es.forEach(function(e){ if (e.isIntersecting){ e.target.classList.add("in"); io.unobserve(e.target); } });
+    }, {rootMargin:"0px 0px -8% 0px", threshold:.06});
+    rv.forEach(function(el){ io.observe(el); });
+  }
+  setTimeout(function(){ rv.forEach(function(el){ el.classList.add("in"); }); }, 1100);
+
+  /* ---------- sticky top shadow ---------- */
+  var top = document.getElementById("top");
+  addEventListener("scroll", function(){ top.classList.toggle("stuck", scrollY > 12); }, {passive:true});
+
+  /* ---------- lightbox ---------- */
+  var lb = document.getElementById("lb"), lbImg = lb.querySelector("img");
+  var shots = [].slice.call(document.querySelectorAll("#gal button")), at = 0;
+  function show(i){
+    at = (i + shots.length) % shots.length;
+    var im = shots[at].querySelector("img");
+    lbImg.src = im.src; lbImg.alt = im.alt;
+    lb.classList.add("on"); document.body.style.overflow = "hidden";
+  }
+  function hide(){ lb.classList.remove("on"); document.body.style.overflow = ""; }
+  shots.forEach(function(b,i){ b.addEventListener("click", function(){ show(i); }); });
+  lb.querySelector(".lb-x").addEventListener("click", hide);
+  lb.querySelector(".lb-prev").addEventListener("click", function(e){ e.stopPropagation(); show(at-1); });
+  lb.querySelector(".lb-next").addEventListener("click", function(e){ e.stopPropagation(); show(at+1); });
+  lb.addEventListener("click", function(e){ if (e.target === lb) hide(); });
+  addEventListener("keydown", function(e){
+    if (!lb.classList.contains("on")) return;
+    if (e.key === "Escape") hide();
+    if (e.key === "ArrowRight") show(at+1);
+    if (e.key === "ArrowLeft")  show(at-1);
+  });
+})();
+</script>
+</body>
+</html>
