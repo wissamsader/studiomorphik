@@ -102,29 +102,30 @@ p{max-width:62ch}
 .head-right{text-align:end}
 
 /* ---------- the striped awning valance: the house motif ---------- */
-/* stripes + scalloped hem, one scallop per stripe, like their logo awning */
+/* Built to match the awning drawn in their own logo (logo/mark_4k.png):
+   a straight header board outlined in espresso, vertical espresso/cream
+   stripes on a SOLID canvas body, and a solid espresso hem band with one
+   scallop per stripe. Rendered as inline SVG so the board, the stripe
+   geometry and the scallop radius are exact. The solid body, the board
+   and the drop shadow are what let an espresso pair sit on the butter
+   hero without the dark stripes reading as floating teeth. */
 .valance{
   --vA:var(--ink);
   --vB:var(--butter-soft);
-  --vw:26px;
-  height:44px;flex:none;position:relative;
-  background:repeating-linear-gradient(90deg,var(--vA) 0 var(--vw),var(--vB) var(--vw) calc(var(--vw)*2));
-  -webkit-mask:
-    linear-gradient(#000 0 0) 0 0/100% calc(100% - 13px) no-repeat,
-    radial-gradient(13px at calc(var(--vw)/2) 0,#000 12.4px,#0000 13px) 0 100%/var(--vw) 13px repeat-x;
-  mask:
-    linear-gradient(#000 0 0) 0 0/100% calc(100% - 13px) no-repeat,
-    radial-gradient(13px at calc(var(--vw)/2) 0,#000 12.4px,#0000 13px) 0 100%/var(--vw) 13px repeat-x;
+  flex:none;position:relative;line-height:0;
   animation:awning-sun 13s ease-in-out infinite;
 }
+.valance svg{
+  display:block;width:100%;height:90px;
+  filter:drop-shadow(0 16px 22px rgba(42,33,24,.22));
+}
+@keyframes spin{to{transform:rotate(1turn)}}
 @keyframes awning-sun{
-  0%,100%{opacity:.94;transform:translateY(0)}
+  0%,100%{opacity:.97;transform:translateY(0)}
   50%{opacity:1;transform:translateY(2px)}
 }
-/* The page-top valance hangs over the butter hero. An espresso/cream pair loses its
-   light stripe into that ground and the dark stripes then read as teeth, not fabric.
-   Coral on cream keeps both stripes legible and matches their wordmark. */
-.top + .valance{--vA:var(--coral-deep);--vB:var(--cream)}
+/* the page-top awning: their logo colourway, espresso canvas on cream */
+.top + .valance{--vA:#633B0D;--vB:#F9E4B6}  /* sampled off their logo awning */
 /* checkerboard strip: the parlour floor */
 .checker{
   height:18px;
@@ -139,8 +140,8 @@ p{max-width:62ch}
 /* ---------- reveal ---------- */
 /* numbers and codes keep LTR order inside the Arabic layer (bidi isolation) */
 .ltr{direction:ltr;unicode-bidi:isolate}
-.rv{opacity:0;transform:translateY(16px) rotate(var(--rot,0deg));transition:opacity .8s cubic-bezier(.2,.7,.3,1),transform .8s cubic-bezier(.2,.7,.3,1)}
-.rv.in{opacity:1;transform:translateY(0) rotate(var(--rot,0deg))}
+.rv{opacity:0;transform:translateY(16px);transition:opacity .8s cubic-bezier(.2,.7,.3,1),transform .8s cubic-bezier(.2,.7,.3,1)}
+.rv.in{opacity:1;transform:translateY(0)}
 
 /* ============ top bar ============ */
 .top{
@@ -200,7 +201,6 @@ html.lang-ar .brand{font-family:var(--ar-serif);letter-spacing:0;font-size:21px}
   width:clamp(198px,27vw,312px);height:auto;
   margin-inline:auto;
 }
-}
 .wordmark-ar{
   font-family:var(--ar-serif);font-size:clamp(21px,3.4vw,34px);
   color:#9C6A3C;margin-top:12px;line-height:1.5;
@@ -214,24 +214,23 @@ html.lang-ar .brand{font-family:var(--ar-serif);letter-spacing:0;font-size:21px}
 html.lang-ar .hero-line{font-family:var(--ar-sans);font-size:clamp(16px,2vw,21px);max-width:34ch;color:var(--ink-soft)}
 .hero-cta{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-top:clamp(24px,3.6vw,36px)}
 
-/* the two hero ornaments: a spinning counter seal and a stamped hours sticker */
+/* the two hero ornaments: a counter seal and a stamped hours sticker.
+   Both sit dead straight: nothing on this page is rotated. */
 .seal{
   position:absolute;z-index:2;
+  animation:spin 46s linear infinite;
   bottom:clamp(34px,8vh,80px);inset-inline-end:clamp(28px,8vw,140px);
   width:138px;height:138px;color:var(--coral-deep);
-  animation:spin 28s linear infinite;
 }
 .seal text{fill:currentColor;font-family:var(--sans);font-weight:600;font-size:12px}
 .seal .seal-c{font-size:18px}
-@keyframes spin{to{transform:rotate(1turn)}}
 .stamp{
   position:absolute;z-index:2;
   top:clamp(110px,17vh,180px);inset-inline-start:clamp(30px,9vw,150px);
   width:118px;height:118px;border-radius:50%;
   background:var(--yellow);color:var(--ink);
   display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;
-  text-align:center;transform:rotate(-9deg);
-  animation:drift 9s ease-in-out infinite;
+  text-align:center;
 }
 .stamp::before{content:"";position:absolute;inset:7px;border:1.5px dashed rgba(42,33,24,.5);border-radius:50%}
 .stamp span{font-size:9.5px;font-weight:600;letter-spacing:.16em;text-transform:uppercase}
@@ -270,11 +269,11 @@ html.lang-ar .shopframe figure{box-shadow:-18px 18px 0 var(--coral)}
 .shoptag{
   position:absolute;top:-17px;inset-inline-end:clamp(18px,4vw,44px);
   background:var(--ink);color:var(--butter);
-  padding:10px 18px;transform:rotate(2.5deg);
+  padding:10px 18px;
   font-size:11px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;
   white-space:nowrap;
 }
-html.lang-ar .shoptag{letter-spacing:.03em;text-transform:none;font-size:12.5px;transform:rotate(-2.5deg)}
+html.lang-ar .shoptag{letter-spacing:.03em;text-transform:none;font-size:12.5px}
 .shopcap{
   display:flex;flex-wrap:wrap;gap:8px 26px;justify-content:flex-start;
   margin-top:26px;
@@ -323,7 +322,7 @@ html.lang-ar .story-fig img{box-shadow:-18px 18px 0 var(--pist)}
   width:136px;height:136px;border-radius:50%;
   background:var(--butter);
   display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;
-  text-align:center;transform:rotate(-8deg);
+  text-align:center;
   box-shadow:0 18px 40px -24px rgba(42,33,24,.55);
 }
 .story-badge::before{content:"";position:absolute;inset:8px;border:1.5px dashed rgba(188,95,66,.6);border-radius:50%}
@@ -383,6 +382,7 @@ html.lang-ar .flavbanner-txt p{font-family:var(--ar-serif);font-style:normal;fon
 html.lang-ar .chip{letter-spacing:.02em;text-transform:none;font-size:13.5px}
 .chip:hover{border-color:var(--ink)}
 .chip.on{background:var(--ink);border-color:var(--ink);color:var(--butter)}
+/* a designed index: every tile the same size, every row on one baseline */
 .flav-grid{
   display:grid;gap:clamp(18px,2.6vw,34px);
   grid-template-columns:repeat(2,1fr);
@@ -390,7 +390,6 @@ html.lang-ar .chip{letter-spacing:.02em;text-transform:none;font-size:13.5px}
 }
 @media(min-width:620px){
   .flav-grid{grid-template-columns:repeat(3,1fr)}
-  .flav-grid>:nth-child(3n+2){margin-top:44px}
 }
 .flav-card{min-width:0;counter-increment:fl;transition:opacity .4s}
 .flav-card[hidden]{display:none}
@@ -398,10 +397,6 @@ html.lang-ar .chip{letter-spacing:.02em;text-transform:none;font-size:13.5px}
   position:relative;overflow:hidden;background:var(--cream);
 }
 .flav-card img{aspect-ratio:1;object-fit:cover;width:100%;transition:transform .8s cubic-bezier(.2,.7,.3,1)}
-@media(min-width:620px){
-  .flav-card:nth-child(4n+1) img{aspect-ratio:.84}
-  .flav-card:nth-child(4n+3) img{aspect-ratio:1.12}
-}
 .flav-card:hover img{transform:scale(1.045)}
 /* the tray index chip */
 .flav-card figure::after{
@@ -427,14 +422,15 @@ html.lang-ar .flav-card p{font-style:normal;font-family:var(--ar-sans);font-size
 html.lang-ar .flav-note p{font-family:var(--ar-sans);font-style:normal;font-size:16px}
 
 /* ============ signatures ============ */
+/* Three columns on one shared baseline. Identical image size and aspect,
+   identical frame geometry. The interest comes from the giant numerals,
+   the type, and one accent colour per plate, never from misalignment. */
 .sig{background:var(--cream);overflow:hidden}
 .sig-grid{display:grid;gap:clamp(28px,4vw,52px);grid-template-columns:1fr;counter-reset:sg}
-@media(min-width:760px){
-  .sig-grid{grid-template-columns:repeat(3,1fr)}
-  .sig-card:nth-child(2){margin-top:64px}
-  .sig-card:nth-child(3){margin-top:128px}
-}
-.sig-card{min-width:0;counter-increment:sg}
+@media(min-width:760px){.sig-grid{grid-template-columns:repeat(3,1fr)}}
+.sig-card{--acc:var(--choc);min-width:0;counter-increment:sg}
+.sig-card:nth-child(2){--acc:var(--coral)}
+.sig-card:nth-child(3){--acc:var(--ochre)}
 .sig-card::before{
   content:counter(sg,decimal-leading-zero);
   display:block;
@@ -442,16 +438,17 @@ html.lang-ar .flav-note p{font-family:var(--ar-sans);font-style:normal;font-size
   font-size:clamp(54px,5.5vw,80px);line-height:1;
   color:var(--coral);margin-bottom:14px;
 }
-.sig-card figure{position:relative;min-width:0}
-.sig-card img{aspect-ratio:4/3;object-fit:cover;width:100%}
-/* three different frames: hard offset, arch, tilted postcard */
-.sig-card:nth-child(1) figure{box-shadow:14px 14px 0 var(--choc)}
-.sig-card:nth-child(2) figure img{aspect-ratio:4/5;border-radius:999px 999px 6px 6px;box-shadow:14px 14px 0 var(--coral)}
-.sig-card:nth-child(3) figure{background:var(--bone);padding:12px 12px 16px;transform:rotate(-1.6deg);box-shadow:14px 14px 0 var(--ochre)}
-html.lang-ar .sig-card:nth-child(1) figure{box-shadow:-14px 14px 0 var(--choc)}
-html.lang-ar .sig-card:nth-child(2) figure img{box-shadow:-14px 14px 0 var(--coral)}
-html.lang-ar .sig-card:nth-child(3) figure{box-shadow:-14px 14px 0 var(--ochre);transform:rotate(1.6deg)}
+.sig-card figure{
+  position:relative;min-width:0;background:var(--bone);
+  box-shadow:14px 14px 0 var(--acc);
+}
+html.lang-ar .sig-card figure{box-shadow:-14px 14px 0 var(--acc)}
+.sig-card img{aspect-ratio:1;object-fit:cover;width:100%}
 .sig-card .meta{display:block;margin:24px 0 8px;color:var(--ink-faint)}
+.sig-card .meta::before{
+  content:"";display:inline-block;width:22px;height:3px;
+  background:var(--acc);margin-inline-end:10px;vertical-align:3px;
+}
 .sig-card p{font-size:15px;color:var(--ink-soft)}
 
 /* ============ counter / menu: the yellow room ============ */
@@ -460,7 +457,7 @@ html.lang-ar .sig-card:nth-child(3) figure{box-shadow:-14px 14px 0 var(--ochre);
 .counter .sec-head .meta{color:var(--choc)}
 .counter-grid{display:grid;gap:clamp(30px,4.4vw,56px);align-items:start}
 @media(min-width:861px){.counter-grid{grid-template-columns:1fr 1fr}}
-/* receipts from the till: flat paper, sawtooth hem, a hair of tilt */
+/* receipts from the till: flat paper, sawtooth hem, set down straight */
 .menu-card{
   background:var(--cream);
   padding:clamp(26px,3.4vw,40px) clamp(24px,3vw,36px) 40px;
@@ -472,8 +469,6 @@ html.lang-ar .sig-card:nth-child(3) figure{box-shadow:-14px 14px 0 var(--ochre);
     linear-gradient(#000 0 0) 0 0/100% calc(100% - 11px) no-repeat,
     conic-gradient(from 135deg at 50% 0,#000 0 90deg,#0000 0) 50% 100%/22px 11px repeat-x;
 }
-.counter-grid .menu-card:first-child{--rot:-.6deg}
-.counter-grid .menu-card:last-child{--rot:.6deg}
 .menu-card h3{
   font-family:var(--serif);font-size:clamp(28px,2.6vw,36px);font-weight:400;font-style:italic;
   padding-bottom:14px;border-bottom:2px solid var(--ink);
@@ -493,7 +488,6 @@ html.lang-ar .menu-card li i{font-family:var(--ar-sans);font-style:normal;font-s
   margin-top:34px;padding:20px 24px;
   border:1.5px dashed var(--choc);border-radius:2px;
   font-size:14.5px;color:var(--choc);
-  --rot:-.35deg;
 }
 .price-note b{font-weight:600}
 
@@ -517,9 +511,6 @@ html.lang-ar .menu-card li i{font-family:var(--ar-sans);font-style:normal;font-s
   display:flex;flex-direction:column;min-width:0;
   box-shadow:0 20px 40px -32px rgba(42,33,24,.5);
 }
-.revs-grid .rev:nth-child(1){--rot:-1.1deg}
-.revs-grid .rev:nth-child(2){--rot:.8deg}
-.revs-grid .rev:nth-child(3){--rot:-.6deg}
 .rev blockquote{
   font-family:var(--serif);font-size:19.5px;font-weight:300;line-height:1.5;
   color:var(--ink);flex:1;
@@ -531,7 +522,8 @@ html.lang-ar .rev blockquote{font-family:var(--ar-sans);font-size:15.5px}
 
 /* ============ clubs (navy) ============ */
 .clubs{background:var(--navy);color:var(--butter-soft);position:relative;overflow:hidden;padding-top:0}
-.clubs .valance{--vA:var(--butter-soft);--vB:var(--navy);margin-bottom:clamp(56px,8vw,110px)}
+/* canvas body a step lighter than the wall so the canopy reads as an object */
+.clubs .valance{--vA:var(--butter-soft);--vB:#3C4557;margin-bottom:clamp(56px,8vw,110px)}
 .clubs::before{ /* their own merch line, embroidered huge into the navy */
   content:"slow life";
   position:absolute;inset-block-end:-.16em;inset-inline-end:1%;
@@ -546,15 +538,13 @@ html.lang-ar .clubs::before{content:"سلو لايف";font-family:var(--ar-serif
 .clubs-grid{display:grid;gap:clamp(28px,3.8vw,48px);grid-template-columns:1fr;position:relative}
 @media(min-width:760px){.clubs-grid{grid-template-columns:repeat(3,1fr)}}
 .club{min-width:0}
-/* postcards pinned to the navy wall */
+/* postcards set straight on the navy wall; they lift, they never tilt */
 .club figure{
   background:var(--bone);padding:12px 12px 16px;border-radius:2px;
-  transform:rotate(-2deg);transition:transform .45s cubic-bezier(.2,.7,.3,1);
+  transition:transform .45s cubic-bezier(.2,.7,.3,1),box-shadow .45s cubic-bezier(.2,.7,.3,1);
   box-shadow:0 24px 50px -30px rgba(0,0,0,.65);
 }
-.club:nth-child(2) figure{transform:rotate(1.7deg)}
-.club:nth-child(3) figure{transform:rotate(-1.2deg)}
-.club:hover figure{transform:rotate(0)}
+.club:hover figure{transform:translateY(-6px);box-shadow:0 34px 60px -32px rgba(0,0,0,.75)}
 .club img{aspect-ratio:4/3;object-fit:cover;width:100%;border-radius:1px}
 .club h3{font-family:var(--serif);font-size:26px;font-weight:400;margin:20px 0 7px}
 html.lang-ar .club h3{font-family:var(--ar-serif)}
@@ -657,7 +647,7 @@ html.lang-ar .reach a:hover{box-shadow:-5px 5px 0 var(--butter-deep)}
 
 /* ============ footer ============ */
 .foot{background:var(--ink);color:rgba(251,246,233,.6);padding-block:0 clamp(44px,6vw,64px)}
-.foot .valance{--vA:var(--butter);--vB:var(--ink);margin-bottom:clamp(44px,6vw,72px)}
+.foot .valance{--vA:var(--butter);--vB:#382D20;margin-bottom:clamp(44px,6vw,72px)}
 .foot p.foot-line{
   font-family:var(--serif);font-style:italic;font-weight:300;
   font-size:clamp(28px,4.4vw,52px);line-height:1.15;letter-spacing:0;
@@ -703,7 +693,6 @@ html.lang-ar .bar a{letter-spacing:.01em;text-transform:none;font-size:13px}
 /* ============ mobile trims ============ */
 @media(max-width:520px){
   .flav-grid{gap:16px}
-  .flav-grid>:nth-child(2n){margin-top:22px}
   .flav-name h3{font-size:20px}
   .flav-card p{font-size:13.5px}
   .shopframe figure{box-shadow:10px 10px 0 var(--coral)}
@@ -711,7 +700,6 @@ html.lang-ar .bar a{letter-spacing:.01em;text-transform:none;font-size:13px}
   .story-fig img{box-shadow:10px 10px 0 var(--pist)}
   html.lang-ar .story-fig img{box-shadow:-10px 10px 0 var(--pist)}
   .story-fig{padding-inline-end:10px}
-  .valance{--vw:20px;height:36px}
   .bar{gap:8px;padding-inline:14px}
   .bar a.wa{font-size:11px;letter-spacing:.05em}
 }
@@ -722,10 +710,10 @@ html.lang-ar .bar a{letter-spacing:.01em;text-transform:none;font-size:13px}
 
 .wordmark{position:relative}
 
-/* resting state, and the state on any repeat view within the session */
+/* resting state, and the state when the intro does not run */
 .wordmark img{opacity:1}
 
-/* --- first visit of the session --- */
+/* --- the intro, played on every load --- */
 .hero.intro .wordmark img{
   -webkit-mask-image:linear-gradient(180deg,#000 68%,rgba(0,0,0,.35) 86%,transparent 100%);
           mask-image:linear-gradient(180deg,#000 68%,rgba(0,0,0,.35) 86%,transparent 100%);
@@ -813,8 +801,28 @@ html.lang-ar .bar a{letter-spacing:.01em;text-transform:none;font-size:13px}
   </div>
 </div>
 
-<!-- the awning the whole page sits under -->
-<div class="valance" aria-hidden="true"></div>
+<!-- the awning the whole page sits under, built like the one in their logo:
+     header board, striped canvas body, solid scalloped hem -->
+<div class="valance" aria-hidden="true"><svg width="100%" height="90" focusable="false">
+  <defs>
+    <pattern id="vstr-a" patternUnits="userSpaceOnUse" width="56" height="90"><rect width="28" height="90" fill="var(--vA)"/></pattern>
+    <pattern id="vscl-a" patternUnits="userSpaceOnUse" width="28" height="90"><circle cx="14" cy="76" r="14" fill="var(--vA)"/></pattern>
+    <linearGradient id="vsh-a" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#FFFFFF" stop-opacity=".20"/>
+      <stop offset=".45" stop-color="#FFFFFF" stop-opacity="0"/>
+      <stop offset="1" stop-color="#000000" stop-opacity=".10"/>
+    </linearGradient>
+  </defs>
+  <rect x="0" y="0" width="100%" height="2.5" fill="var(--vA)"/>
+  <rect x="0" y="2.5" width="100%" height="17" fill="var(--vB)"/>
+  <rect x="0" y="19.5" width="100%" height="2.5" fill="var(--vA)"/>
+  <rect x="0" y="22" width="100%" height="43.5" fill="var(--vB)"/>
+  <rect x="0" y="22" width="100%" height="43.5" fill="url(#vstr-a)"/>
+  <rect x="0" y="22" width="100%" height="4" fill="var(--vA)" opacity=".14"/>
+  <rect x="0" y="22" width="100%" height="43.5" fill="url(#vsh-a)"/>
+  <rect x="0" y="65.5" width="100%" height="10.5" fill="var(--vA)"/>
+  <rect x="0" y="76" width="100%" height="14" fill="url(#vscl-a)"/>
+</svg></div>
 
 <!-- ===================== HERO ===================== -->
 <header class="hero">
@@ -831,7 +839,7 @@ html.lang-ar .bar a{letter-spacing:.01em;text-transform:none;font-size:13px}
     </div>
   </div>
 
-  <!-- spinning counter seal, decorative -->
+  <!-- counter seal, decorative -->
   <svg class="seal" viewBox="0 0 140 140" aria-hidden="true">
     <path id="sealc" d="M70 70 m-51 0 a51 51 0 1 1 102 0 a51 51 0 1 1 -102 0" fill="none"/>
     <text><textPath href="#sealc" textLength="316">ICE CREAM &#183; COFFEE &#183; TOAST &#183; DOHA &#183;</textPath></text>
@@ -1025,7 +1033,26 @@ html.lang-ar .bar a{letter-spacing:.01em;text-transform:none;font-size:13px}
 
 <!-- ===================== THE COUNTER / MENU ===================== -->
 <section class="sec counter" id="counter">
-  <div class="valance" aria-hidden="true"></div>
+  <div class="valance" aria-hidden="true"><svg width="100%" height="90" focusable="false">
+    <defs>
+      <pattern id="vstr-b" patternUnits="userSpaceOnUse" width="56" height="90"><rect width="28" height="90" fill="var(--vA)"/></pattern>
+      <pattern id="vscl-b" patternUnits="userSpaceOnUse" width="28" height="90"><circle cx="14" cy="76" r="14" fill="var(--vA)"/></pattern>
+      <linearGradient id="vsh-b" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#FFFFFF" stop-opacity=".20"/>
+        <stop offset=".45" stop-color="#FFFFFF" stop-opacity="0"/>
+        <stop offset="1" stop-color="#000000" stop-opacity=".10"/>
+      </linearGradient>
+    </defs>
+    <rect x="0" y="0" width="100%" height="2.5" fill="var(--vA)"/>
+    <rect x="0" y="2.5" width="100%" height="17" fill="var(--vB)"/>
+    <rect x="0" y="19.5" width="100%" height="2.5" fill="var(--vA)"/>
+    <rect x="0" y="22" width="100%" height="43.5" fill="var(--vB)"/>
+    <rect x="0" y="22" width="100%" height="43.5" fill="url(#vstr-b)"/>
+    <rect x="0" y="22" width="100%" height="4" fill="var(--vA)" opacity=".14"/>
+    <rect x="0" y="22" width="100%" height="43.5" fill="url(#vsh-b)"/>
+    <rect x="0" y="65.5" width="100%" height="10.5" fill="var(--vA)"/>
+    <rect x="0" y="76" width="100%" height="14" fill="url(#vscl-b)"/>
+  </svg></div>
   <div class="wrap">
     <div class="sec-head rv">
       <span class="meta"><span class="en">What is on</span><span class="ar">ماذا يوجد</span></span>
@@ -1092,7 +1119,26 @@ html.lang-ar .bar a{letter-spacing:.01em;text-transform:none;font-size:13px}
 
 <!-- ===================== CLUBS ===================== -->
 <section class="sec clubs" id="clubs">
-  <div class="valance" aria-hidden="true"></div>
+  <div class="valance" aria-hidden="true"><svg width="100%" height="90" focusable="false">
+    <defs>
+      <pattern id="vstr-c" patternUnits="userSpaceOnUse" width="56" height="90"><rect width="28" height="90" fill="var(--vA)"/></pattern>
+      <pattern id="vscl-c" patternUnits="userSpaceOnUse" width="28" height="90"><circle cx="14" cy="76" r="14" fill="var(--vA)"/></pattern>
+      <linearGradient id="vsh-c" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#FFFFFF" stop-opacity=".20"/>
+        <stop offset=".45" stop-color="#FFFFFF" stop-opacity="0"/>
+        <stop offset="1" stop-color="#000000" stop-opacity=".10"/>
+      </linearGradient>
+    </defs>
+    <rect x="0" y="0" width="100%" height="2.5" fill="var(--vA)"/>
+    <rect x="0" y="2.5" width="100%" height="17" fill="var(--vB)"/>
+    <rect x="0" y="19.5" width="100%" height="2.5" fill="var(--vA)"/>
+    <rect x="0" y="22" width="100%" height="43.5" fill="var(--vB)"/>
+    <rect x="0" y="22" width="100%" height="43.5" fill="url(#vstr-c)"/>
+    <rect x="0" y="22" width="100%" height="4" fill="var(--vA)" opacity=".14"/>
+    <rect x="0" y="22" width="100%" height="43.5" fill="url(#vsh-c)"/>
+    <rect x="0" y="65.5" width="100%" height="10.5" fill="var(--vA)"/>
+    <rect x="0" y="76" width="100%" height="14" fill="url(#vscl-c)"/>
+  </svg></div>
   <div class="wrap">
     <div class="sec-head rv">
       <span class="meta"><span class="en">Beyond the counter</span><span class="ar">أبعد من الكاونتر</span></span>
@@ -1210,7 +1256,26 @@ html.lang-ar .bar a{letter-spacing:.01em;text-transform:none;font-size:13px}
 
 <!-- ===================== FOOTER ===================== -->
 <footer class="foot">
-  <div class="valance" aria-hidden="true"></div>
+  <div class="valance" aria-hidden="true"><svg width="100%" height="90" focusable="false">
+    <defs>
+      <pattern id="vstr-d" patternUnits="userSpaceOnUse" width="56" height="90"><rect width="28" height="90" fill="var(--vA)"/></pattern>
+      <pattern id="vscl-d" patternUnits="userSpaceOnUse" width="28" height="90"><circle cx="14" cy="76" r="14" fill="var(--vA)"/></pattern>
+      <linearGradient id="vsh-d" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#FFFFFF" stop-opacity=".20"/>
+        <stop offset=".45" stop-color="#FFFFFF" stop-opacity="0"/>
+        <stop offset="1" stop-color="#000000" stop-opacity=".10"/>
+      </linearGradient>
+    </defs>
+    <rect x="0" y="0" width="100%" height="2.5" fill="var(--vA)"/>
+    <rect x="0" y="2.5" width="100%" height="17" fill="var(--vB)"/>
+    <rect x="0" y="19.5" width="100%" height="2.5" fill="var(--vA)"/>
+    <rect x="0" y="22" width="100%" height="43.5" fill="var(--vB)"/>
+    <rect x="0" y="22" width="100%" height="43.5" fill="url(#vstr-d)"/>
+    <rect x="0" y="22" width="100%" height="4" fill="var(--vA)" opacity=".14"/>
+    <rect x="0" y="22" width="100%" height="43.5" fill="url(#vsh-d)"/>
+    <rect x="0" y="65.5" width="100%" height="10.5" fill="var(--vA)"/>
+    <rect x="0" y="76" width="100%" height="14" fill="url(#vscl-d)"/>
+  </svg></div>
   <div class="wrap">
     <p class="foot-line rv"><span class="en">See you under the awning.</span><span class="ar blk">نراكم تحت المظلة.</span></p>
   </div>
@@ -1256,16 +1321,19 @@ html.lang-ar .bar a{letter-spacing:.01em;text-transform:none;font-size:13px}
 (function(){
   "use strict";
 
-  /* ---------- hero intro, first visit of the session only ---------- */
-  try{
+  /* ---------- hero intro, every page load ---------- */
+  /* One page, so every load is a visit. Gated on a fresh navigation rather than a
+     back/forward restore, so returning through history does not replay it. */
+  (function(){
     var hero = document.querySelector(".hero");
-    if (hero && !sessionStorage.getItem("tt_intro_seen")){
-      hero.classList.add("intro");
-      sessionStorage.setItem("tt_intro_seen", "1");
-    }
-  }catch(e){
-    /* private mode blocks sessionStorage: just show the page, no intro */
-  }
+    if (!hero) return;
+    var restored = false;
+    try{
+      var nav = performance.getEntriesByType && performance.getEntriesByType("navigation")[0];
+      restored = !!(nav && nav.type === "back_forward");
+    }catch(e){}
+    if (!restored) hero.classList.add("intro");
+  })();
 
 
   /* ---------- WhatsApp, prefilled ---------- */
