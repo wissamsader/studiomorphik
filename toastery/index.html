@@ -95,10 +95,10 @@ p{max-width:62ch}
 
 /* scalloped awning valance: the one living ornament */
 .awning{
-  height:21px;width:min(342px,64vw);
+  height:15px;width:min(210px,46vw);
   background:
-    radial-gradient(circle at 50% 0, var(--coral) 8.6px, transparent 9.1px) 0 100%/18px 10px repeat-x,
-    linear-gradient(var(--coral),var(--coral)) 0 0/100% 12px no-repeat;
+    radial-gradient(circle at 50% 0, var(--coral) 6.2px, transparent 6.6px) 0 100%/13px 7px repeat-x,
+    linear-gradient(var(--coral),var(--coral)) 0 0/100% 8px no-repeat;
   opacity:.85;
   animation:awning-sun 13s ease-in-out infinite;
 }
@@ -169,20 +169,22 @@ html.lang-ar .brand{font-family:var(--ar-serif);letter-spacing:0;font-size:21px}
 }
 .hero-in{position:relative;z-index:1;width:100%;padding-block:56px}
 .hero .meta{display:block;margin-bottom:clamp(20px,3vw,30px)}
-.wordmark{
-  font-family:var(--serif);font-weight:300;
-  font-size:clamp(52px,12.5vw,148px);
-  line-height:.95;letter-spacing:.06em;
-  color:var(--coral-deep);
+/* the hero mark is their own logo, the storefront line drawing.
+   It is served on transparency so it sits straight on the butter ground. */
+.wordmark{margin:0 auto;line-height:0}
+.wordmark img{
+  width:clamp(198px,27vw,312px);height:auto;
+  margin-inline:auto;
+  animation:mark-in 1.1s cubic-bezier(.2,.7,.3,1) both;
 }
-html.lang-ar .wordmark{font-family:var(--ar-serif);letter-spacing:0;font-size:clamp(46px,11vw,124px);line-height:1.3}
+@keyframes mark-in{from{opacity:0;transform:translateY(10px) scale(.985)}to{opacity:1;transform:none}}
 .wordmark-ar{
-  font-family:var(--ar-serif);font-size:clamp(24px,4.4vw,46px);
-  color:#D9846A;margin-top:10px;line-height:1.5;
+  font-family:var(--ar-serif);font-size:clamp(21px,3.4vw,34px);
+  color:#9C6A3C;margin-top:14px;line-height:1.5;
 }
-html.lang-ar .wordmark-ar{font-family:var(--serif);letter-spacing:.1em;font-size:clamp(20px,3.4vw,34px)}
-.hero .awning{margin:clamp(22px,3.4vw,34px) auto}
+.hero .awning{margin:clamp(20px,2.8vw,28px) auto 0;opacity:.8}
 .hero-line{
+  margin-top:clamp(22px,3vw,30px);
   font-family:var(--serif);font-weight:300;
   font-size:clamp(18px,2.3vw,26px);line-height:1.45;
   color:var(--ink-soft);max-width:26ch;margin-inline:auto;
@@ -528,8 +530,10 @@ html.lang-ar .bar a{letter-spacing:.01em;text-transform:none;font-size:13px}
 <header class="hero">
   <div class="hero-in wrap">
     <span class="meta"><span class="en">Msheireb Downtown &middot; Centro, Lusail &middot; Doha, Qatar</span><span class="ar">مشيرب قلب الدوحة &middot; سنترو، لوسيل &middot; الدوحة، قطر</span></span>
-    <h1 class="wordmark"><span class="en">the toastery</span><span class="ar">ذا توستريه</span></h1>
-    <div class="wordmark-ar"><span class="en">ذا توستريه</span><span class="ar">the toastery</span></div>
+    <h1 class="wordmark">
+      <img src="img/logo.png" alt="the toastery" width="720" height="760" fetchpriority="high">
+    </h1>
+    <div class="wordmark-ar">ذا توستريه</div>
     <div class="awning" aria-hidden="true"></div>
     <p class="hero-line"><span class="en">Ice cream, toast and specialty coffee, from seven in the morning until midnight.</span><span class="ar blk">آيس كريم وتوست وقهوة مختصة، من السابعة صباحاً حتى منتصف الليل.</span></p>
     <div class="hero-cta">
