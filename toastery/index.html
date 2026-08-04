@@ -16,6 +16,7 @@
    the toastery · Doha
    Direction derived from the business's own published material.
    Palette sampled from their photographs. See REFERENCES.md.
+   Motif system: striped awning valance, scallop, arch, checker.
    ============================================================ */
 
 :root{
@@ -32,7 +33,10 @@
   --navy:#323B4C;
   --navy-soft:#4A5568;
   --yellow:#F8D368;
-  --line:rgba(42,33,24,.14);
+  --ochre:#D5C164;
+  --pist:#A6A782;
+  --choc:#4F322D;
+  --line:rgba(42,33,24,.16);
   --line-soft:rgba(42,33,24,.08);
 
   --serif:"Cormorant Garamond",Georgia,serif;
@@ -40,9 +44,9 @@
   --ar-serif:"Amiri",serif;
   --ar-sans:"Noto Sans Arabic",sans-serif;
 
-  --wrap:1180px;
+  --wrap:1200px;
   --pad:clamp(20px,5vw,56px);
-  --r:14px;
+  --r:6px;
 }
 
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -75,39 +79,59 @@ html.lang-ar .meta{letter-spacing:.04em}
 .meta{
   font-family:var(--sans);
   font-size:11px;font-weight:600;
-  letter-spacing:.19em;text-transform:uppercase;
-  color:var(--ink-faint);
+  letter-spacing:.22em;text-transform:uppercase;
+  color:var(--coral-deep);
 }
 .display{
   font-family:var(--serif);font-weight:300;
-  line-height:1.06;letter-spacing:.01em;
+  line-height:1;letter-spacing:-.005em;
 }
-h2.display{font-size:clamp(34px,5.4vw,58px)}
-h3.display{font-size:clamp(23px,2.6vw,31px);line-height:1.2}
+h2.display{font-size:clamp(42px,6.6vw,88px)}
+h3.display{font-size:clamp(24px,2.8vw,34px);line-height:1.15}
+.display em,.hero-line em{font-style:italic;font-weight:300;color:var(--coral-deep)}
+html.lang-ar h2.display{font-size:clamp(32px,5vw,60px);line-height:1.35;letter-spacing:0}
+html.lang-ar h3.display{line-height:1.4}
 .lede{
   font-family:var(--serif);font-size:clamp(19px,2.1vw,25px);
   font-weight:300;line-height:1.5;color:var(--ink-soft);
 }
 p{max-width:62ch}
-.sec{padding-block:clamp(64px,9vw,120px)}
-.sec-head{margin-bottom:clamp(34px,5vw,58px)}
-.sec-head .meta{display:block;margin-bottom:16px}
+.sec{padding-block:clamp(64px,9vw,128px)}
+.sec-head{margin-bottom:clamp(36px,5vw,64px)}
+.sec-head .meta{display:block;margin-bottom:18px}
+.head-right{text-align:end}
 
-/* scalloped awning valance: the one living ornament */
-.awning{
-  height:15px;width:min(210px,46vw);
-  background:
-    radial-gradient(circle at 50% 0, var(--coral) 6.2px, transparent 6.6px) 0 100%/13px 7px repeat-x,
-    linear-gradient(var(--coral),var(--coral)) 0 0/100% 8px no-repeat;
-  opacity:.85;
+/* ---------- the striped awning valance: the house motif ---------- */
+/* stripes + scalloped hem, one scallop per stripe, like their logo awning */
+.valance{
+  --vA:var(--ink);
+  --vB:var(--butter-soft);
+  --vw:26px;
+  height:44px;flex:none;position:relative;
+  background:repeating-linear-gradient(90deg,var(--vA) 0 var(--vw),var(--vB) var(--vw) calc(var(--vw)*2));
+  -webkit-mask:
+    linear-gradient(#000 0 0) 0 0/100% calc(100% - 13px) no-repeat,
+    radial-gradient(13px at calc(var(--vw)/2) 0,#000 12.4px,#0000 13px) 0 100%/var(--vw) 13px repeat-x;
+  mask:
+    linear-gradient(#000 0 0) 0 0/100% calc(100% - 13px) no-repeat,
+    radial-gradient(13px at calc(var(--vw)/2) 0,#000 12.4px,#0000 13px) 0 100%/var(--vw) 13px repeat-x;
   animation:awning-sun 13s ease-in-out infinite;
 }
 @keyframes awning-sun{
-  0%,100%{opacity:.72;transform:translateY(0)}
-  50%{opacity:.95;transform:translateY(2px)}
+  0%,100%{opacity:.94;transform:translateY(0)}
+  50%{opacity:1;transform:translateY(2px)}
+}
+/* The page-top valance hangs over the butter hero. An espresso/cream pair loses its
+   light stripe into that ground and the dark stripes then read as teeth, not fabric.
+   Coral on cream keeps both stripes legible and matches their wordmark. */
+.top + .valance{--vA:var(--coral-deep);--vB:var(--cream)}
+/* checkerboard strip: the parlour floor */
+.checker{
+  height:18px;
+  background:repeating-conic-gradient(var(--ink) 0 25%,var(--butter) 0 50%) 0 0/18px 18px;
 }
 @media(prefers-reduced-motion:reduce){
-  .awning{animation:none}
+  .valance{animation:none}
   html{scroll-behavior:auto}
   *,*::before,*::after{animation-duration:.001ms!important;transition-duration:.001ms!important}
 }
@@ -115,8 +139,8 @@ p{max-width:62ch}
 /* ---------- reveal ---------- */
 /* numbers and codes keep LTR order inside the Arabic layer (bidi isolation) */
 .ltr{direction:ltr;unicode-bidi:isolate}
-.rv{opacity:0;transform:translateY(16px);transition:opacity .8s cubic-bezier(.2,.7,.3,1),transform .8s cubic-bezier(.2,.7,.3,1)}
-.rv.in{opacity:1;transform:none}
+.rv{opacity:0;transform:translateY(16px) rotate(var(--rot,0deg));transition:opacity .8s cubic-bezier(.2,.7,.3,1),transform .8s cubic-bezier(.2,.7,.3,1)}
+.rv.in{opacity:1;transform:translateY(0) rotate(var(--rot,0deg))}
 
 /* ============ top bar ============ */
 .top{
@@ -167,230 +191,394 @@ html.lang-ar .brand{font-family:var(--ar-serif);letter-spacing:0;font-size:21px}
   background:radial-gradient(60% 100% at 50% 0,rgba(255,255,255,.75),transparent 70%);
   pointer-events:none;
 }
-.hero-in{position:relative;z-index:1;width:100%;padding-block:56px}
-.hero .meta{display:block;margin-bottom:clamp(20px,3vw,30px)}
+.hero-in{position:relative;z-index:1;width:100%;padding-block:48px}
+.hero .meta{display:block;margin-bottom:clamp(18px,2.6vw,26px)}
 /* the hero mark is their own logo, the storefront line drawing.
    It is served on transparency so it sits straight on the butter ground. */
 .wordmark{margin:0 auto;line-height:0}
 .wordmark img{
   width:clamp(198px,27vw,312px);height:auto;
   margin-inline:auto;
-  animation:mark-in 1.1s cubic-bezier(.2,.7,.3,1) both;
 }
-@keyframes mark-in{from{opacity:0;transform:translateY(10px) scale(.985)}to{opacity:1;transform:none}}
+}
 .wordmark-ar{
   font-family:var(--ar-serif);font-size:clamp(21px,3.4vw,34px);
-  color:#9C6A3C;margin-top:14px;line-height:1.5;
+  color:#9C6A3C;margin-top:12px;line-height:1.5;
 }
-.hero .awning{margin:clamp(20px,2.8vw,28px) auto 0;opacity:.8}
 .hero-line{
-  margin-top:clamp(22px,3vw,30px);
+  margin-top:clamp(20px,2.6vw,28px);
   font-family:var(--serif);font-weight:300;
-  font-size:clamp(18px,2.3vw,26px);line-height:1.45;
-  color:var(--ink-soft);max-width:26ch;margin-inline:auto;
+  font-size:clamp(20px,2.4vw,30px);line-height:1.4;
+  color:var(--ink);max-width:24ch;margin-inline:auto;
 }
-html.lang-ar .hero-line{font-family:var(--ar-sans);font-size:clamp(16px,2vw,21px);max-width:34ch}
-.hero-cta{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-top:clamp(26px,4vw,38px)}
+html.lang-ar .hero-line{font-family:var(--ar-sans);font-size:clamp(16px,2vw,21px);max-width:34ch;color:var(--ink-soft)}
+.hero-cta{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-top:clamp(24px,3.6vw,36px)}
+
+/* the two hero ornaments: a spinning counter seal and a stamped hours sticker */
+.seal{
+  position:absolute;z-index:2;
+  bottom:clamp(34px,8vh,80px);inset-inline-end:clamp(28px,8vw,140px);
+  width:138px;height:138px;color:var(--coral-deep);
+  animation:spin 28s linear infinite;
+}
+.seal text{fill:currentColor;font-family:var(--sans);font-weight:600;font-size:12px}
+.seal .seal-c{font-size:18px}
+@keyframes spin{to{transform:rotate(1turn)}}
+.stamp{
+  position:absolute;z-index:2;
+  top:clamp(110px,17vh,180px);inset-inline-start:clamp(30px,9vw,150px);
+  width:118px;height:118px;border-radius:50%;
+  background:var(--yellow);color:var(--ink);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;
+  text-align:center;transform:rotate(-9deg);
+  animation:drift 9s ease-in-out infinite;
+}
+.stamp::before{content:"";position:absolute;inset:7px;border:1.5px dashed rgba(42,33,24,.5);border-radius:50%}
+.stamp span{font-size:9.5px;font-weight:600;letter-spacing:.16em;text-transform:uppercase}
+html.lang-ar .stamp span{letter-spacing:.02em;text-transform:none;font-size:11px}
+.stamp b{font-family:var(--serif);font-size:17px;font-weight:500}
+html.lang-ar .seal{display:none}
+@media(max-width:1099px){.seal,.stamp{display:none}}
 
 .btn{
   display:inline-flex;align-items:center;gap:9px;
-  padding:13px 26px;border-radius:99px;
-  font-size:12.5px;font-weight:600;letter-spacing:.11em;text-transform:uppercase;
+  padding:14px 28px;border-radius:8px;
+  font-size:12.5px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;
   text-decoration:none;transition:transform .3s cubic-bezier(.2,.7,.3,1),background .3s,box-shadow .3s;
-  border:1px solid transparent;
+  border:1.5px solid transparent;
 }
 html.lang-ar .btn{letter-spacing:.02em;font-size:13.5px;text-transform:none}
-.btn-solid{background:var(--coral-deep);color:var(--butter-soft);box-shadow:0 10px 26px -14px rgba(188,95,66,.9)}
-.btn-solid:hover{transform:translateY(-2px);box-shadow:0 16px 32px -14px rgba(188,95,66,.9)}
-.btn-ghost{border-color:rgba(42,33,24,.28);color:var(--ink)}
-.btn-ghost:hover{background:rgba(42,33,24,.06);transform:translateY(-2px)}
-.btn-navy{background:var(--butter);color:var(--navy)}
-.btn-navy:hover{transform:translateY(-2px)}
+.btn-solid{background:var(--coral-deep);border-color:var(--coral-deep);color:var(--butter-soft);box-shadow:4px 4px 0 rgba(42,33,24,.18)}
+.btn-solid:hover{transform:translate(-1px,-2px);box-shadow:6px 7px 0 rgba(42,33,24,.2)}
+.btn-ghost{border-color:var(--ink);color:var(--ink)}
+.btn-ghost:hover{background:var(--ink);color:var(--butter);transform:translate(-1px,-2px)}
+html.lang-ar .btn-solid{box-shadow:-4px 4px 0 rgba(42,33,24,.18)}
+html.lang-ar .btn-solid:hover{box-shadow:-6px 7px 0 rgba(42,33,24,.2)}
 
 /* ============ storefront band (contained, never edge to edge) ============ */
-.shopband{background:var(--butter);padding-bottom:clamp(50px,7vw,84px)}
+.shopband{background:var(--butter);padding-bottom:clamp(56px,7.5vw,92px)}
 .shopframe{
   max-width:var(--wrap);margin-inline:auto;padding-inline:var(--pad);
 }
 .shopframe figure{
-  border-radius:var(--r);overflow:hidden;
-  box-shadow:0 34px 70px -40px rgba(42,33,24,.55);
+  position:relative;
   background:var(--bone);
+  box-shadow:18px 18px 0 var(--coral);
 }
+html.lang-ar .shopframe figure{box-shadow:-18px 18px 0 var(--coral)}
 .shopframe img{width:100%;aspect-ratio:16/10;object-fit:cover}
-.shopcap{
-  display:flex;flex-wrap:wrap;gap:8px 22px;justify-content:center;
-  margin-top:18px;
+.shoptag{
+  position:absolute;top:-17px;inset-inline-end:clamp(18px,4vw,44px);
+  background:var(--ink);color:var(--butter);
+  padding:10px 18px;transform:rotate(2.5deg);
+  font-size:11px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;
+  white-space:nowrap;
 }
-.shopcap span{font-size:11.5px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-faint)}
+html.lang-ar .shoptag{letter-spacing:.03em;text-transform:none;font-size:12.5px;transform:rotate(-2.5deg)}
+.shopcap{
+  display:flex;flex-wrap:wrap;gap:8px 26px;justify-content:flex-start;
+  margin-top:26px;
+}
+.shopcap span{font-size:11.5px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-soft)}
+.shopcap span+span::before{content:"\2726";color:var(--coral-deep);margin-inline-end:26px;font-size:9px;vertical-align:1px}
 html.lang-ar .shopcap span{letter-spacing:.02em;text-transform:none;font-size:13px}
 
 /* ============ ticker ============ */
 .ticker{
   direction:ltr;
   background:var(--coral-deep);color:var(--butter-soft);
-  padding-block:13px;overflow:hidden;white-space:nowrap;
+  padding-block:15px;overflow:hidden;white-space:nowrap;
   border-block:1px solid rgba(255,255,255,.14);
 }
-.ticker-track{display:inline-flex;gap:0;animation:slide 46s linear infinite;will-change:transform}
+.ticker-track{display:inline-flex;gap:0;animation:slide 52s linear infinite;will-change:transform}
 .ticker:hover .ticker-track{animation-play-state:paused}
-.ticker span{
-  font-family:var(--serif);font-size:19px;font-style:italic;font-weight:300;
-  padding-inline:26px;opacity:.94;
+.ticker .ticker-track>span{
+  font-family:var(--serif);font-size:clamp(21px,2vw,28px);font-style:italic;font-weight:300;
+  padding-inline:28px;opacity:.96;
 }
-.ticker span::after{content:"·";margin-inline-start:26px;opacity:.5;font-style:normal}
+.ticker .ticker-track>span::after{content:"\2726";margin-inline-start:28px;opacity:.55;font-style:normal;font-size:13px;vertical-align:3px}
+html.lang-ar .ticker>.ticker-track>span{font-family:var(--ar-serif);font-style:normal;font-size:clamp(19px,1.8vw,25px)}
 @keyframes slide{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 
 
 /* ============ story ============ */
-.story{background:var(--cream)}
-.story-grid{display:grid;gap:clamp(34px,5vw,68px);align-items:center}
+.story{background:var(--cream);overflow:hidden}
+.story-grid{display:grid;gap:clamp(38px,5.5vw,84px);align-items:center}
 @media(min-width:861px){.story-grid{grid-template-columns:1.05fr .95fr}}
 .story-grid p+p{margin-top:1.1em}
 .story-grid p{color:var(--ink-soft);font-size:16.5px}
-.story-fig{position:relative;min-width:0}
-.story-fig img{border-radius:var(--r);box-shadow:0 30px 60px -38px rgba(42,33,24,.5)}
+.story h2.display{font-size:clamp(40px,5.2vw,70px)}
+html.lang-ar .story h2.display{font-size:clamp(30px,4.4vw,54px)}
+.story-fig{position:relative;min-width:0;padding-inline-end:18px}
+html.lang-ar .story-fig{padding-inline-end:0;padding-inline-start:18px}
+/* the arch: Msheireb doorway geometry, kills the card look */
+.story-fig img{
+  width:100%;aspect-ratio:4/5;object-fit:cover;
+  border-radius:999px 999px 8px 8px;
+  box-shadow:18px 18px 0 var(--pist);
+}
+html.lang-ar .story-fig img{box-shadow:-18px 18px 0 var(--pist)}
 .story-badge{
-  position:absolute;inset-block-end:-20px;inset-inline-start:-14px;
-  background:var(--butter);border:1px solid var(--line-soft);
-  border-radius:12px;padding:14px 20px;text-align:center;
+  position:absolute;inset-block-end:-18px;inset-inline-start:-14px;
+  width:136px;height:136px;border-radius:50%;
+  background:var(--butter);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;
+  text-align:center;transform:rotate(-8deg);
   box-shadow:0 18px 40px -24px rgba(42,33,24,.55);
 }
-@media(max-width:860px){.story-badge{inset-inline-start:12px;inset-block-end:-16px}}
-.story-badge b{display:block;font-family:var(--serif);font-size:31px;font-weight:400;color:var(--coral-deep);line-height:1}
-.story-badge small{font-size:10.5px;font-weight:600;letter-spacing:.13em;text-transform:uppercase;color:var(--ink-faint)}
-html.lang-ar .story-badge small{letter-spacing:.02em;text-transform:none;font-size:12px}
-.story-list{margin-top:30px;display:grid;gap:0;border-top:1px solid var(--line-soft)}
-.story-list div{display:flex;gap:18px;padding-block:13px;border-bottom:1px solid var(--line-soft);align-items:baseline}
-.story-list dt,.story-list b{font-size:11px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-faint);flex:0 0 92px}
-html.lang-ar .story-list b{letter-spacing:.02em;text-transform:none;font-size:13px;flex-basis:96px}
-.story-list span{font-size:15px;color:var(--ink)}
+.story-badge::before{content:"";position:absolute;inset:8px;border:1.5px dashed rgba(188,95,66,.6);border-radius:50%}
+@media(max-width:860px){.story-badge{inset-inline-start:6px;inset-block-end:-14px;width:118px;height:118px}}
+.story-badge b{display:block;font-family:var(--serif);font-size:42px;font-weight:400;color:var(--coral-deep);line-height:1}
+.story-badge small{font-size:9.5px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft);max-width:90px;line-height:1.5}
+html.lang-ar .story-badge small{letter-spacing:.02em;text-transform:none;font-size:11px}
+.story-list{margin-top:32px;display:grid;gap:0}
+.story-list div{
+  display:flex;gap:0;padding-block:13px;align-items:baseline;justify-content:space-between;
+  background:radial-gradient(circle,rgba(42,33,24,.34) 1px,#0000 1.4px) 0 62%/8px 2px repeat-x;
+}
+.story-list dt,.story-list b{font-size:11px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-soft);background:var(--cream);padding-inline-end:12px}
+html.lang-ar .story-list b{letter-spacing:.02em;text-transform:none;font-size:13px;padding-inline-end:0;padding-inline-start:12px}
+.story-list span{font-size:15px;color:var(--ink);background:var(--cream);padding-inline-start:12px}
+html.lang-ar .story-list span{padding-inline-start:0;padding-inline-end:12px}
+
+/* ============ flavour banner: one macro shot, edge to edge ============ */
+.flavbanner{position:relative;overflow:hidden}
+.flavbanner img{width:100%;height:clamp(320px,46vw,560px);object-fit:cover}
+.flavbanner-txt{
+  position:absolute;inset-inline:0;bottom:clamp(40px,7vw,84px);z-index:2;
+}
+.flavbanner-txt .meta{
+  display:inline-block;background:var(--ink);color:var(--butter);
+  padding:8px 14px;margin-bottom:14px;
+}
+.flavbanner-txt p{
+  font-family:var(--serif);font-style:italic;font-weight:300;
+  font-size:clamp(26px,4.6vw,58px);line-height:1.22;
+  color:var(--ink);max-width:18ch;
+}
+.flavbanner-txt p span.en,.flavbanner-txt p span.ar{
+  background:var(--butter);box-decoration-break:clone;-webkit-box-decoration-break:clone;
+  padding:.04em .3em;
+}
+html.lang-ar .flavbanner-txt p{font-family:var(--ar-serif);font-style:normal;font-size:clamp(22px,3.6vw,44px)}
+/* scalloped hem of the next section rising into the photo */
+.flavbanner::after{
+  content:"";position:absolute;inset-inline:0;bottom:-1px;height:15px;z-index:3;
+  background:radial-gradient(circle at 14px 15px,var(--bone) 13.4px,#0000 14px) 0 0/28px 15px repeat-x;
+}
 
 /* ============ flavours ============ */
 .flav{background:var(--bone)}
-.chips{display:flex;flex-wrap:wrap;gap:9px;margin-top:24px}
+.flav-head{
+  display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;
+  gap:20px 44px;margin-bottom:clamp(38px,5vw,64px);
+}
+.flav-head .meta{display:block;margin-bottom:18px}
+.chips{display:flex;flex-wrap:wrap;gap:9px}
 .chip{
-  padding:8px 17px;border-radius:99px;border:1px solid var(--line);
-  font-size:11.5px;font-weight:600;letter-spacing:.11em;text-transform:uppercase;
+  padding:9px 16px;border-radius:4px;border:1.5px solid var(--line);
+  font-size:11.5px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;
   color:var(--ink-soft);transition:background .25s,color .25s,border-color .25s;
 }
 html.lang-ar .chip{letter-spacing:.02em;text-transform:none;font-size:13.5px}
-.chip:hover{border-color:var(--ink-faint)}
-.chip.on{background:var(--ink);border-color:var(--ink);color:var(--butter-soft)}
+.chip:hover{border-color:var(--ink)}
+.chip.on{background:var(--ink);border-color:var(--ink);color:var(--butter)}
 .flav-grid{
-  display:grid;gap:clamp(18px,2.4vw,30px);
+  display:grid;gap:clamp(18px,2.6vw,34px);
   grid-template-columns:repeat(2,1fr);
+  counter-reset:fl;
 }
-@media(min-width:620px){.flav-grid{grid-template-columns:repeat(3,1fr)}}
-.flav-card{min-width:0;transition:opacity .4s,transform .4s}
+@media(min-width:620px){
+  .flav-grid{grid-template-columns:repeat(3,1fr)}
+  .flav-grid>:nth-child(3n+2){margin-top:44px}
+}
+.flav-card{min-width:0;counter-increment:fl;transition:opacity .4s}
 .flav-card[hidden]{display:none}
 .flav-card figure{
-  border-radius:var(--r);overflow:hidden;background:var(--cream);
-  box-shadow:0 18px 40px -30px rgba(42,33,24,.5);
+  position:relative;overflow:hidden;background:var(--cream);
 }
 .flav-card img{aspect-ratio:1;object-fit:cover;width:100%;transition:transform .8s cubic-bezier(.2,.7,.3,1)}
+@media(min-width:620px){
+  .flav-card:nth-child(4n+1) img{aspect-ratio:.84}
+  .flav-card:nth-child(4n+3) img{aspect-ratio:1.12}
+}
 .flav-card:hover img{transform:scale(1.045)}
-.flav-name{display:flex;align-items:center;gap:9px;margin-top:14px}
-.dot{width:10px;height:10px;border-radius:99px;flex:none;border:1px solid rgba(42,33,24,.3)}
-.flav-name h3{font-family:var(--serif);font-size:22px;font-weight:400;line-height:1.2}
-html.lang-ar .flav-name h3{font-family:var(--ar-serif);font-size:20px}
-.flav-card p{font-size:13.5px;color:var(--ink-faint);margin-top:3px;padding-inline-start:18px}
+/* the tray index chip */
+.flav-card figure::after{
+  content:counter(fl,decimal-leading-zero);
+  position:absolute;top:0;inset-inline-start:0;
+  background:var(--butter);color:var(--ink);
+  font-family:var(--sans);font-size:10.5px;font-weight:600;letter-spacing:.14em;
+  padding:7px 10px;
+}
+.flav-name{display:flex;align-items:center;gap:10px;margin-top:15px}
+.dot{width:14px;height:14px;border-radius:3px;flex:none;border:1px solid rgba(42,33,24,.3)}
+.flav-name h3{font-family:var(--serif);font-size:26px;font-weight:400;line-height:1.15}
+html.lang-ar .flav-name h3{font-family:var(--ar-serif);font-size:22px}
+.flav-card p{font-size:13.5px;color:var(--ink-faint);margin-top:4px;padding-inline-start:24px;font-style:italic;font-family:var(--serif);font-size:15.5px}
+html.lang-ar .flav-card p{font-style:normal;font-family:var(--ar-sans);font-size:13.5px}
 .flav-note{
-  margin-top:clamp(34px,4.6vw,52px);padding-top:24px;border-top:1px solid var(--line-soft);
+  margin-top:clamp(40px,5vw,64px);padding-top:26px;
+  border-top:2px solid var(--ink);
   display:flex;flex-wrap:wrap;gap:14px 30px;align-items:baseline;
 }
-.flav-note p{font-family:var(--serif);font-size:19px;font-style:italic;font-weight:300;color:var(--ink-soft);max-width:46ch}
+.flav-note p{font-family:var(--serif);font-size:clamp(19px,1.8vw,24px);font-style:italic;font-weight:300;color:var(--ink-soft);max-width:52ch}
+.flav-note p::before{content:"\2726";color:var(--coral-deep);font-style:normal;margin-inline-end:14px;font-size:15px}
 html.lang-ar .flav-note p{font-family:var(--ar-sans);font-style:normal;font-size:16px}
 
 /* ============ signatures ============ */
-.sig{background:var(--cream)}
-.sig-grid{display:grid;gap:clamp(24px,3.4vw,40px);grid-template-columns:1fr}
-@media(min-width:760px){.sig-grid{grid-template-columns:repeat(3,1fr)}}
-.sig-card{min-width:0}
-.sig-card figure{
-  border-radius:var(--r);overflow:hidden;background:var(--bone);
-  box-shadow:0 24px 54px -36px rgba(42,33,24,.5);
+.sig{background:var(--cream);overflow:hidden}
+.sig-grid{display:grid;gap:clamp(28px,4vw,52px);grid-template-columns:1fr;counter-reset:sg}
+@media(min-width:760px){
+  .sig-grid{grid-template-columns:repeat(3,1fr)}
+  .sig-card:nth-child(2){margin-top:64px}
+  .sig-card:nth-child(3){margin-top:128px}
 }
+.sig-card{min-width:0;counter-increment:sg}
+.sig-card::before{
+  content:counter(sg,decimal-leading-zero);
+  display:block;
+  font-family:var(--serif);font-style:italic;font-weight:300;
+  font-size:clamp(54px,5.5vw,80px);line-height:1;
+  color:var(--coral);margin-bottom:14px;
+}
+.sig-card figure{position:relative;min-width:0}
 .sig-card img{aspect-ratio:4/3;object-fit:cover;width:100%}
-.sig-card .meta{display:block;margin:20px 0 8px}
+/* three different frames: hard offset, arch, tilted postcard */
+.sig-card:nth-child(1) figure{box-shadow:14px 14px 0 var(--choc)}
+.sig-card:nth-child(2) figure img{aspect-ratio:4/5;border-radius:999px 999px 6px 6px;box-shadow:14px 14px 0 var(--coral)}
+.sig-card:nth-child(3) figure{background:var(--bone);padding:12px 12px 16px;transform:rotate(-1.6deg);box-shadow:14px 14px 0 var(--ochre)}
+html.lang-ar .sig-card:nth-child(1) figure{box-shadow:-14px 14px 0 var(--choc)}
+html.lang-ar .sig-card:nth-child(2) figure img{box-shadow:-14px 14px 0 var(--coral)}
+html.lang-ar .sig-card:nth-child(3) figure{box-shadow:-14px 14px 0 var(--ochre);transform:rotate(1.6deg)}
+.sig-card .meta{display:block;margin:24px 0 8px;color:var(--ink-faint)}
 .sig-card p{font-size:15px;color:var(--ink-soft)}
 
-/* ============ counter / menu ============ */
-.counter{background:var(--butter)}
-.counter-grid{display:grid;gap:clamp(34px,5vw,64px)}
+/* ============ counter / menu: the yellow room ============ */
+.counter{background:var(--yellow);padding-top:0}
+.counter .valance{--vA:var(--coral-deep);--vB:var(--cream);margin-bottom:clamp(56px,8vw,110px)}
+.counter .sec-head .meta{color:var(--choc)}
+.counter-grid{display:grid;gap:clamp(30px,4.4vw,56px);align-items:start}
 @media(min-width:861px){.counter-grid{grid-template-columns:1fr 1fr}}
+/* receipts from the till: flat paper, sawtooth hem, a hair of tilt */
 .menu-card{
-  background:var(--butter-soft);border:1px solid rgba(42,33,24,.1);
-  border-radius:var(--r);padding:clamp(24px,3.4vw,38px);
-  box-shadow:0 26px 60px -42px rgba(42,33,24,.55);
+  background:var(--cream);
+  padding:clamp(26px,3.4vw,40px) clamp(24px,3vw,36px) 40px;
   min-width:0;
+  -webkit-mask:
+    linear-gradient(#000 0 0) 0 0/100% calc(100% - 11px) no-repeat,
+    conic-gradient(from 135deg at 50% 0,#000 0 90deg,#0000 0) 50% 100%/22px 11px repeat-x;
+  mask:
+    linear-gradient(#000 0 0) 0 0/100% calc(100% - 11px) no-repeat,
+    conic-gradient(from 135deg at 50% 0,#000 0 90deg,#0000 0) 50% 100%/22px 11px repeat-x;
 }
+.counter-grid .menu-card:first-child{--rot:-.6deg}
+.counter-grid .menu-card:last-child{--rot:.6deg}
 .menu-card h3{
-  font-family:var(--serif);font-size:26px;font-weight:400;
-  padding-bottom:16px;border-bottom:1px solid var(--line);
+  font-family:var(--serif);font-size:clamp(28px,2.6vw,36px);font-weight:400;font-style:italic;
+  padding-bottom:14px;border-bottom:2px solid var(--ink);
 }
-html.lang-ar .menu-card h3{font-family:var(--ar-serif)}
-.menu-card ul{list-style:none;margin-top:6px}
+html.lang-ar .menu-card h3{font-family:var(--ar-serif);font-style:normal}
+.menu-card ul{list-style:none;margin-top:8px}
 .menu-card li{
-  display:flex;gap:16px;align-items:baseline;justify-content:space-between;
-  padding-block:11px;border-bottom:1px solid var(--line-soft);
+  display:flex;gap:0;align-items:baseline;justify-content:space-between;
+  padding-block:12px;
+  background:radial-gradient(circle,rgba(42,33,24,.34) 1px,#0000 1.4px) 0 62%/8px 2px repeat-x;
 }
-.menu-card li:last-child{border-bottom:0}
-.menu-card li b{font-weight:500;font-size:15.5px}
-.menu-card li i{font-family:var(--serif);font-style:italic;font-size:14.5px;color:var(--ink-faint);text-align:end;flex:none}
-html.lang-ar .menu-card li i{font-family:var(--ar-sans);font-style:normal;font-size:13.5px}
+.menu-card li b{font-weight:500;font-size:15.5px;background:var(--cream);padding-inline-end:12px}
+.menu-card li i{font-family:var(--serif);font-style:italic;font-size:15px;color:var(--ink-faint);text-align:end;flex:none;background:var(--cream);padding-inline-start:12px}
+html.lang-ar .menu-card li b{padding-inline-end:0;padding-inline-start:12px}
+html.lang-ar .menu-card li i{font-family:var(--ar-sans);font-style:normal;font-size:13.5px;padding-inline-start:0;padding-inline-end:12px}
 .price-note{
-  margin-top:22px;padding:16px 18px;border-radius:11px;
-  background:rgba(188,95,66,.09);border:1px solid rgba(188,95,66,.2);
-  font-size:14.5px;color:var(--ink);
+  margin-top:34px;padding:20px 24px;
+  border:1.5px dashed var(--choc);border-radius:2px;
+  font-size:14.5px;color:var(--choc);
+  --rot:-.35deg;
 }
 .price-note b{font-weight:600}
 
 /* ============ reviews ============ */
-.revs{background:var(--bone)}
-.score{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
-.score b{font-family:var(--serif);font-size:56px;font-weight:400;line-height:1;color:var(--coral-deep)}
-.stars{color:var(--yellow);font-size:19px;letter-spacing:2px}
-.revs-grid{display:grid;gap:clamp(20px,2.8vw,32px);grid-template-columns:1fr;margin-top:clamp(34px,4.6vw,52px)}
+.revs{background:var(--bone);position:relative;overflow:hidden}
+.revs .sec-head{position:relative}
+.revs .sec-head::after{
+  content:"\201C";
+  position:absolute;top:-30px;inset-inline-end:0;
+  font-family:var(--serif);font-size:clamp(140px,18vw,260px);line-height:1;
+  color:var(--coral);opacity:.35;pointer-events:none;
+}
+.score{display:flex;align-items:baseline;gap:20px;flex-wrap:wrap}
+.score b{font-family:var(--serif);font-size:clamp(88px,10vw,140px);font-weight:300;line-height:.9;color:var(--coral-deep)}
+.stars{color:var(--ochre);font-size:23px;letter-spacing:3px}
+.revs-grid{display:grid;gap:clamp(20px,2.8vw,32px);grid-template-columns:1fr;margin-top:clamp(38px,5vw,58px)}
 @media(min-width:760px){.revs-grid{grid-template-columns:repeat(3,1fr)}}
 .rev{
-  background:var(--cream);border-radius:var(--r);
-  padding:clamp(22px,2.8vw,30px);border:1px solid var(--line-soft);
+  background:var(--cream);border-radius:2px;
+  padding:clamp(24px,3vw,32px);
   display:flex;flex-direction:column;min-width:0;
+  box-shadow:0 20px 40px -32px rgba(42,33,24,.5);
 }
+.revs-grid .rev:nth-child(1){--rot:-1.1deg}
+.revs-grid .rev:nth-child(2){--rot:.8deg}
+.revs-grid .rev:nth-child(3){--rot:-.6deg}
 .rev blockquote{
-  font-family:var(--serif);font-size:18.5px;font-weight:300;line-height:1.5;
+  font-family:var(--serif);font-size:19.5px;font-weight:300;line-height:1.5;
   color:var(--ink);flex:1;
 }
 html.lang-ar .rev blockquote{font-family:var(--ar-sans);font-size:15.5px}
-.rev footer{margin-top:20px;padding-top:16px;border-top:1px solid var(--line-soft)}
+.rev footer{margin-top:20px;padding-top:16px;border-top:1.5px solid var(--line)}
 .rev footer b{display:block;font-size:14px;font-weight:600}
 .rev footer small{font-size:11.5px;color:var(--ink-faint)}
 
 /* ============ clubs (navy) ============ */
-.clubs{background:var(--navy);color:var(--butter-soft)}
-.clubs .meta{color:rgba(251,246,233,.5)}
+.clubs{background:var(--navy);color:var(--butter-soft);position:relative;overflow:hidden;padding-top:0}
+.clubs .valance{--vA:var(--butter-soft);--vB:var(--navy);margin-bottom:clamp(56px,8vw,110px)}
+.clubs::before{ /* their own merch line, embroidered huge into the navy */
+  content:"slow life";
+  position:absolute;inset-block-end:-.16em;inset-inline-end:1%;
+  font-family:var(--serif);font-style:italic;font-weight:300;
+  font-size:clamp(120px,21vw,290px);line-height:1;white-space:nowrap;
+  color:rgba(251,246,233,.055);pointer-events:none;
+}
+html.lang-ar .clubs::before{content:"سلو لايف";font-family:var(--ar-serif);font-style:normal}
+.clubs .meta{color:var(--coral)}
 .clubs h2{color:var(--butter-soft)}
-.clubs-grid{display:grid;gap:clamp(24px,3.4vw,44px);grid-template-columns:1fr}
+.clubs h2 em{color:var(--coral)}
+.clubs-grid{display:grid;gap:clamp(28px,3.8vw,48px);grid-template-columns:1fr;position:relative}
 @media(min-width:760px){.clubs-grid{grid-template-columns:repeat(3,1fr)}}
 .club{min-width:0}
-.club figure{border-radius:var(--r);overflow:hidden;background:var(--navy-soft);border:1px solid rgba(251,246,233,.18)}
-.club img{aspect-ratio:4/3;object-fit:cover;width:100%}
-.club h3{font-family:var(--serif);font-size:25px;font-weight:400;margin:18px 0 7px}
+/* postcards pinned to the navy wall */
+.club figure{
+  background:var(--bone);padding:12px 12px 16px;border-radius:2px;
+  transform:rotate(-2deg);transition:transform .45s cubic-bezier(.2,.7,.3,1);
+  box-shadow:0 24px 50px -30px rgba(0,0,0,.65);
+}
+.club:nth-child(2) figure{transform:rotate(1.7deg)}
+.club:nth-child(3) figure{transform:rotate(-1.2deg)}
+.club:hover figure{transform:rotate(0)}
+.club img{aspect-ratio:4/3;object-fit:cover;width:100%;border-radius:1px}
+.club h3{font-family:var(--serif);font-size:26px;font-weight:400;margin:20px 0 7px}
 html.lang-ar .club h3{font-family:var(--ar-serif)}
 .club p{font-size:14.5px;color:rgba(251,246,233,.66)}
 
 /* ============ gallery ============ */
 .gal{background:var(--cream)}
-.gal-grid{display:grid;gap:10px;grid-template-columns:repeat(2,1fr)}
-@media(min-width:620px){.gal-grid{grid-template-columns:repeat(4,1fr)}}
-.gal-grid button{
-  border-radius:10px;overflow:hidden;background:var(--bone);
-  aspect-ratio:1;display:block;width:100%;
+.gal-grid{
+  display:grid;gap:12px;
+  grid-template-columns:repeat(2,1fr);
+  grid-auto-rows:clamp(96px,24vw,160px);
+  grid-auto-flow:dense;
 }
+@media(min-width:620px){
+  .gal-grid{grid-template-columns:repeat(4,1fr);grid-auto-rows:clamp(110px,15vw,212px)}
+}
+.gal-grid button{
+  overflow:hidden;background:var(--bone);
+  display:block;width:100%;height:100%;
+}
+.gal-grid .t{grid-row:span 2}
+.gal-grid .w{grid-column:span 2}
 .gal-grid img{width:100%;height:100%;object-fit:cover;transition:transform .7s cubic-bezier(.2,.7,.3,1),opacity .3s}
 .gal-grid button:hover img{transform:scale(1.06);opacity:.93}
-/* 12 tiles: divides evenly by 4 columns and by 2, never an exposed empty cell */
 
 /* lightbox */
 .lb{
@@ -399,7 +587,7 @@ html.lang-ar .club h3{font-family:var(--ar-serif)}
   align-items:center;justify-content:center;padding:20px;
 }
 .lb.on{display:flex}
-.lb img{max-width:min(94vw,1100px);max-height:86vh;border-radius:10px;object-fit:contain}
+.lb img{max-width:min(94vw,1100px);max-height:86vh;border-radius:4px;object-fit:contain}
 .lb-x{position:absolute;top:16px;inset-inline-end:18px;color:var(--butter-soft);font-size:32px;line-height:1;padding:10px}
 .lb-nav{position:absolute;top:50%;transform:translateY(-50%);color:var(--butter-soft);font-size:38px;padding:16px;opacity:.75}
 .lb-nav:hover{opacity:1}
@@ -411,12 +599,13 @@ html.lang-ar .club h3{font-family:var(--ar-serif)}
 .visit-grid{display:grid;gap:clamp(24px,3.4vw,38px);grid-template-columns:1fr}
 @media(min-width:861px){.visit-grid{grid-template-columns:1.15fr .85fr}}
 .loc{
-  background:var(--butter-soft);border:1px solid rgba(42,33,24,.1);
+  background:var(--cream);border:1.5px solid var(--ink);
   border-radius:var(--r);padding:clamp(24px,3.2vw,36px);
-  box-shadow:0 26px 60px -44px rgba(42,33,24,.55);min-width:0;
+  box-shadow:10px 10px 0 var(--butter-deep);min-width:0;
 }
+html.lang-ar .loc{box-shadow:-10px 10px 0 var(--butter-deep)}
 .loc-top{display:flex;flex-wrap:wrap;gap:12px;align-items:baseline;justify-content:space-between}
-.loc h3{font-family:var(--serif);font-size:29px;font-weight:400}
+.loc h3{font-family:var(--serif);font-size:clamp(28px,2.6vw,34px);font-weight:400}
 html.lang-ar .loc h3{font-family:var(--ar-serif)}
 .status{
   display:inline-flex;align-items:center;gap:7px;flex:none;
@@ -428,40 +617,54 @@ html.lang-ar .status{letter-spacing:.02em;text-transform:none;font-size:12.5px}
 .status.shut{background:rgba(42,33,24,.09);color:var(--ink-soft)}
 .status i{width:7px;height:7px;border-radius:99px;background:currentColor;flex:none}
 .addr{margin-top:14px;font-size:15px;color:var(--ink-soft)}
-.hours{margin-top:22px;border-top:1px solid var(--line-soft)}
+.hours{margin-top:22px;border-top:2px solid var(--ink)}
 .hours div{
-  display:flex;justify-content:space-between;gap:16px;
-  padding-block:9px;border-bottom:1px solid var(--line-soft);font-size:14.5px;
+  display:flex;justify-content:space-between;gap:0;
+  padding-block:10px;font-size:14.5px;
+  background:radial-gradient(circle,rgba(42,33,24,.3) 1px,#0000 1.4px) 0 62%/8px 2px repeat-x;
 }
+.hours div span{background:var(--cream)}
+.hours div span:first-child{color:var(--ink-soft);padding-inline-end:12px}
+.hours div span:last-child{padding-inline-start:12px}
+html.lang-ar .hours div span:first-child{padding-inline-end:0;padding-inline-start:12px}
+html.lang-ar .hours div span:last-child{padding-inline-start:0;padding-inline-end:12px}
 .hours div.today{font-weight:600;color:var(--coral-deep)}
-.hours dt,.hours span:first-child{color:var(--ink-soft)}
 .hours div.today span{color:var(--coral-deep)}
-.loc-links{display:flex;flex-wrap:wrap;gap:10px;margin-top:24px}
+.loc-links{display:flex;flex-wrap:wrap;gap:10px;margin-top:26px}
 .loc-links a{
   display:inline-flex;align-items:center;gap:8px;
-  padding:10px 18px;border-radius:99px;border:1px solid rgba(42,33,24,.2);
+  padding:11px 18px;border-radius:6px;border:1.5px solid var(--ink);
   font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;
-  text-decoration:none;transition:background .25s,transform .25s;
+  text-decoration:none;transition:background .25s,color .25s,transform .25s;
 }
 html.lang-ar .loc-links a{letter-spacing:.02em;text-transform:none;font-size:13.5px}
-.loc-links a:hover{background:rgba(42,33,24,.06);transform:translateY(-2px)}
+.loc-links a:hover{background:var(--ink);color:var(--butter);transform:translateY(-2px)}
 .loc-links a.wa{background:var(--coral-deep);border-color:var(--coral-deep);color:var(--butter-soft)}
-.loc-links a.wa:hover{background:#a8543a}
-.loc.second{background:transparent;box-shadow:none;border-style:dashed}
+.loc-links a.wa:hover{background:#a8543a;border-color:#a8543a;color:var(--butter-soft)}
+.loc.second{background:transparent;box-shadow:none;border-style:dashed;border-width:1.5px;border-color:var(--ink-soft)}
 .reach{margin-top:clamp(24px,3vw,32px)}
 .reach a{
   display:flex;align-items:center;gap:14px;
-  padding:16px 20px;border-radius:12px;background:var(--butter-soft);
-  border:1px solid rgba(42,33,24,.1);text-decoration:none;
+  padding:16px 20px;border-radius:var(--r);background:var(--cream);
+  border:1.5px solid var(--ink);text-decoration:none;
   margin-bottom:10px;transition:transform .25s,box-shadow .25s;
 }
-.reach a:hover{transform:translateY(-2px);box-shadow:0 16px 34px -24px rgba(42,33,24,.5)}
+.reach a:hover{transform:translate(-1px,-2px);box-shadow:5px 5px 0 var(--butter-deep)}
+html.lang-ar .reach a:hover{box-shadow:-5px 5px 0 var(--butter-deep)}
 .reach b{display:block;font-size:15px;font-weight:600}
 .reach small{font-size:12.5px;color:var(--ink-faint)}
 .reach svg{width:21px;height:21px;flex:none;color:var(--coral-deep)}
 
 /* ============ footer ============ */
-.foot{background:var(--ink);color:rgba(251,246,233,.6);padding-block:clamp(44px,6vw,64px)}
+.foot{background:var(--ink);color:rgba(251,246,233,.6);padding-block:0 clamp(44px,6vw,64px)}
+.foot .valance{--vA:var(--butter);--vB:var(--ink);margin-bottom:clamp(44px,6vw,72px)}
+.foot p.foot-line{
+  font-family:var(--serif);font-style:italic;font-weight:300;
+  font-size:clamp(28px,4.4vw,52px);line-height:1.15;letter-spacing:0;
+  color:var(--butter);max-width:none;
+  margin-bottom:clamp(28px,4vw,44px);
+}
+html.lang-ar .foot-line{font-family:var(--ar-serif);font-style:normal}
 .foot-in{display:flex;flex-wrap:wrap;gap:24px;justify-content:space-between;align-items:center}
 .foot .brand{color:var(--butter);font-size:23px}
 .foot p{font-size:12.5px;letter-spacing:.04em}
@@ -486,9 +689,9 @@ html.lang-ar .foot-links a{letter-spacing:.02em;text-transform:none;font-size:13
 @media(min-width:861px){.bar{display:none}}
 .bar a{
   display:inline-flex;align-items:center;justify-content:center;gap:8px;
-  height:46px;border-radius:99px;text-decoration:none;
+  height:46px;border-radius:8px;text-decoration:none;
   font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;
-  border:1px solid rgba(42,33,24,.22);color:var(--ink);
+  border:1.5px solid var(--ink);color:var(--ink);
   transition:transform .2s;
 }
 html.lang-ar .bar a{letter-spacing:.01em;text-transform:none;font-size:13px}
@@ -499,12 +702,96 @@ html.lang-ar .bar a{letter-spacing:.01em;text-transform:none;font-size:13px}
 
 /* ============ mobile trims ============ */
 @media(max-width:520px){
-  .flav-grid{gap:14px}
-  .flav-name h3{font-size:19px}
-  .flav-card p{font-size:12.5px}
+  .flav-grid{gap:16px}
+  .flav-grid>:nth-child(2n){margin-top:22px}
+  .flav-name h3{font-size:20px}
+  .flav-card p{font-size:13.5px}
+  .shopframe figure{box-shadow:10px 10px 0 var(--coral)}
+  html.lang-ar .shopframe figure{box-shadow:-10px 10px 0 var(--coral)}
+  .story-fig img{box-shadow:10px 10px 0 var(--pist)}
+  html.lang-ar .story-fig img{box-shadow:-10px 10px 0 var(--pist)}
+  .story-fig{padding-inline-end:10px}
+  .valance{--vw:20px;height:36px}
   .bar{gap:8px;padding-inline:14px}
   .bar a.wa{font-size:11px;letter-spacing:.05em}
 }
+
+/* ==== hero intro: the shop opens ==== */
+/* Nothing here changes layout. Only opacity, transform and mask, so the hero
+   height and the no-clip guarantee are unaffected. */
+
+.wordmark{position:relative}
+
+/* resting state, and the state on any repeat view within the session */
+.wordmark img{opacity:1}
+
+/* --- first visit of the session --- */
+.hero.intro .wordmark img{
+  -webkit-mask-image:linear-gradient(180deg,#000 68%,rgba(0,0,0,.35) 86%,transparent 100%);
+          mask-image:linear-gradient(180deg,#000 68%,rgba(0,0,0,.35) 86%,transparent 100%);
+  -webkit-mask-repeat:no-repeat;  mask-repeat:no-repeat;
+  -webkit-mask-position:top center; mask-position:top center;
+  -webkit-mask-size:100% 0%;      mask-size:100% 0%;
+  animation:
+    awning-unroll 1250ms cubic-bezier(.22,.72,.20,1) 120ms both,
+    mark-settle   1450ms cubic-bezier(.18,.72,.26,1)   0ms both;
+}
+@keyframes awning-unroll{
+  from{-webkit-mask-size:100% 0%;   mask-size:100% 0%}
+  to  {-webkit-mask-size:100% 165%; mask-size:100% 165%}
+}
+@keyframes mark-settle{
+  from{opacity:0;transform:translateY(9px) scale(.972)}
+  55% {opacity:1}
+  to  {opacity:1;transform:none}
+}
+
+/* the low morning sun crossing the shopfront, once */
+.hero.intro .wordmark::after{
+  content:"";position:absolute;inset:-6% -14%;
+  pointer-events:none;
+  background:linear-gradient(104deg,
+    transparent 34%,
+    rgba(255,255,255,.72) 47%,
+    rgba(255,247,214,.5) 53%,
+    transparent 66%);
+  opacity:0;
+  transform:translateX(-58%);
+  animation:sun-cross 1500ms cubic-bezier(.35,.1,.28,1) 700ms both;
+  mix-blend-mode:soft-light;
+}
+@keyframes sun-cross{
+  0%  {opacity:0;   transform:translateX(-58%)}
+  22% {opacity:.95}
+  78% {opacity:.5}
+  100%{opacity:0;   transform:translateX(58%)}
+}
+
+/* the rest of the hero comes up behind the mark */
+.hero.intro .hero-in > .meta{animation:hero-rise 900ms cubic-bezier(.2,.7,.3,1) 60ms both}
+.hero.intro .wordmark-ar   {animation:hero-rise 900ms cubic-bezier(.2,.7,.3,1) 1000ms both}
+.hero.intro .awning        {animation:hero-rise 900ms cubic-bezier(.2,.7,.3,1) 1120ms both}
+.hero.intro .hero-line     {animation:hero-rise 900ms cubic-bezier(.2,.7,.3,1) 1240ms both}
+.hero.intro .hero-cta      {animation:hero-rise 900ms cubic-bezier(.2,.7,.3,1) 1360ms both}
+@keyframes hero-rise{
+  from{opacity:0;transform:translateY(12px)}
+  to  {opacity:1;transform:none}
+}
+
+@media (prefers-reduced-motion:reduce){
+  .hero.intro .wordmark img{
+    -webkit-mask-image:none;mask-image:none;
+    -webkit-mask-size:auto;mask-size:auto;
+    animation:none;opacity:1;transform:none;
+  }
+  .hero.intro .wordmark::after{animation:none;opacity:0;content:none}
+  .hero.intro .hero-in > .meta,
+  .hero.intro .wordmark-ar,
+  .hero.intro .awning,
+  .hero.intro .hero-line,
+  .hero.intro .hero-cta{animation:none;opacity:1;transform:none}
+}
+
 </style>
 </head>
 <body>
@@ -526,6 +813,9 @@ html.lang-ar .bar a{letter-spacing:.01em;text-transform:none;font-size:13px}
   </div>
 </div>
 
+<!-- the awning the whole page sits under -->
+<div class="valance" aria-hidden="true"></div>
+
 <!-- ===================== HERO ===================== -->
 <header class="hero">
   <div class="hero-in wrap">
@@ -534,19 +824,35 @@ html.lang-ar .bar a{letter-spacing:.01em;text-transform:none;font-size:13px}
       <img src="img/logo.png" alt="the toastery" width="720" height="760" fetchpriority="high">
     </h1>
     <div class="wordmark-ar">ذا توستريه</div>
-    <div class="awning" aria-hidden="true"></div>
-    <p class="hero-line"><span class="en">Ice cream, toast and specialty coffee, from seven in the morning until midnight.</span><span class="ar blk">آيس كريم وتوست وقهوة مختصة، من السابعة صباحاً حتى منتصف الليل.</span></p>
+    <p class="hero-line"><span class="en">Ice cream, toast and specialty coffee, from <em>seven in the morning</em> until midnight.</span><span class="ar blk">آيس كريم وتوست وقهوة مختصة، من السابعة صباحاً حتى منتصف الليل.</span></p>
     <div class="hero-cta">
       <a class="btn btn-solid" href="#" data-wa><span class="en">Order on WhatsApp</span><span class="ar">اطلب عبر واتساب</span></a>
       <a class="btn btn-ghost" href="#flavours"><span class="en">See the flavours</span><span class="ar">شوف النكهات</span></a>
     </div>
+  </div>
+
+  <!-- spinning counter seal, decorative -->
+  <svg class="seal" viewBox="0 0 140 140" aria-hidden="true">
+    <path id="sealc" d="M70 70 m-51 0 a51 51 0 1 1 102 0 a51 51 0 1 1 -102 0" fill="none"/>
+    <text><textPath href="#sealc" textLength="316">ICE CREAM &#183; COFFEE &#183; TOAST &#183; DOHA &#183;</textPath></text>
+    <text class="seal-c" x="70" y="77" text-anchor="middle">&#10038;</text>
+  </svg>
+
+  <!-- stamped hours sticker: same facts as the caption strip below -->
+  <div class="stamp" aria-hidden="true">
+    <span><span class="en">open daily</span><span class="ar">يومياً</span></span>
+    <b class="ltr">7:00 &ndash; 00:00</b>
+    <span><span class="en">Msheireb</span><span class="ar">مشيرب</span></span>
   </div>
 </header>
 
 <!-- storefront: contained, with butter margin on every side -->
 <div class="shopband">
   <div class="shopframe rv">
-    <figure><img src="img/01.jpg" alt="The toastery storefront in Msheireb Downtown Doha, butter yellow awning over a white counter" width="2200" height="1375" fetchpriority="high"></figure>
+    <figure>
+      <img src="img/01.jpg" alt="The toastery storefront in Msheireb Downtown Doha, butter yellow awning over a white counter" width="2200" height="1375" fetchpriority="high">
+      <figcaption class="shoptag"><span class="en">Wadi <span class="ltr">12</span> &#183; Msheireb</span><span class="ar">وادي <span class="ltr">12</span> &#183; مشيرب</span></figcaption>
+    </figure>
     <div class="shopcap">
       <span><span class="en">Msheireb Downtown</span><span class="ar">مشيرب</span></span>
       <span><span class="en">Open daily 7:00 &ndash; 00:00</span><span class="ar">يومياً <span class="ltr">7:00 &ndash; 00:00</span></span></span>
@@ -555,11 +861,14 @@ html.lang-ar .bar a{letter-spacing:.01em;text-transform:none;font-size:13px}
   </div>
 </div>
 
+<!-- parlour floor -->
+<div class="checker" aria-hidden="true"></div>
+
 <!-- ===================== TICKER ===================== -->
 <div class="ticker" aria-hidden="true">
   <div class="ticker-track">
-    <span>pistachio</span><span>ice cream toast</span><span>matcha</span><span>chocolate</span><span>hot chocolate</span><span>kunafa</span><span>vanilla</span><span>hibiscus refresher</span><span>fresh dates</span><span>cinnamon buns</span><span>coffee</span><span>banana</span>
-    <span>pistachio</span><span>ice cream toast</span><span>matcha</span><span>chocolate</span><span>hot chocolate</span><span>kunafa</span><span>vanilla</span><span>hibiscus refresher</span><span>fresh dates</span><span>cinnamon buns</span><span>coffee</span><span>banana</span>
+    <span><span class="en">pistachio</span><span class="ar">فستق</span></span><span><span class="en">ice cream toast</span><span class="ar">توست بالآيس كريم</span></span><span><span class="en">matcha</span><span class="ar">ماتشا</span></span><span><span class="en">chocolate</span><span class="ar">شوكولاتة</span></span><span><span class="en">hot chocolate</span><span class="ar">شوكولاتة ساخنة</span></span><span><span class="en">kunafa</span><span class="ar">كنافة</span></span><span><span class="en">vanilla</span><span class="ar">فانيليا</span></span><span><span class="en">hibiscus refresher</span><span class="ar">مشروب الكركديه</span></span><span><span class="en">fresh dates</span><span class="ar">رطب</span></span><span><span class="en">cinnamon buns</span><span class="ar">سينامون رول</span></span><span><span class="en">coffee</span><span class="ar">قهوة</span></span><span><span class="en">banana</span><span class="ar">موز</span></span>
+    <span><span class="en">pistachio</span><span class="ar">فستق</span></span><span><span class="en">ice cream toast</span><span class="ar">توست بالآيس كريم</span></span><span><span class="en">matcha</span><span class="ar">ماتشا</span></span><span><span class="en">chocolate</span><span class="ar">شوكولاتة</span></span><span><span class="en">hot chocolate</span><span class="ar">شوكولاتة ساخنة</span></span><span><span class="en">kunafa</span><span class="ar">كنافة</span></span><span><span class="en">vanilla</span><span class="ar">فانيليا</span></span><span><span class="en">hibiscus refresher</span><span class="ar">مشروب الكركديه</span></span><span><span class="en">fresh dates</span><span class="ar">رطب</span></span><span><span class="en">cinnamon buns</span><span class="ar">سينامون رول</span></span><span><span class="en">coffee</span><span class="ar">قهوة</span></span><span><span class="en">banana</span><span class="ar">موز</span></span>
   </div>
 </div>
 
@@ -569,7 +878,7 @@ html.lang-ar .bar a{letter-spacing:.01em;text-transform:none;font-size:13px}
     <div class="rv">
       <span class="meta"><span class="en">Since the counter opened</span><span class="ar">من يوم ما فتحنا</span></span>
       <h2 class="display" style="margin:14px 0 22px">
-        <span class="en">A small counter in the heart of Msheireb</span>
+        <span class="en">A small counter in the <em>heart</em> of Msheireb</span>
         <span class="ar">ركن صغير في قلب مشيرب</span>
       </h2>
       <p class="en">The toastery is an ice cream counter and coffee shop tucked under a butter yellow awning on Wadi 12. Scoops are churned in small batches and set out in trays behind the glass, so the board changes with what came out of the kitchen that morning.</p>
@@ -594,12 +903,23 @@ html.lang-ar .bar a{letter-spacing:.01em;text-transform:none;font-size:13px}
   </div>
 </section>
 
+<!-- one macro shot, edge to edge: the trays as a colour field -->
+<div class="flavbanner">
+  <img src="img/29.jpg" alt="Trays of vanilla and pistachio ice cream side by side, seen from above" width="1100" height="1100" loading="lazy">
+  <div class="flavbanner-txt wrap">
+    <span class="meta"><span class="en">Behind the glass</span><span class="ar">خلف الزجاج</span></span>
+    <p><span class="en">Churned in small batches, set out in trays that morning.</span><span class="ar blk">يُحضّر بكميات صغيرة ويُعرض في الصواني ذلك الصباح.</span></p>
+  </div>
+</div>
+
 <!-- ===================== FLAVOURS ===================== -->
 <section class="sec flav" id="flavours">
   <div class="wrap">
-    <div class="sec-head rv">
-      <span class="meta"><span class="en">Behind the glass</span><span class="ar">خلف الزجاج</span></span>
-      <h2 class="display"><span class="en">The flavour counter</span><span class="ar">قائمة النكهات</span></h2>
+    <div class="flav-head rv">
+      <div>
+        <span class="meta"><span class="en">The trays</span><span class="ar">الصواني</span></span>
+        <h2 class="display"><span class="en">The <em>flavour</em> counter</span><span class="ar">قائمة النكهات</span></h2>
+      </div>
       <div class="chips" role="group" aria-label="Filter flavours">
         <button class="chip on" data-f="all"><span class="en">Everything</span><span class="ar">الكل</span></button>
         <button class="chip" data-f="cream"><span class="en">Creams</span><span class="ar">كريمات</span></button>
@@ -676,7 +996,7 @@ html.lang-ar .bar a{letter-spacing:.01em;text-transform:none;font-size:13px}
   <div class="wrap">
     <div class="sec-head rv">
       <span class="meta"><span class="en">Made to order</span><span class="ar">يُحضّر عند الطلب</span></span>
-      <h2 class="display"><span class="en">Three things we are known for</span><span class="ar">ثلاثة أشياء نُعرف بها</span></h2>
+      <h2 class="display"><span class="en">Three things we are <em>known</em> for</span><span class="ar">ثلاثة أشياء نُعرف بها</span></h2>
     </div>
     <div class="sig-grid">
       <article class="sig-card rv">
@@ -705,10 +1025,11 @@ html.lang-ar .bar a{letter-spacing:.01em;text-transform:none;font-size:13px}
 
 <!-- ===================== THE COUNTER / MENU ===================== -->
 <section class="sec counter" id="counter">
+  <div class="valance" aria-hidden="true"></div>
   <div class="wrap">
     <div class="sec-head rv">
       <span class="meta"><span class="en">What is on</span><span class="ar">ماذا يوجد</span></span>
-      <h2 class="display"><span class="en">The counter</span><span class="ar">المنيو</span></h2>
+      <h2 class="display"><span class="en">The <em>counter</em></span><span class="ar">المنيو</span></h2>
     </div>
     <div class="counter-grid">
       <div class="menu-card rv">
@@ -771,10 +1092,11 @@ html.lang-ar .bar a{letter-spacing:.01em;text-transform:none;font-size:13px}
 
 <!-- ===================== CLUBS ===================== -->
 <section class="sec clubs" id="clubs">
+  <div class="valance" aria-hidden="true"></div>
   <div class="wrap">
     <div class="sec-head rv">
       <span class="meta"><span class="en">Beyond the counter</span><span class="ar">أبعد من الكاونتر</span></span>
-      <h2 class="display"><span class="en">The clubs</span><span class="ar">النوادي</span></h2>
+      <h2 class="display"><span class="en">The <em>clubs</em></span><span class="ar">النوادي</span></h2>
     </div>
     <div class="clubs-grid">
       <article class="club rv">
@@ -799,23 +1121,22 @@ html.lang-ar .bar a{letter-spacing:.01em;text-transform:none;font-size:13px}
 <!-- ===================== GALLERY ===================== -->
 <section class="sec gal">
   <div class="wrap">
-    <div class="sec-head rv">
+    <div class="sec-head head-right rv">
       <span class="meta"><span class="en">The place</span><span class="ar">المكان</span></span>
-      <h2 class="display"><span class="en">Look around</span><span class="ar">تجوّل معنا</span></h2>
+      <h2 class="display"><span class="en">Look <em>around</em></span><span class="ar">تجوّل معنا</span></h2>
     </div>
     <div class="gal-grid" id="gal">
-      <button type="button"><img src="img/21.jpg" alt="Warm wood retail shelving inside the toastery with cups and caps" width="1120" height="1400" loading="lazy"></button>
+      <button type="button" class="t"><img src="img/21.jpg" alt="Warm wood retail shelving inside the toastery with cups and caps" width="1120" height="1400" loading="lazy"></button>
       <button type="button"><img src="img/05.jpg" alt="A hand holding a toastery cup of hot chocolate over a yellow surface" width="1200" height="1200" loading="lazy"></button>
-      <button type="button"><img src="img/17.jpg" alt="A cup of ice cream topped with a cookie" width="1200" height="1200" loading="lazy"></button>
-      <button type="button"><img src="img/18.jpg" alt="Trays of ice cream flavours lined up behind the glass" width="1120" height="1400" loading="lazy"></button>
-      <button type="button"><img src="img/16.jpg" alt="An ice cream sandwich between two slices of swirled toast" width="1400" height="1050" loading="lazy"></button>
-      <button type="button"><img src="img/24.jpg" alt="The toastery counter on a rainy day in Msheireb" width="1440" height="1080" loading="lazy"></button>
-      <button type="button"><img src="img/20.jpg" alt="Interior corner with vintage posters and a model car on the shelf" width="972" height="1215" loading="lazy"></button>
-      <button type="button"><img src="img/29.jpg" alt="Trays of vanilla and pistachio ice cream side by side" width="1100" height="1100" loading="lazy"></button>
-      <button type="button"><img src="img/26.jpg" alt="Yellow stools against the perforated limestone wall outside" width="1300" height="1300" loading="lazy"></button>
+      <button type="button" class="t"><img src="img/17.jpg" alt="A cup of ice cream topped with a cookie" width="1200" height="1200" loading="lazy"></button>
+      <button type="button" class="t"><img src="img/18.jpg" alt="Trays of ice cream flavours lined up behind the glass" width="1120" height="1400" loading="lazy"></button>
+      <button type="button" class="w"><img src="img/16.jpg" alt="An ice cream sandwich between two slices of swirled toast" width="1400" height="1050" loading="lazy" style="object-position:50% 72%"></button>
+      <button type="button" class="w"><img src="img/24.jpg" alt="The toastery counter on a rainy day in Msheireb" width="1440" height="1080" loading="lazy"></button>
+      <button type="button" class="t"><img src="img/20.jpg" alt="Interior corner with vintage posters and a model car on the shelf" width="972" height="1215" loading="lazy"></button>
+      <button type="button" class="w"><img src="img/26.jpg" alt="Yellow stools against the perforated limestone wall outside" width="1300" height="1300" loading="lazy" style="object-position:50% 78%"></button>
       <button type="button"><img src="img/32.jpg" alt="A rail of toastery beach club shirts and caps against an ochre curtain" width="1200" height="1200" loading="lazy"></button>
-      <button type="button"><img src="img/30.jpg" alt="Stacked toastery takeaway cups" width="960" height="1200" loading="lazy"></button>
-      <button type="button"><img src="img/19.jpg" alt="Strawberries and cream served in green glass coupes" width="769" height="576" loading="lazy"></button>
+      <button type="button" class="t"><img src="img/30.jpg" alt="Stacked toastery takeaway cups" width="960" height="1200" loading="lazy"></button>
+      <button type="button" class="w"><img src="img/19.jpg" alt="Strawberries and cream served in green glass coupes" width="769" height="576" loading="lazy"></button>
     </div>
   </div>
 </section>
@@ -825,7 +1146,7 @@ html.lang-ar .bar a{letter-spacing:.01em;text-transform:none;font-size:13px}
   <div class="wrap">
     <div class="sec-head rv">
       <span class="meta"><span class="en">Come by</span><span class="ar">تعال عندنا</span></span>
-      <h2 class="display"><span class="en">Two counters</span><span class="ar">فرعان</span></h2>
+      <h2 class="display"><span class="en">Two <em>counters</em></span><span class="ar">فرعان</span></h2>
     </div>
 
     <div class="visit-grid">
@@ -889,6 +1210,10 @@ html.lang-ar .bar a{letter-spacing:.01em;text-transform:none;font-size:13px}
 
 <!-- ===================== FOOTER ===================== -->
 <footer class="foot">
+  <div class="valance" aria-hidden="true"></div>
+  <div class="wrap">
+    <p class="foot-line rv"><span class="en">See you under the awning.</span><span class="ar blk">نراكم تحت المظلة.</span></p>
+  </div>
   <div class="wrap foot-in">
     <div>
       <div class="brand"><span class="en">the toastery</span><span class="ar">ذا توستريه</span></div>
@@ -930,6 +1255,18 @@ html.lang-ar .bar a{letter-spacing:.01em;text-transform:none;font-size:13px}
 <script>
 (function(){
   "use strict";
+
+  /* ---------- hero intro, first visit of the session only ---------- */
+  try{
+    var hero = document.querySelector(".hero");
+    if (hero && !sessionStorage.getItem("tt_intro_seen")){
+      hero.classList.add("intro");
+      sessionStorage.setItem("tt_intro_seen", "1");
+    }
+  }catch(e){
+    /* private mode blocks sessionStorage: just show the page, no intro */
+  }
+
 
   /* ---------- WhatsApp, prefilled ---------- */
   var WA = "97451313151";
