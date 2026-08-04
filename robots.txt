@@ -1,5 +1,4 @@
 User-agent: *
 Allow: /
-Disallow: /toastery/
 
 Sitemap: https://studiomorphik.com/sitemap.xml
