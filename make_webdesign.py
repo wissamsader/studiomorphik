@@ -74,10 +74,23 @@ if _ber_kd.exists():  # Berlin build may still be in flight — skip until its k
     for b in ber.BIZ:
         add(b["name"], b["url"], "berlin", "Berlin")
 
+# APAC (Hong Kong + Melbourne). These two have no kitdata.py yet: the seller kit is blocked on his
+# price band, and the portfolio must not wait on it (gate 8b is same-session, unconditional).
+# Their rosters are the source of truth instead.
+import json as _json
+for _city_dir, _repo, _label, _base in (
+        ("HONGKONG", "hongkong", "Hong Kong", "https://wissamsader.github.io/hongkong"),
+        ("MELBOURNE", "melbourne", "Melbourne", "https://wissamsader.github.io/melbourne")):
+    _roster = WB / _city_dir / "data" / "_roster.json"
+    if _roster.exists():
+        for b in _json.loads(_roster.read_text()):
+            if (WB / _city_dir / "sites" / b["slug"] / "index.html").exists():
+                add(b["name"], f"{_base}/{b['slug']}/", _repo, _label)
+
 
 # grouped per city with jump-nav (07-14 friend feedback via Wissam: "tekbos 3al city, byenzal la 7alo")
-CITY_ORDER = ["Beirut", "Chiang Mai", "Đà Nẵng", "Barcelona", "Palermo", "Damascus", "Berlin", "Athens"]
-CITY_ID = {"Beirut": "beirut", "Chiang Mai": "chiang-mai", "Đà Nẵng": "da-nang", "Barcelona": "barcelona", "Palermo": "palermo", "Damascus": "damascus", "Berlin": "berlin", "Athens": "athens"}
+CITY_ORDER = ["Beirut", "Chiang Mai", "Đà Nẵng", "Barcelona", "Palermo", "Damascus", "Berlin", "Athens", "Hong Kong", "Melbourne"]
+CITY_ID = {"Beirut": "beirut", "Chiang Mai": "chiang-mai", "Đà Nẵng": "da-nang", "Barcelona": "barcelona", "Palermo": "palermo", "Damascus": "damascus", "Berlin": "berlin", "Athens": "athens", "Hong Kong": "hong-kong", "Melbourne": "melbourne"}
 by_city = {}
 for s in SITES:
     by_city.setdefault(s["city"], []).append(s)
@@ -98,6 +111,8 @@ SHOT_SRC = {
     # plain English-page shots, NOT the kit composite: the kit shot carries an Arabic inset
     # bottom-right, and his 08-03 note was "remove the small picture" from the thumbnails.
     "beirut-b4": WB / "BEIRUT" / "B4" / "PITCH-KIT-UNKNOWN" / "screenshots-plain",
+    "hongkong": WB / "HONGKONG" / "screenshots",
+    "melbourne": WB / "MELBOURNE" / "screenshots",
 }
 TILE_DIR = HERE / "web-design" / "shots"
 TILE_DIR.mkdir(parents=True, exist_ok=True)
@@ -118,6 +133,8 @@ def source_png(s):
         return SHOT_SRC["athens"] / f"{slug}.png"
     if s["repo"] == "beirut-b4":
         return SHOT_SRC["beirut-b4"] / f"{slug}.png"
+    if s["repo"] in ("hongkong", "melbourne"):
+        return SHOT_SRC[s["repo"]] / f"{slug}.png"
     if s["repo"] == "beirut":
         p = SHOT_SRC["bey-cm"] / f"Beirut — {s['name']}.png"
         return p if p.exists() else SHOT_SRC["beirut-rabab"] / f"{slug}.png"
@@ -161,8 +178,8 @@ def tile_v(name):
 def card(s):
     return (f'<a class="card" href="{html.escape(s["url"])}" target="_blank" rel="noopener">'
             f'<span class="inner"><span class="chrome" aria-hidden="true"><i></i><i></i><i></i></span>'
-            f'<img loading="lazy" src="{(_p:=shot(s))}?v={tile_v(_p.split("/")[-1])}" alt="{html.escape(s["name"])} website by StudioMorphik">'
-            f'<span class="meta"><b>{html.escape(s["name"])}</b><span style="display:flex;align-items:center;gap:9px"><i>{s["city"]}</i><span class="arr">↗</span></span></span></span></a>')
+            f'<img loading="lazy" src="{(_p:=shot(s))}?v={tile_v(_p.split("/")[-1])}" alt="{html.escape(s["name"]).replace("\u2014", "-")} website by StudioMorphik">'
+            f'<span class="meta"><b>{html.escape(s["name"]).replace("\u2014", "-")}</b><span style="display:flex;align-items:center;gap:9px"><i>{s["city"]}</i><span class="arr">↗</span></span></span></span></a>')
 
 sections = "\n".join(
     f'<section class="cityblock" id="{CITY_ID[c]}">'
@@ -185,12 +202,12 @@ page = f"""<!doctype html>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<title>Web Design — STUDIOMORPHIK</title>
+<title>Web Design | STUDIOMORPHIK</title>
 <meta name="description" content="Hand-built websites for restaurants, guesthouses, independent businesses: {n} live builds across {cities} by StudioMorphik.">
 <link rel="canonical" href="https://studiomorphik.com/web-design/">
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="icon" type="image/png" sizes="96x96" href="/img/favicon-96.png">
-<meta property="og:title" content="Web Design — STUDIOMORPHIK">
+<meta property="og:title" content="Web Design | STUDIOMORPHIK">
 <meta property="og:description" content="{n} live websites for restaurants, guesthouses, independent businesses.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://studiomorphik.com/web-design/">
