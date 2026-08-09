@@ -78,14 +78,20 @@ if _ber_kd.exists():  # Berlin build may still be in flight — skip until its k
 # price band, and the portfolio must not wait on it (gate 8b is same-session, unconditional).
 # Their rosters are the source of truth instead.
 import json as _json
+PORTFOLIO_SLUG = {("melbourne", "blonde"): "blonde-v2"}
 for _city_dir, _repo, _label, _base in (
         ("HONGKONG", "hongkong", "Hong Kong", "https://wissamsader.github.io/hongkong"),
         ("MELBOURNE", "melbourne", "Melbourne", "https://wissamsader.github.io/melbourne")):
     _roster = WB / _city_dir / "data" / "_roster.json"
     if _roster.exists():
         for b in _json.loads(_roster.read_text()):
-            if (WB / _city_dir / "sites" / b["slug"] / "index.html").exists():
-                add(b["name"], f"{_base}/{b['slug']}/", _repo, _label)
+            # Portfolio-only slug override: show a different build than the roster's
+            # default without touching _roster.json, which HQ and the seller kits also
+            # read. Blonde ships an alternate design direction (08-09); the client-facing
+            # /blonde/ page stays as approved.
+            _slug = PORTFOLIO_SLUG.get((_repo, b["slug"]), b["slug"])
+            if (WB / _city_dir / "sites" / _slug / "index.html").exists():
+                add(b["name"], f"{_base}/{_slug}/", _repo, _label)
 
 
 # grouped per city with jump-nav (07-14 friend feedback via Wissam: "tekbos 3al city, byenzal la 7alo")
