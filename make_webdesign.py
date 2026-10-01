@@ -21,12 +21,24 @@ def load_mod(name, path):
     return mod
 
 SITES = []  # dicts: name, city (display), url, repo
+
+# Pulled from the public portfolio on request. Kept here so a rebuild does not
+# bring them back. Match is on the final URL.
+EXCLUDE_URLS = {
+    "https://wissamsader.github.io/palermo/mamma-lina/",  # 10-01 his call
+}
+
+# Whole cities kept off the public portfolio.
+EXCLUDE_CITIES = {"Chiang Mai"}  # 10-01 his call
+
 def add(name, url, repo, city):
     url = url.strip()
     if not url.startswith("http"):
         url = "https://" + url
     if not url.endswith("/"):
         url += "/"
+    if url in EXCLUDE_URLS or city in EXCLUDE_CITIES:
+        return
     SITES.append(dict(name=name.strip(), url=url, repo=repo, city=city))
 
 # Vietnam
