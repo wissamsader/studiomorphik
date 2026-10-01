@@ -28,16 +28,13 @@ EXCLUDE_URLS = {
     "https://wissamsader.github.io/palermo/mamma-lina/",  # 10-01 his call
 }
 
-# Whole cities kept off the public portfolio.
-EXCLUDE_CITIES = {"Chiang Mai"}  # 10-01 his call
-
 def add(name, url, repo, city):
     url = url.strip()
     if not url.startswith("http"):
         url = "https://" + url
     if not url.endswith("/"):
         url += "/"
-    if url in EXCLUDE_URLS or city in EXCLUDE_CITIES:
+    if url in EXCLUDE_URLS:
         return
     SITES.append(dict(name=name.strip(), url=url, repo=repo, city=city))
 
@@ -47,10 +44,10 @@ import kitdata as vn  # noqa
 for b in vn.BIZ:
     add(b["name"], b["url"], "vietnam", "Đà Nẵng")
 
-# Beirut + Chiang Mai from the xlsx
+# Beirut from the xlsx
 from openpyxl import load_workbook
 wb = load_workbook(WB / "WISSAM-PITCH" / "PITCH-KIT.xlsx")
-for sheet, repo, city in (("Beirut", "beirut", "Beirut"), ("ChiangMai", "chiangmai", "Chiang Mai")):
+for sheet, repo, city in (("Beirut", "beirut", "Beirut"),):
     for row in wb[sheet].iter_rows(min_row=2):
         if not row[2].value:
             continue
@@ -107,8 +104,8 @@ for _city_dir, _repo, _label, _base in (
 
 
 # grouped per city with jump-nav (07-14 friend feedback via Wissam: "tekbos 3al city, byenzal la 7alo")
-CITY_ORDER = ["Beirut", "Chiang Mai", "Đà Nẵng", "Barcelona", "Palermo", "Damascus", "Berlin", "Athens", "Hong Kong", "Melbourne"]
-CITY_ID = {"Beirut": "beirut", "Chiang Mai": "chiang-mai", "Đà Nẵng": "da-nang", "Barcelona": "barcelona", "Palermo": "palermo", "Damascus": "damascus", "Berlin": "berlin", "Athens": "athens", "Hong Kong": "hong-kong", "Melbourne": "melbourne"}
+CITY_ORDER = ["Beirut", "Đà Nẵng", "Barcelona", "Palermo", "Damascus", "Berlin", "Athens", "Hong Kong", "Melbourne"]
+CITY_ID = {"Beirut": "beirut", "Đà Nẵng": "da-nang", "Barcelona": "barcelona", "Palermo": "palermo", "Damascus": "damascus", "Berlin": "berlin", "Athens": "athens", "Hong Kong": "hong-kong", "Melbourne": "melbourne"}
 by_city = {}
 for s in SITES:
     by_city.setdefault(s["city"], []).append(s)
@@ -156,7 +153,7 @@ def source_png(s):
     if s["repo"] == "beirut":
         p = SHOT_SRC["bey-cm"] / f"Beirut — {s['name']}.png"
         return p if p.exists() else SHOT_SRC["beirut-rabab"] / f"{slug}.png"
-    return SHOT_SRC["bey-cm"] / f"Chiang Mai — {s['name']}.png"
+    raise ValueError(f"no screenshot source for repo {s['repo']!r}")
 
 S = 640  # plain top-cropped square screenshot; the frame is drawn in CSS (modern glass/gradient)
 
@@ -210,7 +207,7 @@ citynav = "".join(f'<a href="#{CITY_ID[c]}">{c}<b>{len(by_city[c])}</b></a>' for
 n = len(order)
 live_cities = [c for c in CITY_ORDER if by_city.get(c)]
 n_cities = len(live_cities)
-CITY_COUNTRY = {"Beirut": "Lebanon", "Chiang Mai": "Thailand", "Đà Nẵng": "Vietnam", "Barcelona": "Spain",
+CITY_COUNTRY = {"Beirut": "Lebanon", "Đà Nẵng": "Vietnam", "Barcelona": "Spain",
                 "Palermo": "Italy", "Damascus": "Syria", "Berlin": "Germany"}
 n_countries = len({CITY_COUNTRY[c] for c in live_cities if c in CITY_COUNTRY})
 cities = " · ".join(live_cities)
