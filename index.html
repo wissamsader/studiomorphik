@@ -77,6 +77,85 @@
 <script type="importmap">
 {"imports":{"three":"https://unpkg.com/three@0.160.0/build/three.module.js","three/addons/":"https://unpkg.com/three@0.160.0/examples/jsm/"}}
 </script>
+<style>
+.mood-hub{position:absolute;top:calc(100% - 10px);left:var(--hub-left,140px);z-index:3;display:block;color:#fff;text-decoration:none}
+body:not(.page-home) .mood-hub{display:none}
+.mood-hub .fill{display:block;line-height:1;text-transform:uppercase;white-space:nowrap;color:transparent;background:#f2efe9 0 0 / auto 100% repeat-x;-webkit-background-clip:text;background-clip:text;filter:drop-shadow(0 4px 14px rgba(0,0,0,.4));transition:opacity .7s}
+.mood-hub .fill.wait{opacity:0}
+.mood-hub .lbl{font-family:'JetBrains Mono',ui-monospace,Menlo,monospace;font-size:9px;letter-spacing:.18em;text-transform:uppercase;opacity:.8;white-space:nowrap}
+.mood-hub:hover .lbl{opacity:1}
+.strip{width:var(--w,300px)}
+.strip .lbl{display:flex;justify-content:space-between;margin-bottom:7px}
+.strip .win{display:block;overflow:hidden;height:62px;transition:height .55s cubic-bezier(.2,.8,.2,1),width .55s cubic-bezier(.2,.8,.2,1);-webkit-mask:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);mask:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent)}
+.strip .track{display:flex;align-items:center;gap:5px;height:100%;width:max-content;padding:0;transition:padding .55s cubic-bezier(.2,.8,.2,1);animation:drift 60s linear infinite}
+.strip .track img{position:relative;height:100%;width:auto;display:block;transition:transform .35s cubic-bezier(.2,.8,.2,1),box-shadow .35s}
+.strip:hover .win{height:150px}
+.strip:hover .track{padding:16px 0}
+.strip .track img:hover{transform:scale(1.24);z-index:2;box-shadow:0 10px 28px rgba(0,0,0,.55)}
+@keyframes drift{to{transform:translateX(-50%)}}
+@keyframes rise{to{transform:translateY(-50%)}}
+@media (max-width:640px){.strip .win{height:46px}.strip:hover .win{height:46px}.strip:hover .track{padding:0}}
+.ph-label{margin-left:auto;flex-shrink:0;font-family:'JetBrains Mono',ui-monospace,Menlo,monospace;font-size:9px;letter-spacing:.16em;text-transform:uppercase;white-space:nowrap;color:var(--fg);opacity:.85;transition:opacity .2s}
+.ph-label:hover{opacity:1}
+body:not(.page-home) .ph-label{display:none}
+.tr{position:absolute;top:var(--strip-top,64px);right:var(--strip-right,28px);left:auto;z-index:3;--w:180px}
+.tr:hover .win{height:128px}
+.tr .track img{cursor:pointer}
+@media (max-width:640px){
+  .ph-label{font-size:8px;letter-spacing:.12em}
+  .tr{--w:40vw;--fw:calc((var(--w) - 5px) / 2)}
+  .tr .track,.tr:hover .track{gap:5px;padding:0}
+  .tr .track img{width:var(--fw);height:auto;aspect-ratio:4/5;object-fit:cover}
+  .tr .track img:hover{transform:none;box-shadow:none}
+  .tr .win,.tr:hover .win{height:calc(var(--fw) * 1.25)}
+}
+@media (max-width:400px){.ph-label{font-size:7px;letter-spacing:.08em}}
+@property --fw{syntax:'<length>';inherits:true;initial-value:62px}
+.tr{width:auto;--fw:var(--lbl-w,62px);transition:--fw .55s cubic-bezier(.2,.8,.2,1)}
+.tr .win,.tr:hover .win{width:var(--fw);height:calc(var(--fw) * 1.25);transition:none}
+.tr .track,.tr:hover .track{gap:5px;padding:0}
+.tr .track img{width:var(--fw);height:auto;aspect-ratio:4/5;object-fit:cover}
+.tr .track img:hover{transform:none;box-shadow:none}
+@media (min-width:641px){.tr{--fw:calc(var(--lbl-w,90px) * 1.4)}}
+@media (hover:hover) and (min-width:641px){.tr:hover{--fw:calc(var(--lbl-w,90px) * 2.25)}}
+.tr-wrap{position:absolute;top:var(--strip-top,64px);right:var(--strip-right,28px);z-index:3;display:flex;align-items:flex-start;gap:8px}
+body:not(.page-home) .tr-wrap{display:none}
+.tr-wrap .tr{position:relative;top:auto;right:auto;left:auto;transition:--fw .55s cubic-bezier(.2,.8,.2,1),opacity .4s ease,transform .4s ease,visibility 0s}
+.ph-toggle{display:grid;place-items:center;flex-shrink:0;margin-left:auto;padding:2px;background:none;border:0;color:var(--fg);opacity:.7;cursor:pointer;transition:opacity .2s}
+.ph-toggle:hover{opacity:1}
+.ph-toggle + .ph-label{margin-left:-7px}
+.ph-toggle .eye-off,.ph-toggle.off .eye-on{display:none}
+.ph-toggle.off .eye-off{display:block}
+body:not(.page-home) .ph-toggle{display:none}
+.ph-label{font-size:13px}
+@media (min-width:641px){.ph-toggle svg{width:17px;height:17px}}
+.tr-wrap.off .tr{opacity:0;visibility:hidden;transform:translateY(-6px);pointer-events:none;transition:--fw .55s,opacity .4s ease,transform .4s ease,visibility 0s .4s}
+@media (max-width:640px){.ph-label{font-size:9px}.ph-toggle svg{width:12px;height:12px}.ph-toggle + .ph-label{margin-left:5px}}
+@media (max-width:520px){.ph-label{font-size:8px;letter-spacing:.08em}}
+@media (max-width:370px){.ph-toggle{margin-right:-2px}}
+@media (max-width:400px){.ph-label{font-size:7.5px;letter-spacing:.04em}.ph-toggle svg{width:11px;height:11px}.ph-toggle{padding:1px}.ph-toggle + .ph-label{margin-left:3px}}
+@media (max-width:370px){.ph-label{font-size:7px;letter-spacing:.02em}}
+/* laptop: give the word and the photo some air from the corner */
+@media (min-width:641px){.ph-label{margin-right:clamp(20px,3.5vw,56px)}.tr-wrap{margin-top:6px}.tr{--fw:var(--lbl-w,120px)}.tr .win{-webkit-mask:none;mask:none}}
+@media (hover:hover) and (min-width:641px){.tr-wrap .tr:hover{--fw:calc(var(--lbl-w,120px) * 1.8)}}
+</style>
+<style>
+/* FR-F2b 35mm slide mounts with a bigger window, no number, no red dot. Every photo sits in its own cream card mount with a rounded window; the mounts
+   are drawn on the track, so the whole row of slides drifts together. One mount = the full window width. */
+.tr .track,.tr:hover .track{gap:0;padding:0;background-color:transparent;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 104 125' preserveAspectRatio='none'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23f1ebde'/%3E%3Cstop offset='.55' stop-color='%23e9e2d2'/%3E%3Cstop offset='1' stop-color='%23ddd5c3'/%3E%3C/linearGradient%3E%3Cfilter id='n' x='0' y='0' width='100%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' seed='4'/%3E%3CfeColorMatrix values='0 0 0 0 .35 0 0 0 0 .3 0 0 0 0 .22 0 0 0 .55 -.2'/%3E%3CfeComposite in2='SourceGraphic' operator='in'/%3E%3C/filter%3E%3C/defs%3E%3Crect x='.35' y='.35' width='99.3' height='124.3' rx='2.6' fill='url(%23g)' stroke='%237a6d58' stroke-opacity='.35' stroke-width='.5'/%3E%3Crect x='.35' y='.35' width='99.3' height='124.3' rx='2.6' filter='url(%23n)' opacity='.55'/%3E%3Crect x='11.20' y='9.70' width='77.60' height='104.60' rx='3.40' fill='none' stroke='%23fff' stroke-opacity='.55' stroke-width='.55'/%3E%3Crect x='12.00' y='10.50' width='76.00' height='103.00' rx='2.70' fill='none' stroke='%234a3f30' stroke-opacity='.42' stroke-width='.6'/%3E%3C/svg%3E");
+  background-size:calc(var(--fw) * 1.04) calc(var(--fw) * 1.25);background-repeat:repeat-x;background-position:0 0}
+.tr .track img{box-sizing:border-box;flex:none;width:calc(var(--fw) * 1.04);height:calc(var(--fw) * 1.25);aspect-ratio:auto;background:none;
+  padding:calc(var(--fw) * 0.108) calc(var(--fw) * 0.163) calc(var(--fw) * 0.118) calc(var(--fw) * 0.123);
+  -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 75.4 102.4' preserveAspectRatio='none'%3E%3Crect width='75.4' height='102.4' rx='2.4'/%3E%3C/svg%3E") 0 0/100% 100% no-repeat content-box;
+  mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 75.4 102.4' preserveAspectRatio='none'%3E%3Crect width='75.4' height='102.4' rx='2.4'/%3E%3C/svg%3E") 0 0/100% 100% no-repeat content-box}
+@media (max-width:640px){
+  .tr .track,.tr:hover .track{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 104 125' preserveAspectRatio='none'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23f1ebde'/%3E%3Cstop offset='.55' stop-color='%23e9e2d2'/%3E%3Cstop offset='1' stop-color='%23ddd5c3'/%3E%3C/linearGradient%3E%3Cfilter id='n' x='0' y='0' width='100%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' seed='4'/%3E%3CfeColorMatrix values='0 0 0 0 .35 0 0 0 0 .3 0 0 0 0 .22 0 0 0 .55 -.2'/%3E%3CfeComposite in2='SourceGraphic' operator='in'/%3E%3C/filter%3E%3C/defs%3E%3Crect x='.35' y='.35' width='99.3' height='124.3' rx='2.6' fill='url(%23g)' stroke='%237a6d58' stroke-opacity='.35' stroke-width='.5'/%3E%3Crect x='.35' y='.35' width='99.3' height='124.3' rx='2.6' filter='url(%23n)' opacity='.55'/%3E%3Crect x='8.90' y='8.40' width='82.20' height='108.20' rx='3.40' fill='none' stroke='%23fff' stroke-opacity='.55' stroke-width='.55'/%3E%3Crect x='9.70' y='9.20' width='80.60' height='106.60' rx='2.70' fill='none' stroke='%234a3f30' stroke-opacity='.42' stroke-width='.6'/%3E%3C/svg%3E");background-size:calc(var(--fw) * 1.04) calc(var(--fw) * 1.25)}
+  .tr .track img{padding:calc(var(--fw) * 0.095) calc(var(--fw) * 0.14) calc(var(--fw) * 0.095) calc(var(--fw) * 0.1);
+    -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 106' preserveAspectRatio='none'%3E%3Crect width='80' height='106' rx='2.8'/%3E%3C/svg%3E") 0 0/100% 100% no-repeat content-box;
+    mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 106' preserveAspectRatio='none'%3E%3Crect width='80' height='106' rx='2.8'/%3E%3C/svg%3E") 0 0/100% 100% no-repeat content-box}
+}
+</style>
 </head>
   <body>
 <div class="hero__loader" id="heroLoader" aria-hidden="true"><canvas id="loaderfx"></canvas></div>
@@ -155,6 +234,24 @@
               <line x1="17.2" y1="6.8" x2="17.21" y2="6.8"/>
             </svg>
           </a>
+          <a href="/web-design/" aria-label="Web design" title="Web design" class="header__icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="1.6"
+                 stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2.5" y="4" width="19" height="16" rx="2"/>
+              <line x1="2.5" y1="8.5" x2="21.5" y2="8.5"/>
+              <circle cx="5.6" cy="6.25" r="0.4" fill="currentColor"/>
+              <circle cx="8" cy="6.25" r="0.4" fill="currentColor"/>
+            </svg>
+          </a>
+          <a href="/apps/" aria-label="Apps" title="Apps" class="header__icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="1.6"
+                 stroke-linecap="round" stroke-linejoin="round">
+              <rect x="6" y="2.5" width="12" height="19" rx="2.5"/>
+              <line x1="10.6" y1="18.4" x2="13.4" y2="18.4"/>
+            </svg>
+          </a>
         </div>
 
         <a class="brand" href="#/">STUDIOMORPHIK</a>
@@ -171,41 +268,8 @@
             <line x1="17" y1="9" x2="23" y2="15"/>
           </svg>
         </button>
-
-        <div class="header__pills">
-          <a href="/web-design/" aria-label="Web design portfolio" title="Web design portfolio" class="header__pill">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
-                 stroke="currentColor" stroke-width="1.8"
-                 stroke-linecap="round" stroke-linejoin="round">
-              <rect x="2.5" y="4" width="19" height="16" rx="2"/>
-              <line x1="2.5" y1="8.5" x2="21.5" y2="8.5"/>
-              <circle cx="5.6" cy="6.25" r="0.4" fill="currentColor"/>
-              <circle cx="8" cy="6.25" r="0.4" fill="currentColor"/>
-            </svg>
-            <span>WEB DESIGN</span>
-          </a>
-
-          <a href="/apps/" aria-label="Apps we build" title="Apps we build" class="header__pill header__pill--apps">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
-                 stroke="currentColor" stroke-width="1.8"
-                 stroke-linecap="round" stroke-linejoin="round">
-              <rect x="6" y="2.5" width="12" height="19" rx="2.5"/>
-              <line x1="10.6" y1="18.4" x2="13.4" y2="18.4"/>
-            </svg>
-            <span>APPS</span>
-          </a>
-
-          <a href="/systems/" aria-label="Systems we build for companies" title="Systems we build" class="header__pill header__pill--systems">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
-                 stroke="currentColor" stroke-width="1.8"
-                 stroke-linecap="round" stroke-linejoin="round">
-              <path d="M12 2.5 21 7.25v9.5L12 21.5 3 16.75v-9.5z"/>
-              <path d="M3 7.25 12 12l9-4.75"/>
-              <line x1="12" y1="12" x2="12" y2="21.5"/>
-            </svg>
-            <span>SYSTEMS</span>
-          </a>
-        </div>
+        <button class="ph-toggle" type="button" aria-pressed="true" aria-label="Hide the photos" title="Hide the photos"><svg class="eye-on" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.6-6.5 10-6.5S22 12 22 12s-3.6 6.5-10 6.5S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg><svg class="eye-off" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.6-6.5 10-6.5S22 12 22 12s-3.6 6.5-10 6.5S2 12 2 12z"/><circle cx="12" cy="12" r="3"/><line x1="3.5" y1="20.5" x2="20.5" y2="3.5"/></svg></button>
+        <a class="ph-label" href="/mood/">Photography</a>
       </header>
 
       <!-- home -->
@@ -239,6 +303,10 @@
           <path class="scene-map__route scene-map__route--progress" pathLength="1" fill="none" />
         </svg>
       </nav>
+
+      <div class="tr-wrap">
+        <a class="mood-hub strip tr" href="/mood/" aria-label="Photography"><span class="win"><span class="track"></span></span></a>
+      </div>
 
       <!-- toggle: show / hide the scene map -->
       <div class="map-control">
@@ -398,6 +466,124 @@ if (canvas && !window.__loaderDone) {
     renderer.setSize(W, H, false); composer.setSize(W, H);
   });
 }
+</script>
+<script>
+// Mood under the wordmark: line it up with STUDIOMORPHIK, then bring in random Mood photos.
+(function(){
+  var ALL = ["/mood/img/thumb/208-bread-basket.webp", "/mood/img/thumb/45-villa-pool-leisure.webp", "/mood/img/thumb/11-fashion-pool-deck-2.webp", "/mood/img/thumb/099-breakfast-balcony.webp", "/mood/img/thumb/073-menswear-white-gallery-2.webp", "/mood/img/thumb/01-fashion-pink-courtyard.webp", "/mood/img/thumb/26-music-oud-bed.webp", "/mood/img/thumb/084-jewelry-ear-sun-2.webp", "/mood/img/thumb/087-wine-olive-terrace.webp", "/mood/img/thumb/210-stool-shadow-2.webp", "/mood/img/thumb/060-fashion-diving-board.webp", "/mood/img/thumb/33-craft-potter.webp", "/mood/img/thumb/07-beauty-light-beam-3.webp", "/mood/img/thumb/096-pool-aerial-ring-2.webp", "/mood/img/thumb/08-portrait-old-man-beirut.webp", "/mood/img/thumb/085-jewelry-ear-sun-3.webp", "/mood/img/thumb/52-saltflat-mirror.webp", "/mood/img/thumb/211-speaker-sand-dune.webp", "/mood/img/thumb/20-jewelry-hand-rings.webp", "/mood/img/thumb/34-car-piazza.webp", "/mood/img/thumb/51-diner-night-counter-2.webp", "/mood/img/thumb/105-tennis-resort-above.webp", "/mood/img/thumb/03-fashion-pink-courtyard-3.webp", "/mood/img/thumb/123-infinity-pool-valley-3.webp", "/mood/img/thumb/078-hotel-breakfast-bed.webp", "/mood/img/thumb/215-teapot-set.webp", "/mood/img/thumb/086-jewelry-ear-sun-4.webp", "/mood/img/thumb/202-suitcase-arch.webp", "/mood/img/thumb/100-tech-speaker-blocks.webp", "/mood/img/thumb/115-fashion-red-coat-plaza-3.webp", "/mood/img/thumb/17-food-bread-flour.webp", "/mood/img/thumb/222-thermos-hand-shadow.webp", "/mood/img/thumb/10-fashion-pool-deck.webp", "/mood/img/thumb/54-restaurant-symmetry-2.webp", "/mood/img/thumb/36-bride-limewash.webp", "/mood/img/thumb/132-modernist-cliff-house-2.webp", "/mood/img/thumb/23-hotel-corridor.webp", "/mood/img/thumb/227-sage-apron-stool-4.webp", "/mood/img/thumb/02-fashion-pink-courtyard-2.webp", "/mood/img/thumb/47-silk-pyramids.webp", "/mood/img/thumb/41-fashion-saltflat-hat-3.webp", "/mood/img/thumb/27-sport-boxer-gym.webp", "/mood/img/thumb/080-lipstick-half-shadow.webp", "/mood/img/thumb/113-fashion-red-coat-plaza.webp", "/mood/img/thumb/126-fashion-desert-line-2.webp", "/mood/img/thumb/092-fashion-orange-twins-2.webp", "/mood/img/thumb/214-bucket-bag.webp", "/mood/img/thumb/102-cocktails-pastel-bar.webp", "/mood/img/thumb/15-fashion-grey-room-2.webp", "/mood/img/thumb/04-fashion-pink-courtyard-4.webp", "/mood/img/thumb/209-stool-shadow.webp", "/mood/img/thumb/093-fashion-orange-twins-3.webp", "/mood/img/thumb/31-surreal-mirror-desert-2.webp", "/mood/img/thumb/082-surreal-balloons-stairwell-2.webp", "/mood/img/thumb/30-surreal-mirror-desert.webp", "/mood/img/thumb/59-fisherman-dawn-2.webp", "/mood/img/thumb/201-handbag-pool-edge.webp", "/mood/img/thumb/05-beauty-light-beam.webp", "/mood/img/thumb/081-surreal-balloons-stairwell.webp", "/mood/img/thumb/101-tech-speaker-blocks-2.webp", "/mood/img/thumb/29-fashion-neon-walk-2.webp", "/mood/img/thumb/133-swimmer-dive.webp", "/mood/img/thumb/130-dinner-olive-grove-2.webp", "/mood/img/thumb/095-pool-aerial-ring.webp", "/mood/img/thumb/228-salt-pepper-palm-shadow.webp", "/mood/img/thumb/19-drink-negroni-bar.webp", "/mood/img/thumb/124-infinity-pool-valley-4.webp", "/mood/img/thumb/06-beauty-light-beam-2.webp", "/mood/img/thumb/131-modernist-cliff-house.webp", "/mood/img/thumb/111-icecream-pink-wall-2.webp", "/mood/img/thumb/072-menswear-white-gallery.webp", "/mood/img/thumb/128-fashion-desert-line-4.webp", "/mood/img/thumb/074-menswear-white-gallery-3.webp", "/mood/img/thumb/28-fashion-neon-walk.webp", "/mood/img/thumb/114-fashion-red-coat-plaza-2.webp", "/mood/img/thumb/25-hotel-corridor-3.webp", "/mood/img/thumb/48-silk-pyramids-2.webp", "/mood/img/thumb/125-fashion-desert-line.webp", "/mood/img/thumb/088-wine-olive-terrace-2.webp", "/mood/img/thumb/38-food-mezze-overhead-2.webp", "/mood/img/thumb/094-bridal-garden-veil.webp", "/mood/img/thumb/203-vase-branch.webp", "/mood/img/thumb/116-fashion-red-coat-plaza-4.webp", "/mood/img/thumb/14-fashion-grey-room.webp", "/mood/img/thumb/220-briefcase-cream-glove-2.webp", "/mood/img/thumb/064-sneakers-pink-stairs-2.webp", "/mood/img/thumb/135-car-coastal-road.webp", "/mood/img/thumb/225-sage-apron-stool-2.webp", "/mood/img/thumb/39-fashion-saltflat-hat.webp", "/mood/img/thumb/58-fisherman-dawn.webp", "/mood/img/thumb/097-pool-aerial-ring-3.webp", "/mood/img/thumb/108-surreal-desert-feast.webp", "/mood/img/thumb/46-villa-pool-leisure-2.webp", "/mood/img/thumb/109-surreal-desert-feast-2.webp", "/mood/img/thumb/091-fashion-orange-twins.webp", "/mood/img/thumb/49-fruit-window-sill.webp", "/mood/img/thumb/117-car-pink-villa.webp", "/mood/img/thumb/226-sage-apron-stool-3.webp", "/mood/img/thumb/112-icecream-pink-wall-3.webp", "/mood/img/thumb/079-hotel-breakfast-bed-2.webp", "/mood/img/thumb/127-fashion-desert-line-3.webp", "/mood/img/thumb/061-fashion-diving-board-2.webp", "/mood/img/thumb/120-beach-umbrellas-above-2.webp", "/mood/img/thumb/062-fashion-diving-board-3.webp", "/mood/img/thumb/16-fashion-grey-room-3.webp", "/mood/img/thumb/119-beach-umbrellas-above.webp", "/mood/img/thumb/50-diner-night-counter.webp", "/mood/img/thumb/098-pool-aerial-ring-4.webp", "/mood/img/thumb/53-restaurant-symmetry.webp", "/mood/img/thumb/129-dinner-olive-grove.webp", "/mood/img/thumb/24-hotel-corridor-2.webp", "/mood/img/thumb/122-infinity-pool-valley-2.webp", "/mood/img/thumb/067-handbag-yellow-wall-2.webp", "/mood/img/thumb/42-fashion-saltflat-hat-4.webp", "/mood/img/thumb/134-swimmer-dive-2.webp", "/mood/img/thumb/213-ankle-boots.webp", "/mood/img/thumb/32-surreal-mirror-desert-3.webp", "/mood/img/thumb/090-wine-olive-terrace-4.webp", "/mood/img/thumb/121-infinity-pool-valley.webp", "/mood/img/thumb/37-food-mezze-overhead.webp", "/mood/img/thumb/118-car-pink-villa-2.webp", "/mood/img/thumb/55-restaurant-symmetry-3.webp", "/mood/img/thumb/103-bicycle-white-alley.webp", "/mood/img/thumb/089-wine-olive-terrace-3.webp", "/mood/img/thumb/44-drink-arak-balcony.webp", "/mood/img/thumb/22-jewelry-hand-rings-3.webp", "/mood/img/thumb/12-fashion-pool-deck-3.webp", "/mood/img/thumb/065-sneakers-pink-stairs-3.webp", "/mood/img/thumb/106-tennis-resort-above-2.webp", "/mood/img/thumb/56-restaurant-symmetry-4.webp", "/mood/img/thumb/57-horse-desert-dawn.webp", "/mood/img/thumb/40-fashion-saltflat-hat-2.webp", "/mood/img/thumb/107-chef-plating.webp", "/mood/img/thumb/083-jewelry-ear-sun.webp", "/mood/img/thumb/069-espresso-sea-ledge.webp", "/mood/img/thumb/217-yoga-mat-blocks.webp", "/mood/img/thumb/076-eyewear-sea-reflection-2.webp", "/mood/img/thumb/110-icecream-pink-wall.webp", "/mood/img/thumb/070-espresso-sea-ledge-2.webp", "/mood/img/thumb/216-watering-can.webp", "/mood/img/thumb/221-backpack-white-glove.webp", "/mood/img/thumb/075-eyewear-sea-reflection.webp", "/mood/img/thumb/063-sneakers-pink-stairs.webp", "/mood/img/thumb/104-bicycle-white-alley-2.webp", "/mood/img/thumb/35-car-piazza-2.webp", "/mood/img/thumb/068-handbag-yellow-wall-3.webp", "/mood/img/thumb/18-food-bread-flour-2.webp", "/mood/img/thumb/077-eyewear-sea-reflection-3.webp", "/mood/img/thumb/43-street-cairo-golden.webp", "/mood/img/thumb/071-espresso-sea-ledge-3.webp", "/mood/img/thumb/066-handbag-yellow-wall.webp", "/mood/img/thumb/21-jewelry-hand-rings-2.webp", "/mood/img/thumb/09-portrait-old-man-beirut-2.webp", "/mood/img/thumb/13-fashion-pool-deck-4.webp"], hub = document.querySelector('.mood-hub'), brand = document.querySelector('.brand');
+  function place(){ hub.style.setProperty('--hub-left', brand.offsetLeft + 'px'); hub.style.setProperty('--hub-top', (brand.offsetTop + brand.offsetHeight) + 'px'); }
+  place(); addEventListener('resize', place);
+  window.moodPick = function(n){ var a = ALL.slice(); for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)), t = a[i]; a[i] = a[j]; a[j] = t; } return a.slice(0, n); };
+  window.moodLoad = function(srcs){ return Promise.all(srcs.map(function(s){ return new Promise(function(ok){ var im = new Image(); im.onload = function(){ ok(im); }; im.onerror = function(){ ok(null); }; im.src = s; }); })).then(function(a){ return a.filter(Boolean); }); };
+  // Photos joined into one strip that slides sideways through the letters.
+  window.moodStrip = function(el, n, speed){
+    el.classList.add('wait'); var done = function(){ el.classList.remove('wait'); }; setTimeout(done, 3000);
+    moodLoad(moodPick(n)).then(function(imgs){
+      if (!imgs.length) return done();
+      var S = 300, ws = imgs.map(function(im){ return Math.round(im.naturalWidth * S / im.naturalHeight); }), W = ws.reduce(function(a, b){ return a + b; }, 0);
+      var c = document.createElement('canvas'), g, x = 0; c.width = W; c.height = S; g = c.getContext('2d');
+      imgs.forEach(function(im, k){ g.drawImage(im, x, 0, ws[k], S); x += ws[k]; });
+      g.globalCompositeOperation = 'screen'; g.fillStyle = 'rgb(40,38,34)'; g.fillRect(0, 0, W, S);
+      el.style.backgroundImage = 'url(' + c.toDataURL('image/jpeg', 0.8) + ')'; done();
+      if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      var anim; function run(){ if (anim) anim.cancel(); var d = W * el.clientHeight / S; anim = el.animate([{ backgroundPosition: '0px 0px' }, { backgroundPosition: (-d) + 'px 0px' }], { duration: d / speed * 1000, iterations: Infinity }); }
+      run(); addEventListener('resize', run);
+    });
+  };
+})();
+</script><script>
+// The strip: as wide as the wordmark when it sits under it, its own width elsewhere; each row doubled so it loops without a seam.
+(function(){
+  var hub = document.querySelector('.strip'), brand = document.querySelector('.brand');
+  function size(){ if (hub.hasAttribute('data-brand-width')) hub.style.setProperty('--w', brand.offsetWidth + 'px'); }
+  size(); addEventListener('resize', size);
+  document.querySelectorAll('.strip .track').forEach(function(tr){
+    var one = moodPick(14).map(function(s){ return '<img src="' + s + '" alt="">'; }).join('');
+    tr.innerHTML = one + one;
+  });
+})();
+</script><script>
+// A click on one photo opens the Mood page with that photo first; a click on the words opens the page from the top.
+(function(){
+  var hub = document.querySelector('.strip');
+  hub.addEventListener('click', function(e){
+    var hit = document.elementFromPoint(e.clientX, e.clientY), img = hit && hit.closest('.strip img'); if (!img) return;
+    e.preventDefault();
+    location.href = '/mood/?photo=' + encodeURIComponent(img.getAttribute('src').split('/').pop().replace('.webp', ''));
+  });
+})();
+</script><script>
+// The strip drifts by itself, and can also be swiped (phone), dragged or trackpad-swiped (laptop), with a little glide after.
+// A swipe is never taken as a tap, so it never opens a photo by accident.
+(function(){
+  var hub = document.querySelector('.strip'), win = hub.querySelector('.win'), tr = hub.querySelector('.track');
+  tr.style.animation = 'none';
+  tr.querySelectorAll('img').forEach(function(i){ i.draggable = false; });
+  win.style.userSelect = 'none';
+  var calm = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var p = 0, v = 0, down = null, moved = 0, last = performance.now(), lastMove = 0;
+  function vertical(){ return getComputedStyle(tr).flexDirection === 'column'; }
+  function half(){ return vertical() ? tr.scrollHeight / 2 : tr.scrollWidth / 2; }
+  function frame(now){
+    var dt = Math.min((now - last) / 1000, .1); last = now;
+    var h = half() || 1, period = vertical() ? 70 : 60;
+    if (!down) { p += (calm ? 0 : dt / period) + v * dt / h; v *= Math.pow(.05, dt); if (Math.abs(v) < 4) v = 0; }
+    p = ((p % 1) + 1) % 1;
+    tr.style.transform = vertical() ? 'translateY(' + (-p * h) + 'px)' : 'translateX(' + (-p * h) + 'px)';
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+  function pos(e){ return vertical() ? e.clientY : e.clientX; }
+  function sync(){ win.style.touchAction = vertical() ? 'pan-x' : 'pan-y'; }
+  sync(); addEventListener('resize', sync);
+  win.addEventListener('pointerdown', function(e){ if (e.pointerType === 'mouse') e.preventDefault(); try { win.setPointerCapture(e.pointerId); } catch (_) {} down = { at: pos(e), p: p, t: performance.now() }; moved = 0; v = 0; lastMove = down.at; });
+  win.addEventListener('pointermove', function(e){
+    if (!down) return;
+    var d = pos(e) - down.at; moved = Math.max(moved, Math.abs(d));
+    var now = performance.now(), step = pos(e) - lastMove, dt = Math.max(now - down.t, 1) / 1000;
+    v = -step / dt; down.t = now; lastMove = pos(e);
+    p = down.p - d / (half() || 1);
+  });
+  function up(){ if (!down) return; down = null; v = Math.max(-2500, Math.min(2500, v)); }
+  win.addEventListener('pointerup', up); win.addEventListener('pointercancel', up);
+  win.addEventListener('wheel', function(e){
+    var d = vertical() ? e.deltaY : e.deltaX;
+    if (Math.abs(d) < 1 || (!vertical() && Math.abs(e.deltaX) < Math.abs(e.deltaY))) return;
+    e.preventDefault(); p += d / (half() || 1);
+  }, { passive: false });
+  hub.addEventListener('click', function(e){ if (moved > 8) { e.preventDefault(); e.stopPropagation(); moved = 0; } }, true);
+})();
+</script><script>
+(function(){
+  var lbl = document.querySelector('.ph-label'), wrap = document.querySelector('.tr-wrap'), hero = document.querySelector('.hero'), btn = document.querySelector('.ph-toggle');
+  function place(){
+    var l = lbl.getBoundingClientRect(), h = hero.getBoundingClientRect(), left = l.left, right = l.right;
+    if (innerWidth > 640) {
+      right -= parseFloat(getComputedStyle(lbl).letterSpacing) || 0;
+      var svg = Array.prototype.filter.call(btn.querySelectorAll('svg'), function(s){ return s.getBoundingClientRect().width > 0; })[0];
+      if (svg) { var r = svg.getBoundingClientRect(); left = r.left + r.width * 2 / 24; }
+    }
+    wrap.style.setProperty('--strip-top', (l.bottom - h.top + 10) + 'px');
+    wrap.style.setProperty('--strip-right', (h.right - right) + 'px');
+    wrap.style.setProperty('--lbl-w', (right - left) + 'px');
+  }
+  place(); addEventListener('resize', place); (document.fonts ? document.fonts.ready : Promise.resolve()).then(place);
+})();
+</script><script>
+// The eye button: hide or show the photos under PHOTOGRAPHY. Shown by default; the choice is kept for next time.
+(function(){
+  var wrap = document.querySelector('.tr-wrap'), btn = document.querySelector('.ph-toggle'), KEY = 'smPhotosHidden';
+  function set(off){
+    wrap.classList.toggle('off', off); btn.classList.toggle('off', off);
+    btn.setAttribute('aria-pressed', off ? 'false' : 'true');
+    btn.title = off ? 'Show the photos' : 'Hide the photos'; btn.setAttribute('aria-label', btn.title);
+  }
+  try { set(localStorage.getItem(KEY) === '1'); } catch (_) { set(false); }
+  btn.addEventListener('click', function(){
+    var off = !wrap.classList.contains('off'); set(off);
+    try { localStorage.setItem(KEY, off ? '1' : '0'); } catch (_) {}
+  });
+})();
 </script>
 </body>
 </html>

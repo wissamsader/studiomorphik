@@ -1,672 +1,132 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<title>Apps — STUDIOMORPHIK</title>
-<meta name="description" content="STUDIOMORPHIK also builds software. momzu, a voice AI that lives on your Mac. Himalayan Meditation, a free mantra meditation app for Android. MORPH, an effects studio in the making.">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Apps · STUDIOMORPHIK</title>
+<link rel="icon" href="/favicon.ico" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter+Tight:wght@400;500&family=JetBrains+Mono:wght@400;500&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+@font-face{font-family:'Integral CF';src:url('/fonts/IntegralCF-Bold.woff2') format('woff2');font-weight:700;font-display:swap}
+*{box-sizing:border-box;margin:0;padding:0}
+a{color:inherit;text-decoration:none}
+img{display:block;max-width:100%}
+html,body{overflow-x:clip}
+body{background:#000;color:#f2efe9;font-family:'Inter Tight',Arial,sans-serif;--g:clamp(14px,2.4vw,32px)}
+.top{position:relative;z-index:3;display:flex;justify-content:space-between;padding:18px var(--g);font-size:11px;letter-spacing:.14em;text-transform:uppercase}
+.top .wm{font-family:'Integral CF',sans-serif;letter-spacing:.22em}
+.top nav{display:flex;gap:20px}.top nav a{opacity:.55}.top nav a:hover{opacity:1}
+.big{font-family:'Anton',sans-serif;line-height:1;letter-spacing:-.01em;text-transform:uppercase;padding:0 clamp(6px,1vw,14px);white-space:nowrap;text-align:center;overflow-x:clip;color:transparent;background:#f2efe9 0 50% / auto 100% repeat-x;-webkit-background-clip:text;background-clip:text;transition:opacity .7s}
+.big.wait{opacity:0}
+.meta{display:flex;justify-content:space-between;padding:10px var(--g) 26px;font-size:11px;letter-spacing:.14em;text-transform:uppercase;opacity:.6}
+.intro{max-width:760px;padding:0 var(--g);margin:1vw 0 6vw;font-size:clamp(16px,1.35vw,20px);line-height:1.55;opacity:.82}
+.mono{font-family:'JetBrains Mono',ui-monospace,Menlo,monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase}
+.end{font-family:'Anton',sans-serif;text-transform:uppercase;font-size:clamp(40px,8vw,120px);line-height:.9;padding:12vw var(--g) 3vw}
+.end a{border-bottom:2px solid currentColor}
+.foot{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;padding:24px var(--g) 30px;opacity:.5}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:11px 18px;border:1px solid rgba(242,239,233,.5);border-radius:999px;font-family:'JetBrains Mono',ui-monospace,Menlo,monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;transition:background .2s,color .2s}
+.btn:hover{background:#f2efe9;color:#000}
+.btn.solid{background:#f2efe9;color:#000}.btn.solid:hover{background:transparent;color:#f2efe9}
+.chips{display:flex;flex-wrap:wrap;gap:6px}.chips span{padding:5px 10px;border:1px solid rgba(242,239,233,.22);border-radius:999px;font-family:'JetBrains Mono',ui-monospace,Menlo,monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;opacity:.8}
+.shell{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;padding:12px 14px;border:1px solid rgba(242,239,233,.22);background:#0b0b0b;color:#f2efe9;font-family:'JetBrains Mono',ui-monospace,Menlo,monospace;font-size:12px;cursor:pointer;text-align:left}
+.shell i{font-style:normal;opacity:.55;font-size:10px;letter-spacing:.12em;text-transform:uppercase}
+.shell code{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.big.apps{font-size:44vw;margin:-2.4vw 0 -1.6vw;-webkit-text-stroke:1px rgba(242,239,233,.35)}
+.index{display:flex;flex-wrap:wrap;gap:10px;padding:0 var(--g);margin:4px 0 2.4vw}
+.index a{display:inline-flex;align-items:center;gap:8px;padding:9px 15px;border:1px solid rgba(242,239,233,.55);border-radius:999px;font-size:11px;color:#f2efe9;transition:background .2s,color .2s,border-color .2s}
+.index a b{font-weight:400;opacity:.6}
+.index a:hover{background:#f2efe9;color:#000;border-color:#f2efe9}
+html{scroll-behavior:smooth}
+.chap{padding:0 var(--g);margin-top:4vw;scroll-margin-top:30px}
+.chap + .chap{margin-top:clamp(44px,6vw,80px);padding-top:clamp(44px,6vw,80px);border-top:1px solid rgba(255,255,255,.14);margin-left:var(--g);margin-right:var(--g);padding-left:0;padding-right:0}
+.chap h2{display:flex;justify-content:space-between;align-items:baseline;gap:20px;font-family:'Anton',sans-serif;font-weight:400;font-size:clamp(56px,11vw,180px);line-height:1;border-bottom:1px solid rgba(242,239,233,.16);padding-bottom:1vw;margin-bottom:clamp(26px,4vw,56px)}
+.chap h2 span{opacity:.55}
+@media (max-width:760px){.chap{margin-top:14vw}}
+.orig{--fg:rgba(255,255,255,.92);--dim:rgba(255,255,255,.6);--dimmer:rgba(255,255,255,.38);--line:rgba(255,255,255,.14);font-family:'Montserrat',system-ui,-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;line-height:1.6;letter-spacing:.01em;color:var(--fg);-webkit-font-smoothing:antialiased}
+.orig .shot{position:relative;display:block;border-radius:22px;padding:1px;background:linear-gradient(165deg,rgba(255,255,255,.22),rgba(255,255,255,.06) 42%,rgba(255,255,255,.02));box-shadow:0 40px 90px -34px rgba(0,0,0,.9);transition:transform .45s cubic-bezier(.2,.7,.2,1)}
+.orig .shot::before{content:"";position:absolute;inset:-2px;border-radius:24px;background:conic-gradient(from 210deg,#ff4d4d,#ff9f40,#ffe14d,#5dff9b,#4dc3ff,#b96bff,#ff4d4d);opacity:0;filter:blur(20px);transition:opacity .45s;z-index:0}
+.orig .shot:hover{transform:translateY(-6px)}
+.orig .shot:hover::before{opacity:.34}
+.orig .shot .in{position:relative;z-index:1;border-radius:21px;overflow:hidden;background:#101114}
+.orig .chrome{display:flex;align-items:center;gap:6px;padding:11px 15px;background:linear-gradient(180deg,rgba(255,255,255,.075),rgba(255,255,255,.02));border-bottom:1px solid rgba(255,255,255,.07)}
+.orig .chrome i{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.22)}
+.orig .chrome .url{margin-left:10px;font-family:'JetBrains Mono',ui-monospace,monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--dimmer)}
+.orig .shot img{width:100%;aspect-ratio:1400/880;object-fit:cover;object-position:top center;background:#0b0c0e}
+.orig.appgrid{display:grid;grid-template-columns:1.35fr 1fr;gap:clamp(26px,4vw,58px);align-items:center}
+@media(max-width:940px){.orig.appgrid{grid-template-columns:1fr;gap:32px}}
+.orig .appname{font-family:'Integral CF',sans-serif;font-size:clamp(1.9rem,4.6vw,3rem);letter-spacing:.04em;line-height:1.05}
+.orig .appkind{font-family:'JetBrains Mono',ui-monospace,monospace;font-size:10.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--dim);margin-bottom:14px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.orig .badge{border:1px solid var(--line);border-radius:999px;padding:4px 10px;color:var(--dim)}
+.orig .badge.live{color:#5dff9b;border-color:rgba(93,255,155,.35)}
+.orig .badge.soon{color:#ff9f40;border-color:rgba(255,159,64,.38)}
+.orig .appcopy{color:var(--dim);font-size:15px;margin-top:16px;max-width:46ch}
+.orig .appcopy b{color:var(--fg);font-weight:500}
+.orig .chips{display:flex;flex-wrap:wrap;gap:7px;margin-top:22px}
+.orig .chips span{font-family:'JetBrains Mono',ui-monospace,monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);border:1px solid var(--line);border-radius:999px;padding:6px 12px;opacity:1}
+.orig .cta{display:flex;flex-wrap:wrap;gap:10px;margin-top:28px}
+.orig .btn{display:inline-flex;align-items:center;gap:9px;font-family:'JetBrains Mono',ui-monospace,monospace;font-size:11px;letter-spacing:.16em;text-transform:uppercase;border:1px solid rgba(255,255,255,.38);border-radius:999px;padding:11px 20px;background:none;color:var(--fg);transition:background .2s,color .2s,border-color .2s}
+.orig .btn:hover{background:var(--fg);color:#0b0c0e;border-color:var(--fg)}
+.orig .btn.ghost{border-color:var(--line);color:var(--dim)}
+.orig .btn.ghost:hover{background:transparent;color:var(--fg);border-color:rgba(255,255,255,.38)}
+.orig .install{margin-top:26px}
+.orig .install .lbl{font-family:'JetBrains Mono',ui-monospace,monospace;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--dimmer);margin-bottom:9px}
+.orig .shell{display:inline-flex;align-items:center;gap:14px;max-width:100%;width:auto;cursor:pointer;font:inherit;text-align:left;color:var(--fg);background:rgba(255,255,255,.04);border:1px solid var(--line);border-radius:10px;padding:12px 16px;transition:border-color .2s,background .2s}
+.orig .shell:hover{border-color:rgba(255,255,255,.34);background:rgba(255,255,255,.06)}
+.orig .shell code{font-family:'JetBrains Mono',ui-monospace,monospace;font-size:12px;color:var(--fg);word-break:break-all;white-space:normal;overflow:visible}
+.orig .shell i{font-style:normal;font-family:'JetBrains Mono',ui-monospace,monospace;font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--dimmer);flex-shrink:0;opacity:1}
+.orig .shell.copied i{color:#5dff9b}
+@media(prefers-reduced-motion:reduce){.orig .shot,.orig .shot::before{transition:none}}
+</style>
+<meta name="description" content="STUDIOMORPHIK also builds software. momzu, a voice AI that lives on your Mac. MORPH, an image and video effects studio. Himalayan Meditation, a free mantra meditation app.">
 <link rel="canonical" href="https://studiomorphik.com/apps/">
-<link rel="icon" href="/favicon.ico" sizes="any">
-<link rel="icon" type="image/png" sizes="96x96" href="/img/favicon-96.png">
-<meta property="og:title" content="Apps — STUDIOMORPHIK">
-<meta property="og:description" content="We also build apps: momzu, Himalayan Meditation, MORPH.">
+<meta property="og:title" content="Apps · STUDIOMORPHIK">
+<meta property="og:description" content="We also build apps: momzu, MORPH, Himalayan Meditation.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://studiomorphik.com/apps/">
 <meta property="og:image" content="https://studiomorphik.com/apps/shots/momzu.jpg">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://studiomorphik.com/apps/shots/momzu.jpg">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<link rel="modulepreload" href="https://unpkg.com/three@0.160.0/build/three.module.js">
-<script type="importmap">
-{"imports":{"three":"https://unpkg.com/three@0.160.0/build/three.module.js"}}
-</script>
-<style>
-@font-face{font-family:'Integral CF';src:url('/fonts/IntegralCF-Bold.woff2') format('woff2');font-weight:700;font-style:normal;font-display:swap}
-:root{--bg:#0b0c0e;--fg:rgba(255,255,255,.92);--dim:rgba(255,255,255,.6);--dimmer:rgba(255,255,255,.38);--line:rgba(255,255,255,.14);--sur:#121317}
-*{box-sizing:border-box;margin:0;-webkit-tap-highlight-color:transparent}
-html{scroll-behavior:smooth}
-body{overflow-x:clip;background:var(--bg);color:var(--fg);font-family:'Montserrat',system-ui,-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;line-height:1.6;letter-spacing:.01em;-webkit-font-smoothing:antialiased}
-a{color:inherit;text-decoration:none}
-img{max-width:100%;display:block}
-.wrap{max-width:1280px;margin:0 auto;padding:0 clamp(18px,4vw,44px)}
-.mono{font-family:'JetBrains Mono',ui-monospace,'SF Mono',Menlo,monospace}
-
-/* ambient spectrum wash */
-body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
-  background:radial-gradient(90% 60% at 50% -10%,rgba(77,195,255,.10),transparent 60%),
-             radial-gradient(70% 50% at 100% 100%,rgba(185,107,255,.07),transparent 60%)}
-.wrap,header,footer{position:relative;z-index:1}
-
-/* header — matches /web-design/ */
-header{position:sticky;top:0;z-index:20;background:rgba(11,12,14,.82);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
-header .bar{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:16px clamp(18px,4vw,44px);max-width:1280px;margin:0 auto}
-.wordmark{font-family:'Integral CF',sans-serif;font-size:15px;letter-spacing:.22em;flex-shrink:0}
-header nav{display:flex;gap:22px;flex-shrink:0;font-family:'JetBrains Mono',ui-monospace,monospace;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim)}
-header nav a{transition:color .2s;white-space:nowrap}
-header nav a:hover,header nav a.on{color:var(--fg)}
-header nav{margin-left:auto}
-/* home-page icon links (about · vimeo · contact · instagram), same as the main site */
-.hicons{display:flex;align-items:center;gap:8px;flex-shrink:0}
-.hicon{display:flex;align-items:center;color:var(--fg);opacity:.7;transition:opacity .2s ease}
-.hicon:hover,.hicon:active{opacity:1}
-.hicon svg{display:block}
-@media(max-width:560px){.wordmark{font-size:13px;letter-spacing:.16em}header nav{gap:13px;font-size:9.5px}.hicons{gap:6px}.hicon svg{width:17px;height:17px}}
-@media(max-width:760px){header nav{flex-shrink:1;min-width:0}}
-@media(max-width:520px){
-  header .bar{flex-wrap:wrap;row-gap:10px;padding-top:12px;padding-bottom:12px}
-  header nav{flex-basis:100%;order:3;margin-left:0;justify-content:flex-start;gap:8px}
-  header nav a{border:1px solid var(--line);border-radius:999px;padding:6px 12px;font-size:9px;letter-spacing:.12em}
-  header nav a.on{border-color:rgba(255,255,255,.55);color:var(--fg)}
-}
-@media(max-width:400px){.header .bar,header .bar{gap:12px;padding:14px 16px}.wordmark{font-size:11.5px;letter-spacing:.1em}header nav{gap:10px;font-size:8.5px}.hicons{gap:5px}.hicon svg{width:15px;height:15px}}
-
-/* hero — padding-block only: the shorthand would wipe .wrap's side padding */
-.hero{position:relative;padding-block:clamp(56px,10vw,112px) clamp(30px,4vw,48px)}
-/* fit-content: the text blocks must not span the full row, or their empty right
-   halves sit above the sphere and swallow its mouse events */
-.hero .eyebrow,.hero h1,.hero .sub,.hero .stats{position:relative;z-index:1;width:fit-content}
-
-/* particle sphere (OriginKit) — fills the empty right half of the hero on desktop.
-   .fxclip contains the component's 2.5x overflow canvas inside the hero: without it
-   the canvas sticks past the viewport and phones widen the whole page (nav cut off) */
-.fxclip{position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:0}
-.herofx{position:absolute;right:clamp(18px,4vw,44px);top:0;bottom:0;margin:auto 0;
-  width:min(38vw,500px);aspect-ratio:1/1;cursor:grab;pointer-events:auto}
-.herofx:active{cursor:grabbing}
-.herofx canvas{pointer-events:none}
-/* mobile: small sphere in the free top-right corner beside the headline */
-@media(max-width:940px){.herofx{width:clamp(110px,32vw,170px);right:38px;top:10px;bottom:auto;margin:0}}
-.eyebrow{font-family:'JetBrains Mono',ui-monospace,monospace;font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:var(--dim)}
-h1{font-family:'Integral CF',sans-serif;font-size:clamp(2.3rem,7.6vw,5.2rem);line-height:1.03;letter-spacing:.02em;margin:.35em 0 .32em}
-.sub{max-width:60ch;color:var(--dim);font-size:clamp(15px,1.6vw,17px)}
-.stats{display:flex;gap:10px 26px;flex-wrap:wrap;margin-top:28px;font-family:'JetBrains Mono',ui-monospace,monospace;font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim)}
-.stats b{color:var(--fg);font-weight:700}
-
-/* feature app */
-.feature{padding-block:clamp(24px,4vw,44px) clamp(50px,7vw,90px)}
-.shot{position:relative;border-radius:22px;padding:1px;
-  background:linear-gradient(165deg,rgba(255,255,255,.22),rgba(255,255,255,.06) 42%,rgba(255,255,255,.02));
-  box-shadow:0 40px 90px -34px rgba(0,0,0,.9);transition:transform .45s cubic-bezier(.2,.7,.2,1)}
-.shot::before{content:"";position:absolute;inset:-2px;border-radius:24px;
-  background:conic-gradient(from 210deg,#ff4d4d,#ff9f40,#ffe14d,#5dff9b,#4dc3ff,#b96bff,#ff4d4d);
-  opacity:0;filter:blur(20px);transition:opacity .45s;z-index:0}
-.shot:hover{transform:translateY(-6px)}
-.shot:hover::before{opacity:.34}
-.shot .in{position:relative;z-index:1;border-radius:21px;overflow:hidden;background:#101114}
-.chrome{display:flex;align-items:center;gap:6px;padding:11px 15px;background:linear-gradient(180deg,rgba(255,255,255,.075),rgba(255,255,255,.02));border-bottom:1px solid rgba(255,255,255,.07)}
-.chrome i{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.22)}
-.chrome .url{margin-left:10px;font-family:'JetBrains Mono',ui-monospace,monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--dimmer)}
-.shot img{width:100%;aspect-ratio:1400/880;object-fit:cover;object-position:top center;background:#0b0c0e}
-
-.appgrid{display:grid;grid-template-columns:1.35fr 1fr;gap:clamp(26px,4vw,58px);align-items:center}
-@media(max-width:940px){.appgrid{grid-template-columns:1fr;gap:32px}}
-.appname{font-family:'Integral CF',sans-serif;font-size:clamp(1.9rem,4.6vw,3rem);letter-spacing:.04em;line-height:1.05}
-.appkind{font-family:'JetBrains Mono',ui-monospace,monospace;font-size:10.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--dim);margin-bottom:14px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-.badge{border:1px solid var(--line);border-radius:999px;padding:4px 10px;color:var(--dim)}
-.badge.live{color:#5dff9b;border-color:rgba(93,255,155,.35)}
-.badge.soon{color:#ff9f40;border-color:rgba(255,159,64,.38)}
-.soonline{margin-top:28px;display:inline-flex;align-items:center;gap:10px;
-  font-family:'JetBrains Mono',ui-monospace,monospace;font-size:11px;letter-spacing:.16em;text-transform:uppercase;
-  color:#ff9f40;border:1px solid rgba(255,159,64,.3);background:rgba(255,159,64,.06);
-  border-radius:999px;padding:11px 20px}
-.soonline i{width:7px;height:7px;border-radius:50%;background:#ff9f40;flex:0 0 auto;animation:pulse 1.8s infinite}
-@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(255,159,64,.5)}70%{box-shadow:0 0 0 7px rgba(255,159,64,0)}100%{box-shadow:0 0 0 0 rgba(255,159,64,0)}}
-.appsep{border-top:1px solid var(--line);margin:clamp(44px,6vw,80px) 0 0}
-.appcopy{color:var(--dim);font-size:15px;margin-top:16px;max-width:46ch}
-.appcopy b{color:var(--fg);font-weight:500}
-.chips{display:flex;flex-wrap:wrap;gap:7px;margin-top:22px}
-.chips span{font-family:'JetBrains Mono',ui-monospace,monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);border:1px solid var(--line);border-radius:999px;padding:6px 12px}
-.cta{display:flex;flex-wrap:wrap;gap:10px;margin-top:28px}
-.btn{display:inline-flex;align-items:center;gap:9px;font-family:'JetBrains Mono',ui-monospace,monospace;font-size:11px;letter-spacing:.16em;text-transform:uppercase;border:1px solid rgba(255,255,255,.38);border-radius:999px;padding:11px 20px;transition:background .2s,color .2s,border-color .2s}
-.btn:hover{background:var(--fg);color:#0b0c0e;border-color:var(--fg)}
-.btn.ghost{border-color:var(--line);color:var(--dim)}
-.btn.ghost:hover{background:transparent;color:var(--fg);border-color:rgba(255,255,255,.38)}
-
-/* install line */
-.install{margin-top:26px}
-.install .lbl{font-family:'JetBrains Mono',ui-monospace,monospace;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--dimmer);margin-bottom:9px}
-.shell{display:inline-flex;align-items:center;gap:14px;max-width:100%;cursor:pointer;font:inherit;text-align:left;
-  background:rgba(255,255,255,.04);border:1px solid var(--line);border-radius:10px;padding:12px 16px;transition:border-color .2s,background .2s}
-.shell:hover{border-color:rgba(255,255,255,.34);background:rgba(255,255,255,.06)}
-.shell code{font-family:'JetBrains Mono',ui-monospace,monospace;font-size:12px;color:var(--fg);word-break:break-all}
-.shell i{font-style:normal;font-family:'JetBrains Mono',ui-monospace,monospace;font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--dimmer);flex-shrink:0}
-.shell.copied i{color:#5dff9b}
-
-/* next / footer */
-.next{border-top:1px solid var(--line);padding:clamp(40px,6vw,70px) 0}
-.next h2{font-family:'Integral CF',sans-serif;font-size:clamp(1.3rem,3vw,2rem);letter-spacing:.05em;margin-bottom:14px}
-.next p{color:var(--dim);max-width:60ch;font-size:15px}
-footer{border-top:1px solid var(--line);padding:30px 0 44px;color:var(--dimmer);font-family:'JetBrains Mono',ui-monospace,monospace;font-size:10.5px;letter-spacing:.16em;text-transform:uppercase}
-footer .in{display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;max-width:1280px;margin:0 auto;padding:0 clamp(18px,4vw,44px)}
-footer a:hover{color:var(--fg)}
-
-.rev{opacity:0;transform:translateY(26px);transition:opacity .9s cubic-bezier(.2,.8,.2,1),transform .9s cubic-bezier(.2,.8,.2,1)}
-.rev.in{opacity:1;transform:none}
-@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}html{scroll-behavior:auto}.rev{opacity:1;transform:none}}
-</style>
 </head>
 <body>
-
-<header>
-  <div class="bar">
-    <div class="hicons">
-      <a href="/#/about" aria-label="About" class="hicon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><line x1="12" y1="7" x2="12" y2="8.5"/><line x1="12" y1="11" x2="12" y2="17"/></svg></a>
-      <a href="https://vimeo.com/studiomorphik" target="_blank" rel="noopener" aria-label="Vimeo portfolio" title="Vimeo portfolio" class="hicon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9.6 C4.6 8.3 5.8 7.5 6.8 8 C8 8.6 8.2 10.4 8.8 12.6 C9.4 14.9 10.2 16.9 11.6 17.3 C13.5 17.8 15.7 15.3 17 12.9 C18.1 10.9 18.7 9 17.9 7.9 C17.2 6.9 15.7 7.1 14.8 8.1"/></svg></a>
-      <a href="/#/contact" aria-label="Contact" class="hicon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="5" width="19" height="14" rx="1"/><polyline points="2.5,5 12,13 21.5,5"/></svg></a>
-      <a href="https://www.instagram.com/studiomorphik/" target="_blank" rel="noopener" aria-label="Instagram" title="Instagram" class="hicon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><line x1="17.2" y1="6.8" x2="17.21" y2="6.8"/></svg></a>
-    </div>
-    <a class="wordmark" href="/">STUDIOMORPHIK</a>
-    <nav>
-      <a href="/web-design/">Web design</a>
-      <a href="/apps/" class="on">Apps</a>
-      <a href="/systems/">Systems</a>
-      <a href="/#/contact" class="navcontact">Contact</a>
-    </nav>
-  </div>
-</header>
-
-<section class="hero wrap">
-  <div class="fxclip" aria-hidden="true"><div class="herofx" id="sphereHolder"></div></div>
-  <div class="eyebrow rev">Software</div>
-  <h1 class="rev">We also<br>build apps.</h1>
-  <p class="sub rev">Between the films and the websites, we make software. Tools we wanted to exist, built properly and given away. They run on your own machine, they don't ask you to make an account, and nothing you feed them leaves your computer.</p>
-  <div class="stats rev">
-    <span><b>1</b> shipped</span>
-    <span><b>1</b> in development</span>
-    <span><b>Free</b> to use</span>
-    <span><b>No accounts, no tracking</b></span>
-  </div>
-</section>
-
-<section class="feature wrap">
-  <div class="appgrid">
-    <a class="shot rev" href="https://momzu.space" target="_blank" rel="noopener" aria-label="Visit momzu.space">
-      <div class="in">
-        <div class="chrome"><i></i><i></i><i></i><span class="url">momzu.space</span></div>
-        <img src="shots/momzu.jpg" alt="momzu — a voice AI that lives on your Mac" loading="lazy">
-      </div>
-    </a>
-
-    <div class="rev">
-      <div class="appkind">
-        <span class="badge live">● Live</span>
-        <span class="badge">macOS</span>
-        <span class="badge">Open source</span>
-      </div>
-      <div class="appname">momzu</div>
-      <p class="appcopy">A voice AI that lives on your Mac. Hold a key, say what you want, let go. It <b>talks back, drives your real browser, reads your screen, remembers you, plays your music, keeps your calendar</b>, and leaves finished work on your disk.</p>
-      <p class="appcopy">Your voice never leaves the machine. Speech recognition runs locally, replies are spoken locally, and the cloud only ever sees text, only if you choose a cloud model.</p>
-
-      <div class="chips">
-        <span>Voice</span><span>Browser control</span><span>Screen vision</span>
-        <span>Memory</span><span>Routines</span><span>Runs offline</span>
-      </div>
-
-      <div class="install">
-        <div class="lbl">Install — one line, does everything</div>
-        <button class="shell" type="button" data-copy="curl -fsSL https://momzu.space/install.sh | bash">
-          <code>curl -fsSL https://momzu.space/install.sh | bash</code><i>copy</i>
-        </button>
-      </div>
-
-      <div class="cta">
-        <a class="btn" href="https://momzu.space" target="_blank" rel="noopener">Visit momzu.space →</a>
-        <a class="btn ghost" href="https://github.com/wissamsader/momzu" target="_blank" rel="noopener">Source on GitHub</a>
-      </div>
-    </div>
-  </div>
-
-  <div class="appsep"></div>
-
-  <div class="appgrid" style="margin-top:clamp(34px,5vw,64px)">
-    <a class="shot rev" href="https://studiomorphik.com/morph/" target="_blank" rel="noopener">
-      <div class="in">
-        <div class="chrome"><i></i><i></i><i></i><span class="url">morph</span></div>
-        <img src="shots/morph.jpg" alt="MORPH — an image and video effects studio" loading="lazy">
-      </div>
-    </a>
-
-    <div class="rev">
-      <div class="appkind">
-        <span class="badge soon">● In development</span>
-        <span class="badge">macOS</span>
-      </div>
-      <div class="appname">MORPH</div>
-      <p class="appcopy">An image and video effects studio. Drop in a photo or a video, then <b>turn it into something else</b>: halftone, ordered dither, ascii, contour, glitch, riso. Every dial moves while you watch.</p>
-      <p class="appcopy">It renders on your own machine, not on a farm. No account, no uploads, no queue. The engine is ours, written from scratch.</p>
-
-      <div class="chips">
-        <span>Halftone</span><span>Dither</span><span>Ascii</span><span>Contour</span>
-        <span>Glitch</span><span>Riso</span><span>Crosshatch</span><span>Pixel sort</span>
-      </div>
-
-      <div class="cta">
-        <a class="btn" href="https://studiomorphik.com/morph/" target="_blank" rel="noopener">Visit MORPH website →</a>
-      </div>
-    </div>
-  </div>
-
-  <div class="appsep"></div>
-
-  <div class="appgrid" style="margin-top:clamp(34px,5vw,64px)">
-    <a class="shot rev" href="https://himalayanmeditation.space" target="_blank" rel="noopener" aria-label="Visit himalayanmeditation.space">
-      <div class="in">
-        <div class="chrome"><i></i><i></i><i></i><span class="url">himalayanmeditation.space</span></div>
-        <img src="shots/himalayan.jpg" alt="Himalayan Meditation, the sun resting on its horizon" loading="lazy">
-      </div>
-    </a>
-
-    <div class="rev">
-      <div class="appkind">
-        <span class="badge live">● Live</span>
-        <span class="badge">Android</span>
-        <span class="badge">Free</span>
-      </div>
-      <div class="appname">Himalayan Meditation</div>
-      <p class="appcopy">A mantra of your own. <b>A quiet horizon that follows the day</b>: gold at dawn, coral at midday, lavender at dusk. Tap the sun to begin; it becomes the timer, five to sixty minutes, with your mantra breathing inside it.</p>
-      <p class="appcopy">Free on Google Play. No ads, no streaks, no guilt — the app stays out of the way so the practice can do the work.</p>
-
-      <div class="chips">
-        <span>Mantra</span><span>5 to 60 minute timer</span><span>Colors that follow the day</span>
-        <span>Lessons</span><span>Teacher Q&amp;A</span><span>No ads</span>
-      </div>
-
-      <div class="cta">
-        <a class="btn" href="https://play.google.com/store/apps/details?id=app.himalayanmeditation.vedic" target="_blank" rel="noopener">Get it on Google Play →</a>
-        <a class="btn ghost" href="https://himalayanmeditation.space" target="_blank" rel="noopener">Visit the website</a>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section class="next">
-  <div class="wrap">
-    <h2 class="rev">Need something built?</h2>
-    <p class="rev">We make the tools we wish existed, then we give them away. If you need software, a website, or a film, we are one email away.</p>
-    <div class="cta rev">
-      <a class="btn" href="/#/contact">Work with us →</a>
-      <a class="btn ghost" href="/web-design/">See the websites</a>
-    </div>
-  </div>
-</section>
-
-<footer>
-  <div class="in">
-    <span>STUDIOMORPHIK © 2026</span>
-    <span><a href="/">Home</a> · <a href="/web-design/">Web design</a> · <a href="/#/contact">Contact</a></span>
-  </div>
-</footer>
-
+<header class="top"><a class="wm" href="/">STUDIOMORPHIK</a><nav><a href="/">Home</a><a href="/#/contact">Contact</a></nav></header>
+<div class="big apps" id="big">Apps</div>
+<div class="meta"><span></span><span>3 apps &middot; free</span></div>
+<nav class="index mono"><a href="#momzu">momzu<b>Live</b></a><a href="#morph">MORPH<b>In development</b></a><a href="#himalayan">Himalayan Meditation<b>Live</b></a></nav>
+<p class="intro">Between the films and the websites, we make software. Tools we wanted to exist, built properly and given away. They run on your own machine, they don&#x27;t ask you to make an account, and nothing you feed them leaves your computer.</p>
+<section class="chap" id="momzu"><div class="orig appgrid"><a class="shot" href="https://momzu.space" target="_blank" rel="noopener"><div class="in"><div class="chrome"><i></i><i></i><i></i><span class="url">momzu.space</span></div><img src="/apps/shots/momzu.jpg" alt="momzu" loading="lazy"></div></a><div><div class="appkind"><span class="badge live">&#9679; Live</span><span class="badge">macOS</span><span class="badge">Open source</span></div><div class="appname">momzu</div><p class="appcopy">A voice AI that lives on your Mac. Hold a key, say what you want, let go. It <b>talks back, drives your real browser, reads your screen, remembers you, plays your music, keeps your calendar</b>, and leaves finished work on your disk.</p><p class="appcopy">Your voice never leaves the machine. Speech recognition runs locally, replies are spoken locally, and the cloud only ever sees text, only if you choose a cloud model.</p><div class="chips"><span>Voice</span><span>Browser control</span><span>Screen vision</span><span>Memory</span><span>Routines</span><span>Runs offline</span></div><div class="install"><div class="lbl">Install: one line, does everything</div><button class="shell" type="button" data-copy="curl -fsSL https://momzu.space/install.sh | bash"><code>curl -fsSL https://momzu.space/install.sh | bash</code><i>copy</i></button></div><div class="cta"><a class="btn" href="https://momzu.space" target="_blank" rel="noopener">Visit momzu.space &rarr;</a><a class="btn ghost" href="https://github.com/wissamsader/momzu" target="_blank" rel="noopener">Source on GitHub</a></div></div></div></section>
+<section class="chap" id="morph"><div class="orig appgrid"><a class="shot" href="/morph/"><div class="in"><div class="chrome"><i></i><i></i><i></i><span class="url">morph</span></div><img src="/apps/shots/morph.jpg" alt="MORPH" loading="lazy"></div></a><div><div class="appkind"><span class="badge soon">&#9679; In development</span><span class="badge">macOS</span></div><div class="appname">MORPH</div><p class="appcopy">An image and video effects studio. Drop in a photo or a video, then <b>turn it into something else</b>: halftone, ordered dither, ascii, contour, glitch, riso. Every dial moves while you watch.</p><p class="appcopy">It renders on your own machine, not on a farm. No account, no uploads, no queue. The engine is ours, written from scratch.</p><div class="chips"><span>Halftone</span><span>Dither</span><span>Ascii</span><span>Contour</span><span>Glitch</span><span>Riso</span><span>Crosshatch</span><span>Pixel sort</span></div><div class="cta"><a class="btn" href="/morph/">Visit the MORPH website &rarr;</a></div></div></div></section>
+<section class="chap" id="himalayan"><div class="orig appgrid"><a class="shot" href="https://himalayanmeditation.space" target="_blank" rel="noopener"><div class="in"><div class="chrome"><i></i><i></i><i></i><span class="url">himalayanmeditation.space</span></div><img src="/apps/shots/himalayan.jpg" alt="Himalayan Meditation" loading="lazy"></div></a><div><div class="appkind"><span class="badge live">&#9679; Live</span><span class="badge">Android</span><span class="badge">Free</span></div><div class="appname">Himalayan Meditation</div><p class="appcopy">A mantra of your own. <b>A quiet horizon that follows the day</b>: gold at dawn, coral at midday, lavender at dusk. Tap the sun to begin; it becomes the timer, five to sixty minutes, with your mantra breathing inside it.</p><p class="appcopy">Free on Google Play. No ads, no streaks, no guilt. The app stays out of the way so the practice can do the work.</p><div class="chips"><span>Mantra</span><span>5 to 60 minute timer</span><span>Colours that follow the day</span><span>Lessons</span><span>Teacher Q&amp;A</span><span>No ads</span></div><div class="cta"><a class="btn" href="https://play.google.com/store/apps/details?id=app.himalayanmeditation.vedic" target="_blank" rel="noopener">Get it on Google Play &rarr;</a><a class="btn ghost" href="https://himalayanmeditation.space" target="_blank" rel="noopener">Visit the website</a></div></div></div></section>
+<div class="end">Need something built?<br><a href="/#/contact">Contact</a></div>
+<div class="foot mono"><span>&copy; 2026 STUDIOMORPHIK. All rights reserved.</span><span><a href="mailto:hello@studiomorphik.com">hello@studiomorphik.com</a></span></div>
 <script>
-(() => {
-  const io = new IntersectionObserver(es => {
-    es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
-  }, { threshold: .15 });
-  document.querySelectorAll('.rev').forEach(el => io.observe(el));
-
-  document.querySelectorAll('.shell').forEach(el => {
-    el.addEventListener('click', () => {
-      navigator.clipboard.writeText(el.dataset.copy).then(() => {
-        const i = el.querySelector('i'), old = i.textContent;
-        el.classList.add('copied'); i.textContent = 'copied';
-        setTimeout(() => { i.textContent = old; el.classList.remove('copied'); }, 1600);
-      }).catch(() => {});
-    });
+// The giant title: pick random pictures, join them into one strip and slide it slowly through the letters.
+function fillTitle(el, all, n, H, lift){
+  H = H || 700;
+  var done = function(){ el.classList.remove('wait'); }; el.classList.add('wait'); setTimeout(done, 3000);
+  var a = all.slice(); for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)), t = a[i]; a[i] = a[j]; a[j] = t; }
+  Promise.all(a.slice(0, n).map(function(s){ return new Promise(function(ok){ var im = new Image(); im.onload = function(){ ok(im); }; im.onerror = function(){ ok(null); }; im.src = s; }); }))
+  .then(function(imgs){
+    imgs = imgs.filter(Boolean); if (!imgs.length) return done();
+    var ws = imgs.map(function(im){ return Math.round(im.naturalWidth * H / im.naturalHeight); }), W = ws.reduce(function(x, y){ return x + y; }, 0);
+    var c = document.createElement('canvas'); c.width = W; c.height = H; var g = c.getContext('2d'), x = 0;
+    imgs.forEach(function(im, k){ g.drawImage(im, x, 0, ws[k], H); x += ws[k]; });
+    if (lift) { g.globalCompositeOperation = 'screen'; g.fillStyle = lift; g.fillRect(0, 0, W, H); }  // lighten dark screens so the letters read
+    el.style.backgroundImage = 'url(' + c.toDataURL('image/jpeg', 0.82) + ')'; done();
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    var anim; function run(){ if (anim) anim.cancel(); var d = W * el.clientHeight / H; anim = el.animate([{ backgroundPosition: '0px 50%' }, { backgroundPosition: (-d) + 'px 50%' }], { duration: d / 40 * 1000, iterations: Infinity }); }
+    run(); addEventListener('resize', run);
   });
-})();
+}
 </script>
-
-<script type="module">
-// Particle Sphere — OriginKit, ported 1:1 from the React/Framer component to vanilla three.js.
-// Preview props kept exactly: speed 7 · smoothing 10 · sphereColor #656264; the rest are the
-// component's own defaults (10000 particles, particleScale 4, scale 10, drag, cursor + click).
-import { Scene, PerspectiveCamera, WebGLRenderer, Color, Vector3, Matrix4, Group,
-         SphereGeometry, MeshBasicMaterial, InstancedMesh, Float32BufferAttribute,
-         AdditiveBlending } from "three";
-
-const PROPS = { particlesCount: 10000, particleScale: 4, speed: 7, smoothing: 10, scale: 10,
-  stopOnHover: false, rotationDirection: "clockwise", dragSpeed: 5, drag: true,
-  cursorOn: true, cursorRadiusUI: 75, cursorStrengthUI: 10, clickForce: 5,
-  sphereColor: "#656264" };
-
-function mapLinear(value, inMin, inMax, outMin, outMax) {
-  if (inMax === inMin) return outMin;
-  const t = (value - inMin) / (inMax - inMin);
-  return outMin + t * (outMax - outMin);
-}
-const mapSpeedUiToInternal = ui => mapLinear(ui, 0.1, 1.0, 0.01, 0.05);
-const mapScaleUiToMultiplier = ui => mapLinear(Math.max(0, Math.min(1, ui)), 0, 1.0, 0.25, 1.25);
-const mapParticleSizeUiToInternal = ui => mapLinear(Math.max(0.1, Math.min(1, ui)), 0.1, 1.0, 0.01, 0.1);
-const mapCursorStrengthUiToMultiplier = ui => mapLinear(Math.max(0, Math.min(1, ui)), 0, 1.0, 0, 15);
-const CURSOR_PHYSICS = { RETURN_FORCE: 0.015, FRICTION: 0.94 };
-
-function initParticleSphere() {
-  const container = document.getElementById("sphereHolder");
-  if (!container || container.clientWidth === 0) return false;
-
-  const speedN = PROPS.speed / 10, smoothingN = PROPS.smoothing / 10, scaleN = PROPS.scale / 10;
-  const dragN = PROPS.dragSpeed / 10, sizeN = PROPS.particleScale / 10, strengthN = PROPS.cursorStrengthUI / 10;
-  const rotationSpeed = PROPS.rotationDirection === "anticlockwise"
-    ? -mapSpeedUiToInternal(speedN) : mapSpeedUiToInternal(speedN);
-  const scaleMultiplier = mapScaleUiToMultiplier(scaleN);
-  const particleSize = mapParticleSizeUiToInternal(sizeN);
-  const cursorRadius = Math.max(0, Math.min(600, PROPS.cursorRadiusUI));
-  const cursorStrength = mapCursorStrengthUiToMultiplier(strengthN);
-
-  const containerWidth = container.clientWidth || container.offsetWidth || 400;
-  const containerHeight = container.clientHeight || container.offsetHeight || 400;
-  const canvasOverflowMultiplier = 2.5;
-  let canvasWidth = containerWidth * canvasOverflowMultiplier;
-  let canvasHeight = containerHeight * canvasOverflowMultiplier;
-
-  const scene = new Scene();
-  const baseFOV = 50;
-  const adjustedFOV = 2 * Math.atan(Math.tan((baseFOV * Math.PI) / 180 / 2) * canvasOverflowMultiplier) * (180 / Math.PI);
-  const camera = new PerspectiveCamera(adjustedFOV, canvasWidth / canvasHeight, 0.1, 1000);
-  const baseCameraDistance = 3.0;
-  const currentSphereRadius = 1.0 * scaleMultiplier;
-  camera.position.z = Math.max(baseCameraDistance, currentSphereRadius + 1.0);
-
-  const renderer = new WebGLRenderer({ antialias: true, alpha: true });
-  renderer.setSize(canvasWidth, canvasHeight);
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-  renderer.outputColorSpace = "srgb";
-  const canvas = renderer.domElement;
-  canvas.style.position = "absolute";
-  let offsetX = (canvasWidth - containerWidth) / 2;
-  let offsetY = (canvasHeight - containerHeight) / 2;
-  canvas.style.left = `-${offsetX}px`;
-  canvas.style.top = `-${offsetY}px`;
-  canvas.style.width = `${canvasWidth}px`;
-  canvas.style.height = `${canvasHeight}px`;
-  canvas.style.display = "block";
-  container.appendChild(canvas);
-
-  // Fibonacci sphere distribution (identical to the component)
-  const goldenAngle = Math.PI * (3 - Math.sqrt(5));
-  const sphereRadius = 1.0 * scaleMultiplier;
-  const vertices = [];
-  const basePositions = [], displacements = [], scatterVelocities = [];
-  const baseColorObj = new Color(PROPS.sphereColor);
-  // small mobile sphere: 4k particles look identical at that scale and keep phones smooth
-  const N = matchMedia("(max-width: 940px)").matches ? 4000 : PROPS.particlesCount;
-  for (let i = 0; i < N; i++) {
-    const y = 1 - (i / (N - 1)) * 2;
-    const radius = Math.sqrt(1 - y * y);
-    const theta = goldenAngle * i;
-    const px = Math.cos(theta) * radius * sphereRadius;
-    const py = y * sphereRadius;
-    const pz = Math.sin(theta) * radius * sphereRadius;
-    vertices.push(px, py, pz);
-    basePositions.push(new Vector3(px, py, pz));
-    displacements.push(new Vector3(0, 0, 0));
-    scatterVelocities.push(new Vector3(0, 0, 0));
-  }
-
-  const sphereGeometry = new SphereGeometry(particleSize * 0.15, 8, 8);
-  const sphereMaterial = new MeshBasicMaterial({ color: 0xffffff, blending: AdditiveBlending });
-  const particles = new InstancedMesh(sphereGeometry, sphereMaterial, N);
-  const matrix = new Matrix4();
-  for (let i = 0; i < N; i++) {
-    matrix.setPosition(vertices[i * 3], vertices[i * 3 + 1], vertices[i * 3 + 2]);
-    particles.setMatrixAt(i, matrix);
-  }
-  particles.instanceMatrix.needsUpdate = true;
-  const instanceColors = new Float32Array(N * 3);
-  for (let i = 0; i < N; i++) {
-    instanceColors[i * 3] = baseColorObj.r;
-    instanceColors[i * 3 + 1] = baseColorObj.g;
-    instanceColors[i * 3 + 2] = baseColorObj.b;
-  }
-  particles.instanceColor = new Float32BufferAttribute(instanceColors, 3);
-  particles.instanceColor.needsUpdate = true;
-
-  const particlesGroup = new Group();
-  particlesGroup.add(particles);
-  scene.add(particlesGroup);
-
-  const rotation = { x: 0, y: 0 }, targetRotation = { x: 0, y: 0 }, velocity = { x: 0, y: 0 };
-  let isDragging = false, isHovering = false;
-  let lastMouseX = 0, lastMouseY = 0, lastDragTime = 0;
-  let animationFrameId = null;
-  let mouse = null;
-  let onScreen = true;
-  let lastFrameTime = performance.now();
-  const targetDeltaTime = 1000 / 60;
-  const lerpFactor = smoothingN === 0 ? 1 : mapLinear(smoothingN, 0, 1, 0.4, 0.03);
-  const velocityDecay = mapLinear(smoothingN, 0, 1, 0.7, 0.96);
-
-  const animate = () => {
-    if (!onScreen || container.offsetParent === null) { animationFrameId = null; return; }
-    const now = performance.now();
-    const deltaFactor = (now - lastFrameTime) / targetDeltaTime;
-    lastFrameTime = now;
-    const threshold = 0.01;
-
-    if (!isDragging && rotationSpeed !== 0 && (!PROPS.stopOnHover || !isHovering)) {
-      targetRotation.x += rotationSpeed * 0.1 * deltaFactor;
-    }
-    if (!isDragging && smoothingN > 0) {
-      if (Math.abs(velocity.x) > threshold || Math.abs(velocity.y) > threshold) {
-        targetRotation.x += velocity.x * deltaFactor;
-        targetRotation.y += velocity.y * deltaFactor;
-        targetRotation.y = Math.max(-Math.PI / 2, Math.min(Math.PI / 2, targetRotation.y));
-        const decayFactor = Math.pow(velocityDecay, deltaFactor);
-        velocity.x *= decayFactor; velocity.y *= decayFactor;
-      } else { velocity.x = 0; velocity.y = 0; }
-    }
-    const dx = targetRotation.x - rotation.x, dy = targetRotation.y - rotation.y;
-    const timeLerpFactor = 1 - Math.pow(1 - lerpFactor, deltaFactor);
-    rotation.x += dx * timeLerpFactor;
-    rotation.y += dy * timeLerpFactor;
-    rotation.y = Math.max(-Math.PI / 2, Math.min(Math.PI / 2, rotation.y));
-
-    particlesGroup.rotation.y = rotation.x;
-    particlesGroup.rotation.x = rotation.y;
-    particlesGroup.updateMatrixWorld(true);
-
-    const cw = container.clientWidth || 400, ch = container.clientHeight || 400;
-    const ccw = cw * canvasOverflowMultiplier, cch = ch * canvasOverflowMultiplier;
-    const cursorRadiusSquared = cursorRadius * cursorRadius;
-
-    if (PROPS.cursorOn) {
-      for (let i = 0; i < N; i++) {
-        const displacement = displacements[i];
-        if (mouse) {
-          const currentLocalPos = new Vector3().copy(basePositions[i]).add(displacement);
-          const worldPos = currentLocalPos.clone().applyMatrix4(particlesGroup.matrixWorld);
-          const projected = worldPos.clone().project(camera);
-          const screenX = (projected.x * 0.5 + 0.5) * ccw;
-          const screenY = (-projected.y * 0.5 + 0.5) * cch;
-          const mdx = mouse.x - screenX, mdy = mouse.y - screenY;
-          const distanceSquared = mdx * mdx + mdy * mdy;
-          if (distanceSquared < cursorRadiusSquared && distanceSquared > 0 && worldPos.z > 0) {
-            const distance = Math.sqrt(distanceSquared);
-            const force = (cursorRadius - distance) / cursorRadius;
-            const angle = Math.atan2(mdy, mdx);
-            const cameraRight = new Vector3().setFromMatrixColumn(camera.matrixWorld, 0).normalize();
-            const cameraUp = new Vector3().setFromMatrixColumn(camera.matrixWorld, 1).normalize();
-            const repulsion2D = force * cursorStrength * speedN * deltaFactor;
-            const repulsionX = -Math.cos(angle) * repulsion2D * 0.01;
-            const repulsionY = Math.sin(angle) * repulsion2D * 0.01;
-            const worldRepulsion = new Vector3()
-              .addScaledVector(cameraRight, repulsionX)
-              .addScaledVector(cameraUp, repulsionY);
-            const localRepulsion = worldRepulsion.clone()
-              .applyMatrix4(new Matrix4().copy(particlesGroup.matrixWorld).invert());
-            displacement.add(localRepulsion);
-          }
-        }
-        const frictionFactor = Math.pow(CURSOR_PHYSICS.FRICTION, deltaFactor);
-        const returnForce = CURSOR_PHYSICS.RETURN_FORCE * speedN * deltaFactor;
-        displacement.multiplyScalar(frictionFactor);
-        displacement.multiplyScalar(1 - returnForce);
-      }
-    }
-
-    for (let i = 0; i < N; i++) {
-      const scatterVelocity = scatterVelocities[i];
-      displacements[i].addScaledVector(scatterVelocity, deltaFactor * 0.1);
-      scatterVelocity.multiplyScalar(Math.pow(0.95, deltaFactor));
-      scatterVelocity.multiplyScalar(1 - CURSOR_PHYSICS.RETURN_FORCE * speedN * deltaFactor);
-    }
-
-    const m = new Matrix4();
-    const finalPos = new Vector3();
-    for (let i = 0; i < N; i++) {
-      finalPos.copy(basePositions[i]).add(displacements[i]);
-      m.setPosition(finalPos.x, finalPos.y, finalPos.z);
-      particles.setMatrixAt(i, m);
-    }
-    particles.instanceMatrix.needsUpdate = true;
-
-    renderer.render(scene, camera);
-    animationFrameId = requestAnimationFrame(animate);
-  };
-
-  const startAnimation = () => {
-    if (animationFrameId === null) {
-      lastFrameTime = performance.now();
-      animationFrameId = requestAnimationFrame(animate);
-    }
-  };
-
-  // pause when the hero is scrolled away (rendering 10k instances offscreen wastes battery)
-  new IntersectionObserver(es => {
-    onScreen = es[0].isIntersecting;
-    if (onScreen) startAnimation();
-  }, { threshold: 0 }).observe(container);
-  startAnimation();
-
-  // interaction listeners live on the CONTAINER (the 1:1 sphere area), not the oversized
-  // canvas — the 2.5x canvas overlaps content below and must never intercept clicks there
-  container.addEventListener("mousedown", event => {
-    if (!PROPS.drag) return;
-    isDragging = true;
-    velocity.x = 0; velocity.y = 0;
-    lastMouseX = event.clientX; lastMouseY = event.clientY;
-    lastDragTime = performance.now();
-    startAnimation();
-    const handleMouseMove = moveEvent => {
-      const currentTime = performance.now();
-      const timeSinceLastMove = currentTime - lastDragTime;
-      const sensitivity = mapLinear(dragN, 0, 1, 0.001, 0.02);
-      const mdx = moveEvent.clientX - lastMouseX;
-      const mdy = moveEvent.clientY - lastMouseY;
-      targetRotation.x += mdx * sensitivity;
-      targetRotation.y += mdy * sensitivity;
-      targetRotation.y = Math.max(-Math.PI / 2, Math.min(Math.PI / 2, targetRotation.y));
-      if (timeSinceLastMove > 0) {
-        const timeNormalization = targetDeltaTime / timeSinceLastMove;
-        velocity.x = mdx * sensitivity * 0.3 * timeNormalization;
-        velocity.y = mdy * sensitivity * 0.3 * timeNormalization;
-      }
-      lastMouseX = moveEvent.clientX; lastMouseY = moveEvent.clientY;
-      lastDragTime = currentTime;
-    };
-    const handleMouseUp = () => {
-      document.removeEventListener("mousemove", handleMouseMove);
-      document.removeEventListener("mouseup", handleMouseUp);
-      isDragging = false;
-    };
-    document.addEventListener("mousemove", handleMouseMove);
-    document.addEventListener("mouseup", handleMouseUp);
+<script>
+// Copy the install line.
+document.querySelectorAll('[data-copy]').forEach(function(b){
+  b.addEventListener('click', function(){
+    var i = b.querySelector('i'); (navigator.clipboard ? navigator.clipboard.writeText(b.dataset.copy) : Promise.reject()).then(function(){ i.textContent = 'copied'; b.classList.add('copied'); setTimeout(function(){ i.textContent = 'copy'; b.classList.remove('copied'); }, 1600); }, function(){});
   });
-
-  container.addEventListener("mousemove", event => {
-    const rect = container.getBoundingClientRect();
-    if (PROPS.stopOnHover) isHovering = true;
-    mouse = { x: event.clientX - rect.left + offsetX, y: event.clientY - rect.top + offsetY };
-    startAnimation();
-  });
-  container.addEventListener("mouseleave", () => { mouse = null; isHovering = false; });
-
-  const scatterAt = (pointX, pointY) => {
-    particlesGroup.updateMatrixWorld(true);
-    const rect = container.getBoundingClientRect();
-    const clickX = pointX - rect.left + offsetX;
-    const clickY = pointY - rect.top + offsetY;
-    const cursorRadiusSquared = cursorRadius * cursorRadius;
-    const cw = container.clientWidth || 400, ch = container.clientHeight || 400;
-    const ccw = cw * canvasOverflowMultiplier, cch = ch * canvasOverflowMultiplier;
-    const ndcX = (clickX / ccw) * 2 - 1;
-    const ndcY = 1 - (clickY / cch) * 2;
-    const clickRay = new Vector3(ndcX, ndcY, 0.5).unproject(camera);
-    const cameraWorldPos = new Vector3().setFromMatrixPosition(camera.matrixWorld);
-    const clickDirection = new Vector3().subVectors(clickRay, cameraWorldPos).normalize();
-    const sphereDistance = new Vector3().subVectors(new Vector3(0, 0, 0), cameraWorldPos).length();
-    const clickWorldPos = new Vector3().copy(cameraWorldPos).addScaledVector(clickDirection, sphereDistance);
-    const invGroup = new Matrix4().copy(particlesGroup.matrixWorld).invert();
-    for (let i = 0; i < N; i++) {
-      const worldPos = new Vector3().copy(basePositions[i]).add(displacements[i])
-        .applyMatrix4(particlesGroup.matrixWorld);
-      const projected = worldPos.clone().project(camera);
-      const screenX = (projected.x * 0.5 + 0.5) * ccw;
-      const screenY = (-projected.y * 0.5 + 0.5) * cch;
-      const cdx = clickX - screenX, cdy = clickY - screenY;
-      const distanceSquared = cdx * cdx + cdy * cdy;
-      if (distanceSquared < cursorRadiusSquared && distanceSquared > 0) {
-        const screenDistance = Math.sqrt(distanceSquared);
-        const force = ((cursorRadius - screenDistance) / cursorRadius) * PROPS.clickForce;
-        const radialDirection = new Vector3().subVectors(worldPos, clickWorldPos);
-        if (radialDirection.length() > 0.001) {
-          radialDirection.normalize();
-          const localScatter = radialDirection.multiplyScalar(force * 0.5).applyMatrix4(invGroup);
-          scatterVelocities[i].add(localScatter);
-        }
-      }
-    }
-    startAnimation();
-  };
-  container.addEventListener("click", event => {
-    if (PROPS.cursorOn && PROPS.clickForce) scatterAt(event.clientX, event.clientY);
-  });
-  container.addEventListener("touchstart", event => {
-    if (!PROPS.cursorOn || !PROPS.clickForce) return;
-    event.preventDefault();
-    const touch = event.touches[0];
-    if (touch) scatterAt(touch.clientX, touch.clientY);
-  }, { passive: false });
-  container.addEventListener("touchmove", event => {
-    event.preventDefault();
-    const touch = event.touches[0];
-    if (touch) {
-      const rect = container.getBoundingClientRect();
-      mouse = { x: touch.clientX - rect.left + offsetX, y: touch.clientY - rect.top + offsetY };
-      startAnimation();
-    }
-  }, { passive: false });
-  container.addEventListener("touchend", () => { mouse = null; });
-  container.addEventListener("touchcancel", () => { mouse = null; });
-
-  const handleResize = () => {
-    const newWidth = container.clientWidth || container.offsetWidth;
-    const newHeight = container.clientHeight || container.offsetHeight;
-    if (!newWidth || !newHeight) return;
-    canvasWidth = newWidth * canvasOverflowMultiplier;
-    canvasHeight = newHeight * canvasOverflowMultiplier;
-    offsetX = (canvasWidth - newWidth) / 2;
-    offsetY = (canvasHeight - newHeight) / 2;
-    camera.aspect = canvasWidth / canvasHeight;
-    camera.updateProjectionMatrix();
-    renderer.setSize(canvasWidth, canvasHeight);
-    canvas.style.left = `-${offsetX}px`;
-    canvas.style.top = `-${offsetY}px`;
-    canvas.style.width = `${canvasWidth}px`;
-    canvas.style.height = `${canvasHeight}px`;
-    renderer.render(scene, camera);
-  };
-  new ResizeObserver(handleResize).observe(container);
-  window.addEventListener("resize", handleResize);
-  return true;
-}
-
-if (!initParticleSphere()) {
-  const mq = matchMedia("(min-width: 941px)");
-  mq.addEventListener("change", e => { if (e.matches) initParticleSphere(); }, { once: true });
-}
+});
 </script>
 </body>
 </html>
