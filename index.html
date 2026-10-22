@@ -156,6 +156,16 @@ body:not(.page-home) .ph-toggle{display:none}
     mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 106' preserveAspectRatio='none'%3E%3Crect width='80' height='106' rx='2.8'/%3E%3C/svg%3E") 0 0/100% 100% no-repeat content-box}
 }
 </style>
+<style data-round="11">
+/* phone: the word alone, pushed to the right of the header line */
+@media (max-width:640px){.tr-wrap,.ph-toggle{display:none!important}.ph-toggle + .ph-label,.ph-label{margin-left:auto!important}}
+/* laptop: always the big slide, no hover growth; sized from the screen height so it scales with the window */
+@media (min-width:641px){.tr-wrap .tr,.tr-wrap .tr:hover{--fw:calc(34vh * .8)}}
+</style>
+<style data-round="13">
+/* the slide hangs halfway down the right side, right edge on the end of PHOTOGRAPHY; it does not grow on hover */
+@media (min-width:641px){.tr-wrap{top:50%!important;transform:translateY(-50%);margin-top:0!important}}
+</style>
 </head>
   <body>
 <div class="hero__loader" id="heroLoader" aria-hidden="true"><canvas id="loaderfx"></canvas></div>
