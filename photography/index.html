@@ -72,13 +72,14 @@ body{background:#000;color:#f2efe9;font-family:'Inter Tight',Arial,sans-serif}
   var im = new Image(); im.fetchPriority = 'high';
   im.onload = function(){
     big.style.backgroundImage = 'url(img/title/' + s.f + ')'; show();
-    if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    // always drifts (his call: phones with "remove animations" or battery saver showed it frozen); half speed there
+    var speed = matchMedia('(prefers-reduced-motion: reduce)').matches ? 20 : 40;
     var anim;
     function run(){
       var at = anim ? anim.currentTime : null; if (anim) anim.cancel();
       var shown = s.w * big.clientHeight / s.h;
-      anim = big.animate([{ backgroundPosition: '0px 50%' }, { backgroundPosition: (-shown) + 'px 50%' }], { duration: shown / 40 * 1000, iterations: Infinity });
-      anim.currentTime = at !== null ? at : Math.random() * shown / 40 * 1000;
+      anim = big.animate([{ backgroundPosition: '0px 50%' }, { backgroundPosition: (-shown) + 'px 50%' }], { duration: shown / speed * 1000, iterations: Infinity });
+      anim.currentTime = at !== null ? at : Math.random() * shown / speed * 1000;
     }
     run(); addEventListener('resize', run);
   };
