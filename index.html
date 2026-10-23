@@ -189,17 +189,28 @@ body:not(.page-home) .ph-toggle{display:none}
           var v = document.currentScript.previousElementSibling;
           var mq = window.matchMedia('(max-width: 880px)');
           var current;
+          // Same picture, smaller files (10-23): AV1 or HEVC when the browser can play it, the original H.264 behind it
+          // as a fallback. Phones try HEVC first (hardware decoding on iPhones and most Androids), computers AV1.
+          var probe = document.createElement('video');
+          function best(stem) {
+            var av1 = probe.canPlayType('video/mp4; codecs="av01.0.08M.10"'), hevc = probe.canPlayType('video/mp4; codecs="hvc1.1.6.L120.90"');
+            var order = mq.matches ? [[hevc, '_hevc'], [av1, '_av1']] : [[av1, '_av1'], [hevc, '_hevc']];
+            for (var i = 0; i < order.length; i++) if (order[i][0]) return 'img/' + stem + order[i][1] + '.mp4';
+            return null;
+          }
           function setSrc() {
-            var src = mq.matches
-              ? 'img/STUDIOMORPHIK_2026_MOBILE.mp4'
-              : 'img/STUDIOMORPHIK_2026%20showreel_FINAL_2026.mp4';
-            if (src === current) return;
-            current = src;
+            var original = mq.matches ? 'img/STUDIOMORPHIK_2026_MOBILE.mp4' : 'img/STUDIOMORPHIK_2026%20showreel_FINAL_2026.mp4';
+            var small = best(mq.matches ? 'reel_mobile' : 'reel_1080');
+            if (original === current) return;
+            current = original;
             v.innerHTML = '';
-            var s = document.createElement('source');
-            s.type = 'video/mp4';
-            s.src = src;
-            v.appendChild(s);
+            [small, original].forEach(function (src) {
+              if (!src) return;
+              var s = document.createElement('source');
+              s.type = 'video/mp4';
+              s.src = src;
+              v.appendChild(s);
+            });
             v.load();
           }
           setSrc();
