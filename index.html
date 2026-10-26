@@ -177,7 +177,7 @@ body:not(.page-home) .ph-toggle{display:none}
   .ph-vlabel:hover{opacity:1}
 
   .tr-wrap{overflow:visible}
-  .ph-side{position:absolute;right:-44px;top:-44px}
+  .ph-side{position:absolute;left:-44px;right:auto;top:-44px}
   .ph-vlabel{display:none}
   .ph-ring{position:absolute;left:0;top:0;overflow:visible;pointer-events:none}
   .ph-ring text{font-family:'JetBrains Mono',ui-monospace,Menlo,monospace;font-size:10px;letter-spacing:.22em;text-transform:uppercase;fill:var(--fg);opacity:.8;transition:opacity .2s}
@@ -642,20 +642,24 @@ if (canvas && !window.__loaderDone) {
 // and it hides with the photos when the eye is off. It turns clockwise (his call).
 // The ring is sized from the slide on every resize.
 (function(){
-  if (innerWidth <= 640) return;
   var wrap = document.querySelector('.tr-wrap'), slide = wrap.querySelector('.tr'), svg = wrap.querySelector('.ph-ring'),
       path = svg.querySelector('#phRingPath'), tp = svg.querySelector('textPath'), UNIT = 'Photography \u00b7 Mood \u00b7 ', pad = 16, len = 1, word = 1, off = 0, last = performance.now();
+  var ready = false;
   function build(){
+    // only on laptops, and only once the slide has a size (a narrow or background window at load must not stop it for good)
+    if (innerWidth <= 640 || !slide.offsetWidth) return;
     var w = slide.offsetWidth + pad * 2, h = slide.offsetHeight + pad * 2, r = 10;
     svg.setAttribute('width', w); svg.setAttribute('height', h);
     svg.style.left = (slide.offsetLeft - pad) + 'px'; svg.style.top = (slide.offsetTop - pad) + 'px';
     path.setAttribute('d', 'M' + r + ',0H' + (w - r) + 'A' + r + ',' + r + ' 0 0 1 ' + w + ',' + r + 'V' + (h - r) + 'A' + r + ',' + r + ' 0 0 1 ' + (w - r) + ',' + h +
       'H' + r + 'A' + r + ',' + r + ' 0 0 1 0,' + (h - r) + 'V' + r + 'A' + r + ',' + r + ' 0 0 1 ' + r + ',0Z');
     len = path.getTotalLength(); tp.textContent = UNIT; word = tp.getComputedTextLength() || 160;
-    tp.textContent = new Array(Math.ceil(len / word) + 2).join(UNIT);
+    tp.textContent = new Array(Math.ceil(len / word) + 2).join(UNIT); ready = true;
   }
-  function tick(now){ off = (off + (now - last) / 1000 * 14) % word; last = now; tp.setAttribute('startOffset', off - word); requestAnimationFrame(tick); }
-  build(); addEventListener('resize', build); (document.fonts ? document.fonts.ready : Promise.resolve()).then(build); requestAnimationFrame(tick);
+  function tick(now){ if (ready) { off = (off + (now - last) / 1000 * 14) % word; tp.setAttribute('startOffset', off - word); } last = now; requestAnimationFrame(tick); }
+  build(); addEventListener('resize', build); addEventListener('load', build); (document.fonts ? document.fonts.ready : Promise.resolve()).then(build);
+  if (window.ResizeObserver) new ResizeObserver(build).observe(slide);
+  requestAnimationFrame(tick);
 })();
 </script>
 </body>
