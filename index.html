@@ -77,117 +77,35 @@
 .hero__loader.is-hidden{opacity:0}
 .hero__loader canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
 </style>
-<style>
-.mood-hub{position:absolute;top:calc(100% - 10px);left:var(--hub-left,140px);z-index:3;display:block;color:#fff;text-decoration:none}
-body:not(.page-home) .mood-hub{display:none}
-.mood-hub .fill{display:block;line-height:1;text-transform:uppercase;white-space:nowrap;color:transparent;background:#f2efe9 0 0 / auto 100% repeat-x;-webkit-background-clip:text;background-clip:text;filter:drop-shadow(0 4px 14px rgba(0,0,0,.4));transition:opacity .7s}
-.mood-hub .fill.wait{opacity:0}
-.mood-hub .lbl{font-family:'JetBrains Mono',ui-monospace,Menlo,monospace;font-size:9px;letter-spacing:.18em;text-transform:uppercase;opacity:.8;white-space:nowrap}
-.mood-hub:hover .lbl{opacity:1}
-.strip{width:var(--w,300px)}
-.strip .lbl{display:flex;justify-content:space-between;margin-bottom:7px}
-.strip .win{display:block;overflow:hidden;height:62px;transition:height .55s cubic-bezier(.2,.8,.2,1),width .55s cubic-bezier(.2,.8,.2,1);-webkit-mask:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);mask:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent)}
-.strip .track{display:flex;align-items:center;gap:5px;height:100%;width:max-content;padding:0;transition:padding .55s cubic-bezier(.2,.8,.2,1);animation:drift 60s linear infinite}
-.strip .track img{position:relative;height:100%;width:auto;display:block;transition:transform .35s cubic-bezier(.2,.8,.2,1),box-shadow .35s}
-.strip:hover .win{height:150px}
-.strip:hover .track{padding:16px 0}
-.strip .track img:hover{transform:scale(1.24);z-index:2;box-shadow:0 10px 28px rgba(0,0,0,.55)}
-@keyframes drift{to{transform:translateX(-50%)}}
-@keyframes rise{to{transform:translateY(-50%)}}
-@media (max-width:640px){.strip .win{height:46px}.strip:hover .win{height:46px}.strip:hover .track{padding:0}}
-.ph-label{margin-left:auto;flex-shrink:0;font-family:'JetBrains Mono',ui-monospace,Menlo,monospace;font-size:9px;letter-spacing:.16em;text-transform:uppercase;white-space:nowrap;color:var(--fg);opacity:.85;transition:opacity .2s}
-.ph-label:hover{opacity:1}
-body:not(.page-home) .ph-label{display:none}
-.tr{position:absolute;top:var(--strip-top,64px);right:var(--strip-right,28px);left:auto;z-index:3;--w:180px}
-.tr:hover .win{height:128px}
-.tr .track img{cursor:pointer}
+<style data-round="16">
+/* final: the two doors on the header line, alive like the scene circle (same ring, blur, sonar pulse, floating hint) */
+.sm-go{display:none}
+body.page-home .sm-go{display:flex;align-items:center;gap:26px;position:absolute;top:50%;right:calc(clamp(16px,3vw,28px) + clamp(20px,3.5vw,56px) + 2px);transform:translateY(-50%)}
+.sm-go a{position:relative;display:flex;align-items:center;gap:10px;color:inherit;text-decoration:none}
+.sm-go__hint{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.06em;text-transform:lowercase;color:rgba(255,255,255,.8);white-space:nowrap;mix-blend-mode:difference;animation:hintFloat 2.4s ease-in-out infinite;transition:opacity .4s ease}
+.sm-go__ring{position:relative;flex:none;display:grid;place-items:center;width:44px;height:44px;border-radius:50%;border:1px solid var(--line);background:rgba(0,0,0,.28);backdrop-filter:blur(var(--blur));-webkit-backdrop-filter:blur(var(--blur));color:rgba(255,255,255,.78);transition:background .25s ease,color .25s ease,transform .25s ease,border-color .25s ease}
+.sm-go__ring svg{display:block}
+.sm-go__ring::before{content:"";position:absolute;inset:-1px;border-radius:999px;border:1px solid rgba(255,255,255,.55);pointer-events:none;animation:mapPing 2.2s ease-out infinite}
+/* the two pulses and hints take turns, half a beat apart, so the corner breathes instead of flashing twice at once */
+.sm-go a + a .sm-go__ring::before{animation-delay:1.1s}
+.sm-go a + a .sm-go__hint{animation-delay:1.2s}
+@media (hover:hover){.sm-go a:hover .sm-go__ring{color:#fff;transform:scale(1.05);border-color:rgba(255,255,255,.4)}}
+@media (prefers-reduced-motion:reduce){.sm-go__ring{transition:none}.sm-go__ring::before,.sm-go__hint{animation:none}}
+/* small tablets: the header line is too short to share, so the pair drops just under it */
+@media (min-width:641px) and (max-width:960px){body.page-home .sm-go{top:calc(100% + 8px);transform:none}}
+/* phones: where PHOTOGRAPHY was, two small circles on the header line, the word (mood, motion) hanging under each */
 @media (max-width:640px){
-  .ph-label{font-size:8px;letter-spacing:.12em}
-  .tr{--w:40vw;--fw:calc((var(--w) - 5px) / 2)}
-  .tr .track,.tr:hover .track{gap:5px;padding:0}
-  .tr .track img{width:var(--fw);height:auto;aspect-ratio:4/5;object-fit:cover}
-  .tr .track img:hover{transform:none;box-shadow:none}
-  .tr .win,.tr:hover .win{height:calc(var(--fw) * 1.25)}
+  body.page-home .sm-go{right:16px;gap:10px}
+  .sm-go__ring{width:28px;height:28px}
+  .sm-go__ring svg{width:14px;height:14px}
+  .sm-go__pre{display:none}
+  /* centred with translate, not transform, so the float animation (a transform) still runs; the box is only as wide as the word */
+  .sm-go__hint{position:absolute;top:calc(100% + 5px);left:50%;translate:-50% 0;font-size:8px}
 }
-@media (max-width:400px){.ph-label{font-size:7px;letter-spacing:.08em}}
-@property --fw{syntax:'<length>';inherits:true;initial-value:62px}
-.tr{width:auto;--fw:var(--lbl-w,62px);transition:--fw .55s cubic-bezier(.2,.8,.2,1)}
-.tr .win,.tr:hover .win{width:var(--fw);height:calc(var(--fw) * 1.25);transition:none}
-.tr .track,.tr:hover .track{gap:5px;padding:0}
-.tr .track img{width:var(--fw);height:auto;aspect-ratio:4/5;object-fit:cover}
-.tr .track img:hover{transform:none;box-shadow:none}
-@media (min-width:641px){.tr{--fw:calc(var(--lbl-w,90px) * 1.4)}}
-@media (hover:hover) and (min-width:641px){.tr:hover{--fw:calc(var(--lbl-w,90px) * 2.25)}}
-.tr-wrap{position:absolute;top:var(--strip-top,64px);right:var(--strip-right,28px);z-index:3;display:flex;align-items:flex-start;gap:8px}
-body:not(.page-home) .tr-wrap{display:none}
-.tr-wrap .tr{position:relative;top:auto;right:auto;left:auto;transition:--fw .55s cubic-bezier(.2,.8,.2,1),opacity .4s ease,transform .4s ease,visibility 0s}
-.ph-toggle{display:grid;place-items:center;flex-shrink:0;margin-left:auto;padding:2px;background:none;border:0;color:var(--fg);opacity:.7;cursor:pointer;transition:opacity .2s}
-.ph-toggle:hover{opacity:1}
-.ph-toggle + .ph-label{margin-left:-7px}
-.ph-toggle .eye-off,.ph-toggle.off .eye-on{display:none}
-.ph-toggle.off .eye-off{display:block}
-body:not(.page-home) .ph-toggle{display:none}
-.ph-label{font-size:13px}
-@media (min-width:641px){.ph-toggle svg{width:17px;height:17px}}
-.tr-wrap.off .tr{opacity:0;visibility:hidden;transform:translateY(-6px);pointer-events:none;transition:--fw .55s,opacity .4s ease,transform .4s ease,visibility 0s .4s}
-@media (max-width:640px){.ph-label{font-size:9px}.ph-toggle svg{width:12px;height:12px}.ph-toggle + .ph-label{margin-left:5px}}
-@media (max-width:520px){.ph-label{font-size:8px;letter-spacing:.08em}}
-@media (max-width:370px){.ph-toggle{margin-right:-2px}}
-@media (max-width:400px){.ph-label{font-size:7.5px;letter-spacing:.04em}.ph-toggle svg{width:11px;height:11px}.ph-toggle{padding:1px}.ph-toggle + .ph-label{margin-left:3px}}
-@media (max-width:370px){.ph-label{font-size:7px;letter-spacing:.02em}}
-/* laptop: give the word and the photo some air from the corner */
-@media (min-width:641px){.ph-label{margin-right:clamp(20px,3.5vw,56px)}.tr-wrap{margin-top:6px}.tr{--fw:var(--lbl-w,120px)}.tr .win{-webkit-mask:none;mask:none}}
-@media (hover:hover) and (min-width:641px){.tr-wrap .tr:hover{--fw:calc(var(--lbl-w,120px) * 1.8)}}
-</style>
-<style>
-/* FR-F2b 35mm slide mounts with a bigger window, no number, no red dot. Every photo sits in its own cream card mount with a rounded window; the mounts
-   are drawn on the track, so the whole row of slides drifts together. One mount = the full window width. */
-.tr .track,.tr:hover .track{gap:0;padding:0;background-color:transparent;
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 104 125' preserveAspectRatio='none'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23f1ebde'/%3E%3Cstop offset='.55' stop-color='%23e9e2d2'/%3E%3Cstop offset='1' stop-color='%23ddd5c3'/%3E%3C/linearGradient%3E%3Cfilter id='n' x='0' y='0' width='100%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' seed='4'/%3E%3CfeColorMatrix values='0 0 0 0 .35 0 0 0 0 .3 0 0 0 0 .22 0 0 0 .55 -.2'/%3E%3CfeComposite in2='SourceGraphic' operator='in'/%3E%3C/filter%3E%3C/defs%3E%3Crect x='.35' y='.35' width='99.3' height='124.3' rx='2.6' fill='url(%23g)' stroke='%237a6d58' stroke-opacity='.35' stroke-width='.5'/%3E%3Crect x='.35' y='.35' width='99.3' height='124.3' rx='2.6' filter='url(%23n)' opacity='.55'/%3E%3Crect x='3.70' y='3.20' width='92.60' height='118.60' rx='3.40' fill='none' stroke='%23fff' stroke-opacity='.55' stroke-width='.55'/%3E%3Crect x='4.50' y='4.00' width='91.00' height='117.00' rx='2.70' fill='none' stroke='%234a3f30' stroke-opacity='.42' stroke-width='.6'/%3E%3C/svg%3E");
-  background-size:calc(var(--fw) * 1.04) calc(var(--fw) * 1.25);background-repeat:repeat-x;background-position:0 0}
-.tr .track img{box-sizing:border-box;flex:none;width:calc(var(--fw) * 1.04);height:calc(var(--fw) * 1.25);aspect-ratio:auto;background:none;
-  padding:calc(var(--fw) * 0.043) calc(var(--fw) * 0.088) calc(var(--fw) * 0.043) calc(var(--fw) * 0.048);
-  -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 90.4 116.4' preserveAspectRatio='none'%3E%3Crect width='90.4' height='116.4' rx='2.4'/%3E%3C/svg%3E") 0 0/100% 100% no-repeat content-box;
-  mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 90.4 116.4' preserveAspectRatio='none'%3E%3Crect width='90.4' height='116.4' rx='2.4'/%3E%3C/svg%3E") 0 0/100% 100% no-repeat content-box}
-@media (max-width:640px){
-  .tr .track,.tr:hover .track{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 104 125' preserveAspectRatio='none'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23f1ebde'/%3E%3Cstop offset='.55' stop-color='%23e9e2d2'/%3E%3Cstop offset='1' stop-color='%23ddd5c3'/%3E%3C/linearGradient%3E%3Cfilter id='n' x='0' y='0' width='100%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' seed='4'/%3E%3CfeColorMatrix values='0 0 0 0 .35 0 0 0 0 .3 0 0 0 0 .22 0 0 0 .55 -.2'/%3E%3CfeComposite in2='SourceGraphic' operator='in'/%3E%3C/filter%3E%3C/defs%3E%3Crect x='.35' y='.35' width='99.3' height='124.3' rx='2.6' fill='url(%23g)' stroke='%237a6d58' stroke-opacity='.35' stroke-width='.5'/%3E%3Crect x='.35' y='.35' width='99.3' height='124.3' rx='2.6' filter='url(%23n)' opacity='.55'/%3E%3Crect x='8.90' y='8.40' width='82.20' height='108.20' rx='3.40' fill='none' stroke='%23fff' stroke-opacity='.55' stroke-width='.55'/%3E%3Crect x='9.70' y='9.20' width='80.60' height='106.60' rx='2.70' fill='none' stroke='%234a3f30' stroke-opacity='.42' stroke-width='.6'/%3E%3C/svg%3E");background-size:calc(var(--fw) * 1.04) calc(var(--fw) * 1.25)}
-  .tr .track img{padding:calc(var(--fw) * 0.095) calc(var(--fw) * 0.14) calc(var(--fw) * 0.095) calc(var(--fw) * 0.1);
-    -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 106' preserveAspectRatio='none'%3E%3Crect width='80' height='106' rx='2.8'/%3E%3C/svg%3E") 0 0/100% 100% no-repeat content-box;
-    mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 106' preserveAspectRatio='none'%3E%3Crect width='80' height='106' rx='2.8'/%3E%3C/svg%3E") 0 0/100% 100% no-repeat content-box}
-}
-</style>
-<style data-round="11">
-/* phone: the word alone, pushed to the right of the header line */
-@media (max-width:640px){.tr-wrap,.ph-toggle{display:none!important}.ph-toggle + .ph-label,.ph-label{margin-left:auto!important}}
-/* laptop: always the big slide, no hover growth; sized from the screen height so it scales with the window */
-@media (min-width:641px){.tr-wrap .tr,.tr-wrap .tr:hover{--fw:calc(34vh * .8)}}
-</style>
-<style data-round="13">
-/* the slide hangs halfway down the right side, right edge on the end of PHOTOGRAPHY; it does not grow on hover */
-@media (min-width:641px){.tr-wrap{top:50%!important;transform:translateY(-50%);margin-top:0!important}}
-</style>
-<style data-round="15">
-/* 6. Around the photo, PHOTOGRAPHY · MOOD running round the frame, the ring opens the page */
-.ph-side{display:none}
-@media (min-width:641px){
-  .header .ph-toggle,.header .ph-label{visibility:hidden;pointer-events:none}
-  .ph-side{display:flex;align-items:center;gap:12px}
-  .ph-side .ph-toggle{margin:0;padding:0}
-  .ph-vlabel{font-family:'JetBrains Mono',ui-monospace,Menlo,monospace;font-size:13px;letter-spacing:.16em;text-transform:uppercase;white-space:nowrap;color:var(--fg);opacity:.85;text-decoration:none;transition:opacity .2s}
-  .ph-vlabel:hover{opacity:1}
-
-  .tr-wrap{overflow:visible}
-  .ph-side{position:absolute;left:-44px;right:auto;top:-44px}
-  .ph-vlabel{display:none}
-  .ph-ring{position:absolute;left:0;top:0;overflow:visible;pointer-events:none}
-  .ph-ring text{font-family:'JetBrains Mono',ui-monospace,Menlo,monospace;font-size:10px;letter-spacing:.22em;text-transform:uppercase;fill:var(--fg);opacity:.8;transition:opacity .2s}
-  .ph-ring a{pointer-events:auto;cursor:pointer}
-  .ph-ring-hit{fill:none;stroke:transparent;stroke-width:22px;pointer-events:stroke}
-  .ph-ring a:hover text{opacity:1}
-  .ph-ring{transition:opacity .4s ease,visibility 0s}
-  .tr-wrap.off .ph-ring{opacity:0;visibility:hidden;transition:opacity .4s ease,visibility 0s .4s}
-  .tr-wrap.off .ph-ring a{pointer-events:none}
-}
+@media (max-width:520px){body.page-home .sm-go{right:13px}}
+@media (max-width:400px){body.page-home .sm-go{right:11px;gap:8px}}
+/* narrow phones (360): a touch smaller so the pair keeps clear of the sound button */
+@media (max-width:370px){body.page-home .sm-go{gap:6px}.sm-go__ring{width:26px;height:26px}.sm-go__ring svg{width:13px;height:13px}}
 </style>
 </head>
   <body>
@@ -314,8 +232,10 @@ body:not(.page-home) .ph-toggle{display:none}
             <line x1="17" y1="9" x2="23" y2="15"/>
           </svg>
         </button>
-        <button class="ph-toggle" type="button" aria-pressed="true" aria-label="Hide the photos" title="Hide the photos"><svg class="eye-on" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.6-6.5 10-6.5S22 12 22 12s-3.6 6.5-10 6.5S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg><svg class="eye-off" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.6-6.5 10-6.5S22 12 22 12s-3.6 6.5-10 6.5S2 12 2 12z"/><circle cx="12" cy="12" r="3"/><line x1="3.5" y1="20.5" x2="20.5" y2="3.5"/></svg></button>
-        <a class="ph-label" href="/photography/">Photography</a>
+        <nav class="sm-go" aria-label="Mood and motion">
+          <a class="sm-go__link sm-go__link--mood" href="/photography/" aria-label="Mood, photography"><span class="sm-go__hint" aria-hidden="true"><span class="sm-go__pre">tap to explore </span>mood</span><span class="sm-go__ring" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6.7 3.8H17.3Q18.6 3.8 18.6 5.1V18.9Q18.6 20.2 17.3 20.2H6.7Q5.4 20.2 5.4 18.9V5.1Q5.4 3.8 6.7 3.8ZM5.4 16.2L9.7 11.9L12.8 14.8L15.2 12.6L18.6 15.9"/></svg></span></a>
+          <a class="sm-go__link sm-go__link--motion" href="/motion/" aria-label="Motion, videos"><span class="sm-go__hint" aria-hidden="true"><span class="sm-go__pre">tap to explore </span>motion</span><span class="sm-go__ring" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4.7 5.6H19.3Q20.6 5.6 20.6 6.9V17.1Q20.6 18.4 19.3 18.4H4.7Q3.4 18.4 3.4 17.1V6.9Q3.4 5.6 4.7 5.6ZM9.9 8.7L15.4 12L9.9 15.3Z"/></svg></span></a>
+        </nav>
       </header>
 
       <!-- home -->
@@ -349,12 +269,6 @@ body:not(.page-home) .ph-toggle{display:none}
           <path class="scene-map__route scene-map__route--progress" pathLength="1" fill="none" />
         </svg>
       </nav>
-
-      <div class="tr-wrap">
-        <a class="mood-hub strip tr" href="/photography/" aria-label="Photography"><span class="win"><span class="track"></span></span></a>
-        <svg class="ph-ring" aria-hidden="true"><defs><path id="phRingPath"/></defs><a href="/photography/" tabindex="-1"><use href="#phRingPath" class="ph-ring-hit"/><text><textPath href="#phRingPath"></textPath></text></a></svg>
-        <div class="ph-side"><button class="ph-toggle ph-toggle--side" type="button" aria-pressed="true" aria-label="Hide the photos" title="Hide the photos"><svg class="eye-on" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.6-6.5 10-6.5S22 12 22 12s-3.6 6.5-10 6.5S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg><svg class="eye-off" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.6-6.5 10-6.5S22 12 22 12s-3.6 6.5-10 6.5S2 12 2 12z"/><circle cx="12" cy="12" r="3"/><line x1="3.5" y1="20.5" x2="20.5" y2="3.5"/></svg></button><a class="ph-vlabel" href="/photography/">Photography</a></div>
-      </div>
 
       <!-- toggle: show / hide the scene map -->
       <div class="map-control">
@@ -514,153 +428,6 @@ if (canvas && !window.__loaderDone) {
     renderer.setSize(W, H, false); composer.setSize(W, H);
   });
 }
-</script>
-<script>
-// Mood under the wordmark: line it up with STUDIOMORPHIK, then bring in random Mood photos.
-(function(){
-  var ALL = ["/photography/img/thumb/53-restaurant-symmetry.webp", "/photography/img/thumb/220-briefcase-cream-glove-2.webp", "/photography/img/thumb/307-tunnel-2a1d44bf.webp", "/photography/img/thumb/311-tunnel-d6a95d02.webp", "/photography/img/thumb/085-jewelry-ear-sun-3.webp", "/photography/img/thumb/122-infinity-pool-valley-2.webp", "/photography/img/thumb/41-fashion-saltflat-hat-3.webp", "/photography/img/thumb/073-menswear-white-gallery-2.webp", "/photography/img/thumb/314-tunnel-66713dec.webp", "/photography/img/thumb/060-fashion-diving-board.webp", "/photography/img/thumb/082-surreal-balloons-stairwell-2.webp", "/photography/img/thumb/115-fashion-red-coat-plaza-3.webp", "/photography/img/thumb/33-craft-potter.webp", "/photography/img/thumb/228-salt-pepper-palm-shadow.webp", "/photography/img/thumb/14-fashion-grey-room.webp", "/photography/img/thumb/02-fashion-pink-courtyard-2.webp", "/photography/img/thumb/23-hotel-corridor.webp", "/photography/img/thumb/101-tech-speaker-blocks-2.webp", "/photography/img/thumb/117-car-pink-villa.webp", "/photography/img/thumb/216-watering-can.webp", "/photography/img/thumb/134-swimmer-dive-2.webp", "/photography/img/thumb/094-bridal-garden-veil.webp", "/photography/img/thumb/125-fashion-desert-line.webp", "/photography/img/thumb/05-beauty-light-beam.webp", "/photography/img/thumb/31-surreal-mirror-desert-2.webp", "/photography/img/thumb/59-fisherman-dawn-2.webp", "/photography/img/thumb/21-jewelry-hand-rings-2.webp", "/photography/img/thumb/120-beach-umbrellas-above-2.webp", "/photography/img/thumb/129-dinner-olive-grove.webp", "/photography/img/thumb/093-fashion-orange-twins-3.webp", "/photography/img/thumb/107-chef-plating.webp", "/photography/img/thumb/01-fashion-pink-courtyard.webp", "/photography/img/thumb/086-jewelry-ear-sun-4.webp", "/photography/img/thumb/322-tunnel-bc11ca5b.webp", "/photography/img/thumb/09-portrait-old-man-beirut-2.webp", "/photography/img/thumb/213-ankle-boots.webp", "/photography/img/thumb/102-cocktails-pastel-bar.webp", "/photography/img/thumb/16-fashion-grey-room-3.webp", "/photography/img/thumb/130-dinner-olive-grove-2.webp", "/photography/img/thumb/312-tunnel-e9a9ca48.webp", "/photography/img/thumb/45-villa-pool-leisure.webp", "/photography/img/thumb/316-tunnel-a6ce271d.webp", "/photography/img/thumb/29-fashion-neon-walk-2.webp", "/photography/img/thumb/328-tunnel-c5c088fa.webp", "/photography/img/thumb/08-portrait-old-man-beirut.webp", "/photography/img/thumb/308-tunnel-24705adb.webp", "/photography/img/thumb/42-fashion-saltflat-hat-4.webp", "/photography/img/thumb/088-wine-olive-terrace-2.webp", "/photography/img/thumb/20-jewelry-hand-rings.webp", "/photography/img/thumb/080-lipstick-half-shadow.webp", "/photography/img/thumb/225-sage-apron-stool-2.webp", "/photography/img/thumb/19-drink-negroni-bar.webp", "/photography/img/thumb/201-handbag-pool-edge.webp", "/photography/img/thumb/306-tunnel-c6084b38.webp", "/photography/img/thumb/078-hotel-breakfast-bed.webp", "/photography/img/thumb/210-stool-shadow-2.webp", "/photography/img/thumb/099-breakfast-balcony.webp", "/photography/img/thumb/13-fashion-pool-deck-4.webp", "/photography/img/thumb/54-restaurant-symmetry-2.webp", "/photography/img/thumb/12-fashion-pool-deck-3.webp", "/photography/img/thumb/067-handbag-yellow-wall-2.webp", "/photography/img/thumb/04-fashion-pink-courtyard-4.webp", "/photography/img/thumb/226-sage-apron-stool-3.webp", "/photography/img/thumb/56-restaurant-symmetry-4.webp", "/photography/img/thumb/313-tunnel-5753e394.webp", "/photography/img/thumb/097-pool-aerial-ring-3.webp", "/photography/img/thumb/302-tunnel-095f37e1.webp", "/photography/img/thumb/03-fashion-pink-courtyard-3.webp", "/photography/img/thumb/132-modernist-cliff-house-2.webp", "/photography/img/thumb/100-tech-speaker-blocks.webp", "/photography/img/thumb/24-hotel-corridor-2.webp", "/photography/img/thumb/215-teapot-set.webp", "/photography/img/thumb/091-fashion-orange-twins.webp", "/photography/img/thumb/061-fashion-diving-board-2.webp", "/photography/img/thumb/319-tunnel-3e02afa2.webp", "/photography/img/thumb/111-icecream-pink-wall-2.webp", "/photography/img/thumb/326-tunnel-9b9a27ea.webp", "/photography/img/thumb/35-car-piazza-2.webp", "/photography/img/thumb/062-fashion-diving-board-3.webp", "/photography/img/thumb/300-tunnel-57e189b1.webp", "/photography/img/thumb/301-tunnel-9af32640.webp", "/photography/img/thumb/22-jewelry-hand-rings-3.webp", "/photography/img/thumb/126-fashion-desert-line-2.webp", "/photography/img/thumb/096-pool-aerial-ring-2.webp", "/photography/img/thumb/203-vase-branch.webp", "/photography/img/thumb/303-tunnel-c97df507.webp", "/photography/img/thumb/37-food-mezze-overhead.webp", "/photography/img/thumb/121-infinity-pool-valley.webp", "/photography/img/thumb/44-drink-arak-balcony.webp", "/photography/img/thumb/135-car-coastal-road.webp", "/photography/img/thumb/06-beauty-light-beam-2.webp", "/photography/img/thumb/209-stool-shadow.webp", "/photography/img/thumb/113-fashion-red-coat-plaza.webp", "/photography/img/thumb/072-menswear-white-gallery.webp", "/photography/img/thumb/217-yoga-mat-blocks.webp", "/photography/img/thumb/074-menswear-white-gallery-3.webp", "/photography/img/thumb/104-bicycle-white-alley-2.webp", "/photography/img/thumb/116-fashion-red-coat-plaza-4.webp", "/photography/img/thumb/48-silk-pyramids-2.webp", "/photography/img/thumb/46-villa-pool-leisure-2.webp", "/photography/img/thumb/127-fashion-desert-line-3.webp", "/photography/img/thumb/321-tunnel-7eabfb16.webp", "/photography/img/thumb/335-tunnel-bf895792.webp", "/photography/img/thumb/51-diner-night-counter-2.webp", "/photography/img/thumb/095-pool-aerial-ring.webp", "/photography/img/thumb/114-fashion-red-coat-plaza-2.webp", "/photography/img/thumb/118-car-pink-villa-2.webp", "/photography/img/thumb/28-fashion-neon-walk.webp", "/photography/img/thumb/123-infinity-pool-valley-3.webp", "/photography/img/thumb/064-sneakers-pink-stairs-2.webp", "/photography/img/thumb/25-hotel-corridor-3.webp", "/photography/img/thumb/304-tunnel-b6c711f0.webp", "/photography/img/thumb/18-food-bread-flour-2.webp", "/photography/img/thumb/40-fashion-saltflat-hat-2.webp", "/photography/img/thumb/331-tunnel-b24b0043.webp", "/photography/img/thumb/34-car-piazza.webp", "/photography/img/thumb/58-fisherman-dawn.webp", "/photography/img/thumb/318-tunnel-5c257047.webp", "/photography/img/thumb/11-fashion-pool-deck-2.webp", "/photography/img/thumb/30-surreal-mirror-desert.webp", "/photography/img/thumb/39-fashion-saltflat-hat.webp", "/photography/img/thumb/110-icecream-pink-wall.webp", "/photography/img/thumb/092-fashion-orange-twins-2.webp", "/photography/img/thumb/211-speaker-sand-dune.webp", "/photography/img/thumb/47-silk-pyramids.webp", "/photography/img/thumb/119-beach-umbrellas-above.webp", "/photography/img/thumb/15-fashion-grey-room-2.webp", "/photography/img/thumb/309-tunnel-26b0d36f.webp", "/photography/img/thumb/103-bicycle-white-alley.webp", "/photography/img/thumb/334-tunnel-9d986719.webp", "/photography/img/thumb/07-beauty-light-beam-3.webp", "/photography/img/thumb/52-saltflat-mirror.webp", "/photography/img/thumb/208-bread-basket.webp", "/photography/img/thumb/10-fashion-pool-deck.webp", "/photography/img/thumb/079-hotel-breakfast-bed-2.webp", "/photography/img/thumb/098-pool-aerial-ring-4.webp", "/photography/img/thumb/128-fashion-desert-line-4.webp", "/photography/img/thumb/083-jewelry-ear-sun.webp", "/photography/img/thumb/320-tunnel-a2fab1c4.webp", "/photography/img/thumb/089-wine-olive-terrace-3.webp", "/photography/img/thumb/43-street-cairo-golden.webp", "/photography/img/thumb/124-infinity-pool-valley-4.webp", "/photography/img/thumb/087-wine-olive-terrace.webp", "/photography/img/thumb/325-tunnel-ff1139cb.webp", "/photography/img/thumb/065-sneakers-pink-stairs-3.webp", "/photography/img/thumb/108-surreal-desert-feast.webp", "/photography/img/thumb/55-restaurant-symmetry-3.webp", "/photography/img/thumb/57-horse-desert-dawn.webp", "/photography/img/thumb/330-tunnel-f86d8923.webp", "/photography/img/thumb/36-bride-limewash.webp", "/photography/img/thumb/50-diner-night-counter.webp", "/photography/img/thumb/109-surreal-desert-feast-2.webp", "/photography/img/thumb/084-jewelry-ear-sun-2.webp", "/photography/img/thumb/327-tunnel-cf55ef2e.webp", "/photography/img/thumb/069-espresso-sea-ledge.webp", "/photography/img/thumb/222-thermos-hand-shadow.webp", "/photography/img/thumb/323-tunnel-360c7bd4.webp", "/photography/img/thumb/076-eyewear-sea-reflection-2.webp", "/photography/img/thumb/112-icecream-pink-wall-3.webp", "/photography/img/thumb/070-espresso-sea-ledge-2.webp", "/photography/img/thumb/221-backpack-white-glove.webp", "/photography/img/thumb/227-sage-apron-stool-4.webp", "/photography/img/thumb/075-eyewear-sea-reflection.webp", "/photography/img/thumb/063-sneakers-pink-stairs.webp", "/photography/img/thumb/105-tennis-resort-above.webp", "/photography/img/thumb/310-tunnel-0dcc41e2.webp", "/photography/img/thumb/068-handbag-yellow-wall-3.webp", "/photography/img/thumb/332-tunnel-dd927a13.webp", "/photography/img/thumb/202-suitcase-arch.webp", "/photography/img/thumb/077-eyewear-sea-reflection-3.webp", "/photography/img/thumb/32-surreal-mirror-desert-3.webp", "/photography/img/thumb/071-espresso-sea-ledge-3.webp", "/photography/img/thumb/066-handbag-yellow-wall.webp", "/photography/img/thumb/49-fruit-window-sill.webp", "/photography/img/thumb/214-bucket-bag.webp", "/photography/img/thumb/090-wine-olive-terrace-4.webp", "/photography/img/thumb/131-modernist-cliff-house.webp"], hub = document.querySelector('.mood-hub'), brand = document.querySelector('.brand');
-  function place(){ hub.style.setProperty('--hub-left', brand.offsetLeft + 'px'); hub.style.setProperty('--hub-top', (brand.offsetTop + brand.offsetHeight) + 'px'); }
-  place(); addEventListener('resize', place);
-  window.moodPick = function(n){ var a = ALL.slice(); for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)), t = a[i]; a[i] = a[j]; a[j] = t; } return a.slice(0, n); };
-  window.moodLoad = function(srcs){ return Promise.all(srcs.map(function(s){ return new Promise(function(ok){ var im = new Image(); im.onload = function(){ ok(im); }; im.onerror = function(){ ok(null); }; im.src = s; }); })).then(function(a){ return a.filter(Boolean); }); };
-  // Photos joined into one strip that slides sideways through the letters.
-  window.moodStrip = function(el, n, speed){
-    el.classList.add('wait'); var done = function(){ el.classList.remove('wait'); }; setTimeout(done, 3000);
-    moodLoad(moodPick(n)).then(function(imgs){
-      if (!imgs.length) return done();
-      var S = 300, ws = imgs.map(function(im){ return Math.round(im.naturalWidth * S / im.naturalHeight); }), W = ws.reduce(function(a, b){ return a + b; }, 0);
-      var c = document.createElement('canvas'), g, x = 0; c.width = W; c.height = S; g = c.getContext('2d');
-      imgs.forEach(function(im, k){ g.drawImage(im, x, 0, ws[k], S); x += ws[k]; });
-      g.globalCompositeOperation = 'screen'; g.fillStyle = 'rgb(40,38,34)'; g.fillRect(0, 0, W, S);
-      el.style.backgroundImage = 'url(' + c.toDataURL('image/jpeg', 0.8) + ')'; done();
-      if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-      var anim; function run(){ if (anim) anim.cancel(); var d = W * el.clientHeight / S; anim = el.animate([{ backgroundPosition: '0px 0px' }, { backgroundPosition: (-d) + 'px 0px' }], { duration: d / speed * 1000, iterations: Infinity }); }
-      run(); addEventListener('resize', run);
-    });
-  };
-})();
-</script><script>
-// The strip: as wide as the wordmark when it sits under it, its own width elsewhere; each row doubled so it loops without a seam.
-(function(){
-  var hub = document.querySelector('.strip'), brand = document.querySelector('.brand');
-  function size(){ if (hub.hasAttribute('data-brand-width')) hub.style.setProperty('--w', brand.offsetWidth + 'px'); }
-  size(); addEventListener('resize', size);
-  document.querySelectorAll('.strip .track').forEach(function(tr){
-    var one = moodPick(14).map(function(s){ return '<img src="' + s + '" alt="">'; }).join('');
-    tr.innerHTML = one + one;
-  });
-})();
-</script><script>
-// A click on one photo opens the Mood page with that photo first; a click on the words opens the page from the top.
-(function(){
-  var hub = document.querySelector('.strip');
-  hub.addEventListener('click', function(e){
-    var hit = document.elementFromPoint(e.clientX, e.clientY), img = hit && hit.closest('.strip img'); if (!img) return;
-    e.preventDefault();
-    location.href = '/photography/?photo=' + encodeURIComponent(img.getAttribute('src').split('/').pop().replace('.webp', ''));
-  });
-})();
-</script><script>
-// The strip drifts by itself, and can also be swiped (phone), dragged or trackpad-swiped (laptop), with a little glide after.
-// A swipe is never taken as a tap, so it never opens a photo by accident.
-(function(){
-  var hub = document.querySelector('.strip'), win = hub.querySelector('.win'), tr = hub.querySelector('.track');
-  tr.style.animation = 'none';
-  tr.querySelectorAll('img').forEach(function(i){ i.draggable = false; });
-  win.style.userSelect = 'none';
-  var calm = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var p = 0, v = 0, down = null, moved = 0, last = performance.now(), lastMove = 0;
-  function vertical(){ return getComputedStyle(tr).flexDirection === 'column'; }
-  function half(){ return vertical() ? tr.scrollHeight / 2 : tr.scrollWidth / 2; }
-  function frame(now){
-    var dt = Math.min((now - last) / 1000, .1); last = now;
-    var h = half() || 1, period = vertical() ? 70 : 60;
-    if (!down) { p += (calm ? 0 : dt / period) + v * dt / h; v *= Math.pow(.05, dt); if (Math.abs(v) < 4) v = 0; }
-    p = ((p % 1) + 1) % 1;
-    tr.style.transform = vertical() ? 'translateY(' + (-p * h) + 'px)' : 'translateX(' + (-p * h) + 'px)';
-    requestAnimationFrame(frame);
-  }
-  requestAnimationFrame(frame);
-  function pos(e){ return vertical() ? e.clientY : e.clientX; }
-  function sync(){ win.style.touchAction = vertical() ? 'pan-x' : 'pan-y'; }
-  sync(); addEventListener('resize', sync);
-  win.addEventListener('pointerdown', function(e){ if (e.pointerType === 'mouse') e.preventDefault(); try { win.setPointerCapture(e.pointerId); } catch (_) {} down = { at: pos(e), p: p, t: performance.now() }; moved = 0; v = 0; lastMove = down.at; });
-  win.addEventListener('pointermove', function(e){
-    if (!down) return;
-    var d = pos(e) - down.at; moved = Math.max(moved, Math.abs(d));
-    var now = performance.now(), step = pos(e) - lastMove, dt = Math.max(now - down.t, 1) / 1000;
-    v = -step / dt; down.t = now; lastMove = pos(e);
-    p = down.p - d / (half() || 1);
-  });
-  function up(){ if (!down) return; down = null; v = Math.max(-2500, Math.min(2500, v)); }
-  win.addEventListener('pointerup', up); win.addEventListener('pointercancel', up);
-  win.addEventListener('wheel', function(e){
-    var d = vertical() ? e.deltaY : e.deltaX;
-    if (Math.abs(d) < 1 || (!vertical() && Math.abs(e.deltaX) < Math.abs(e.deltaY))) return;
-    e.preventDefault(); p += d / (half() || 1);
-  }, { passive: false });
-  hub.addEventListener('click', function(e){ if (moved > 8) { e.preventDefault(); e.stopPropagation(); moved = 0; } }, true);
-})();
-</script><script>
-(function(){
-  var lbl = document.querySelector('.ph-label'), wrap = document.querySelector('.tr-wrap'), hero = document.querySelector('.hero'), btn = document.querySelector('.ph-toggle');
-  function place(){
-    var l = lbl.getBoundingClientRect(), h = hero.getBoundingClientRect(), left = l.left, right = l.right;
-    if (innerWidth > 640) {
-      right -= parseFloat(getComputedStyle(lbl).letterSpacing) || 0;
-      var svg = Array.prototype.filter.call(btn.querySelectorAll('svg'), function(s){ return s.getBoundingClientRect().width > 0; })[0];
-      if (svg) { var r = svg.getBoundingClientRect(); left = r.left + r.width * 2 / 24; }
-    }
-    wrap.style.setProperty('--strip-top', (l.bottom - h.top + 10) + 'px');
-    wrap.style.setProperty('--strip-right', (h.right - right) + 'px');
-    wrap.style.setProperty('--lbl-w', (right - left) + 'px');
-  }
-  place(); addEventListener('resize', place); (document.fonts ? document.fonts.ready : Promise.resolve()).then(place);
-})();
-</script><script>
-// The eye button: hide or show the photos under PHOTOGRAPHY. Shown by default; the choice is kept for next time.
-(function(){
-  // two eyes: the header one (phones) and the one on the slide's edge (laptop); both stay in step
-  var wrap = document.querySelector('.tr-wrap'), btns = document.querySelectorAll('.ph-toggle'), KEY = 'smPhotosHidden';
-  function set(off){
-    wrap.classList.toggle('off', off);
-    btns.forEach(function(btn){
-      btn.classList.toggle('off', off);
-      btn.setAttribute('aria-pressed', off ? 'false' : 'true');
-      btn.title = off ? 'Show the photos' : 'Hide the photos'; btn.setAttribute('aria-label', btn.title);
-    });
-  }
-  try { set(localStorage.getItem(KEY) === '1'); } catch (_) { set(false); }
-  btns.forEach(function(btn){ btn.addEventListener('click', function(){
-    var off = !wrap.classList.contains('off'); set(off);
-    try { localStorage.setItem(KEY, off ? '1' : '0'); } catch (_) {}
-  }); });
-})();
-</script>
-<script>
-// Option 6 (his pick 10-26): PHOTOGRAPHY and MOOD run slowly round the slide's frame; the whole band is a link to the page,
-// and it hides with the photos when the eye is off. It turns clockwise (his call).
-// The ring is sized from the slide on every resize.
-(function(){
-  var wrap = document.querySelector('.tr-wrap'), slide = wrap.querySelector('.tr'), svg = wrap.querySelector('.ph-ring'),
-      path = svg.querySelector('#phRingPath'), tp = svg.querySelector('textPath'), UNIT = 'Photography \u00b7 Mood \u00b7 ', pad = 16, len = 1, word = 1, off = 0, last = performance.now();
-  var ready = false;
-  function build(){
-    // only on laptops, and only once the slide has a size (a narrow or background window at load must not stop it for good)
-    if (innerWidth <= 640 || !slide.offsetWidth) return;
-    var w = slide.offsetWidth + pad * 2, h = slide.offsetHeight + pad * 2, r = 10;
-    svg.setAttribute('width', w); svg.setAttribute('height', h);
-    svg.style.left = (slide.offsetLeft - pad) + 'px'; svg.style.top = (slide.offsetTop - pad) + 'px';
-    path.setAttribute('d', 'M' + r + ',0H' + (w - r) + 'A' + r + ',' + r + ' 0 0 1 ' + w + ',' + r + 'V' + (h - r) + 'A' + r + ',' + r + ' 0 0 1 ' + (w - r) + ',' + h +
-      'H' + r + 'A' + r + ',' + r + ' 0 0 1 0,' + (h - r) + 'V' + r + 'A' + r + ',' + r + ' 0 0 1 ' + r + ',0Z');
-    len = path.getTotalLength(); tp.textContent = UNIT; word = tp.getComputedTextLength() || 160;
-    tp.textContent = new Array(Math.ceil(len / word) + 2).join(UNIT); ready = true;
-  }
-  function tick(now){ if (ready) { off = (off + (now - last) / 1000 * 14) % word; tp.setAttribute('startOffset', off - word); } last = now; requestAnimationFrame(tick); }
-  build(); addEventListener('resize', build); addEventListener('load', build); (document.fonts ? document.fonts.ready : Promise.resolve()).then(build);
-  if (window.ResizeObserver) new ResizeObserver(build).observe(slide);
-  requestAnimationFrame(tick);
-})();
 </script>
 </body>
 </html>
