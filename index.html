@@ -94,16 +94,20 @@ body.page-home .sm-go{display:flex;align-items:center;gap:26px;position:absolute
 @media (prefers-reduced-motion:reduce){.sm-go__ring{transition:none}.sm-go__ring::before,.sm-go__hint{animation:none}}
 /* small tablets: the header line is too short to share, so the pair drops just under it */
 @media (min-width:641px) and (max-width:960px){body.page-home .sm-go{top:calc(100% + 8px);transform:none}}
-/* phones: the header line is full (icons, wordmark, sound), so the pair hangs just under it on the right, one above the
-   other, the words beside each circle */
+.sm-go__short{display:none}
+/* phones: two small circles on the header line where PHOTOGRAPHY was, a short word hanging under each (his call 11-01: photo, video) */
 @media (max-width:640px){
-  body.page-home .sm-go{top:calc(100% + 10px);right:16px;transform:none;flex-direction:column;align-items:flex-end;gap:10px}
-  .sm-go a{gap:9px}
-  .sm-go__ring{width:32px;height:32px}
-  .sm-go__ring svg{width:15px;height:15px}
-  .sm-go__hint{font-size:9.5px}
+  body.page-home .sm-go{right:16px;gap:10px}
+  .sm-go__ring{width:28px;height:28px}
+  .sm-go__ring svg{width:14px;height:14px}
+  .sm-go__long{display:none}.sm-go__short{display:inline}
+  /* centred with translate, not transform, so the float animation (a transform) still runs; the box is only as wide as the word */
+  .sm-go__hint{position:absolute;top:calc(100% + 5px);left:50%;translate:-50% 0;font-size:8px}
 }
-@media (max-width:400px){body.page-home .sm-go{right:12px}}
+@media (max-width:520px){body.page-home .sm-go{right:13px}}
+@media (max-width:400px){body.page-home .sm-go{right:11px;gap:8px}}
+/* narrow phones (360): a touch smaller so the pair keeps clear of the sound button */
+@media (max-width:370px){body.page-home .sm-go{gap:6px}.sm-go__ring{width:26px;height:26px}.sm-go__ring svg{width:13px;height:13px}}
 </style>
 </head>
   <body>
@@ -231,8 +235,8 @@ body.page-home .sm-go{display:flex;align-items:center;gap:26px;position:absolute
           </svg>
         </button>
         <nav class="sm-go" aria-label="Mood and motion">
-          <a class="sm-go__link sm-go__link--mood" href="/photography/" aria-label="Mood, photography"><span class="sm-go__hint" aria-hidden="true">photography.mood</span><span class="sm-go__ring" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6.7 3.8H17.3Q18.6 3.8 18.6 5.1V18.9Q18.6 20.2 17.3 20.2H6.7Q5.4 20.2 5.4 18.9V5.1Q5.4 3.8 6.7 3.8ZM5.4 16.2L9.7 11.9L12.8 14.8L15.2 12.6L18.6 15.9"/></svg></span></a>
-          <a class="sm-go__link sm-go__link--motion" href="/motion/" aria-label="Motion, videos"><span class="sm-go__hint" aria-hidden="true">video.motion</span><span class="sm-go__ring" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4.7 5.6H19.3Q20.6 5.6 20.6 6.9V17.1Q20.6 18.4 19.3 18.4H4.7Q3.4 18.4 3.4 17.1V6.9Q3.4 5.6 4.7 5.6ZM9.9 8.7L15.4 12L9.9 15.3Z"/></svg></span></a>
+          <a class="sm-go__link sm-go__link--mood" href="/photography/" aria-label="Mood, photography"><span class="sm-go__hint" aria-hidden="true"><span class="sm-go__long">photography.mood</span><span class="sm-go__short">photo</span></span><span class="sm-go__ring" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6.7 3.8H17.3Q18.6 3.8 18.6 5.1V18.9Q18.6 20.2 17.3 20.2H6.7Q5.4 20.2 5.4 18.9V5.1Q5.4 3.8 6.7 3.8ZM5.4 16.2L9.7 11.9L12.8 14.8L15.2 12.6L18.6 15.9"/></svg></span></a>
+          <a class="sm-go__link sm-go__link--motion" href="/motion/" aria-label="Motion, videos"><span class="sm-go__hint" aria-hidden="true"><span class="sm-go__long">video.motion</span><span class="sm-go__short">video</span></span><span class="sm-go__ring" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4.7 5.6H19.3Q20.6 5.6 20.6 6.9V17.1Q20.6 18.4 19.3 18.4H4.7Q3.4 18.4 3.4 17.1V6.9Q3.4 5.6 4.7 5.6ZM9.9 8.7L15.4 12L9.9 15.3Z"/></svg></span></a>
         </nav>
       </header>
 
