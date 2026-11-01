@@ -43,7 +43,11 @@ body{background:#000;color:#f2efe9;font-family:'Inter Tight',Arial,sans-serif}
 .big.wait{opacity:0}
 .rights{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;padding:24px clamp(14px,2.4vw,32px) 30px;font-size:10px;letter-spacing:.14em;text-transform:uppercase;opacity:.5}
 
-@media (max-width:480px){.top nav a.ph{display:none}}
+/* phones: all three links show (his call 11-02: Photography / Video between Home and Contact); the menu words get a
+   little smaller and tighter so they fit beside the wordmark, which stays as it is */
+@media (max-width:480px){.top nav{gap:9px;font-size:10px;letter-spacing:.1em}}
+@media (max-width:370px){.top nav{gap:7px;font-size:9px;letter-spacing:.06em}}
+@media (max-width:340px){.top nav{gap:6px;letter-spacing:.02em}}
 </style>
 <meta name="description" content="Photography by STUDIOMORPHIK: products, places and people, shot for brands and campaigns.">
 <link rel="canonical" href="https://studiomorphik.com/photography/">
