@@ -115,6 +115,7 @@ body.page-home .sm-go{display:flex;align-items:center;gap:26px;position:absolute
     <div class="hero">
       <video
         class="hero__media"
+        crossorigin="anonymous"
         autoplay
         muted
         loop
@@ -162,6 +163,16 @@ body.page-home .sm-go{display:flex;align-items:center;gap:26px;position:absolute
           mq.addEventListener('change', setSrc);
         })();
       </script>
+
+      <!-- the Motion reel: a second video over the main one; script.js gives it its file and shows it when the switch is flicked -->
+      <video
+        class="hero__media hero__media--motion"
+        muted
+        playsinline
+        webkit-playsinline
+        preload="none"
+        aria-hidden="true"
+      ></video>
 
       <div class="hero__overlay" aria-hidden="true"></div>
 
@@ -287,6 +298,8 @@ body.page-home .sm-go{display:flex;align-items:center;gap:26px;position:absolute
             </svg>
           </span>
         </button>
+        <!-- the reel switch (main reel / Motion reel); script.js draws it once the Motion reel can play -->
+        <div class="reel-switch-mount"></div>
       </div>
 
       <!-- about -->

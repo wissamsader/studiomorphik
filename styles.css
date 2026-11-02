@@ -1018,3 +1018,193 @@ body.is-map-open .map-toggle__icon {
     animation: none;
   }
 }
+
+/* ---- reel switch: the main reel and the Motion reel ----
+   The Motion reel is a second video laid over the main one (both play the whole time; only one is seen and heard).
+   The switch sits to the right of the scene-map circle, centred on it, and shows only once the Motion reel can play.
+   --p is the cap's place on the rail: 0 = main reel, 1 = Motion reel. */
+
+.hero__media--motion {
+  opacity: 0;
+  transition: opacity 0.55s ease;
+  background: transparent;
+}
+.hero[data-reel="motion"] .hero__media--motion {
+  opacity: 1;
+}
+
+.reel-switch-mount {
+  --ring-r: 34px;          /* half the scene-map circle */
+  --gap: 22px;
+  position: absolute;
+  left: calc(50% + var(--ring-r) + var(--gap));
+  bottom: var(--ring-r);
+  transform: translateY(50%);
+  display: none;
+  align-items: center;
+  gap: 10px;
+}
+.hero[data-switch="on"] .reel-switch-mount {
+  display: flex;
+}
+@media (max-width: 880px) {
+  .reel-switch-mount { --ring-r: 30px; --gap: 16px; gap: 8px; }
+}
+
+/* the name of the reel that is on, beside the rail, in the voice of "tap to explore scenes" */
+.reel-switch__say {
+  font-family: 'Space Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: lowercase;
+  color: rgba(255, 255, 255, 0.85);
+  white-space: nowrap;
+  mix-blend-mode: difference;
+  pointer-events: none;
+}
+@media (max-width: 880px) {
+  .reel-switch__say { font-size: 10px; }
+}
+
+/* the rail: the same glass as the scene-map circle and the header rings */
+.reel-switch {
+  --p: 0;
+  --w: 64px;
+  --spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  position: relative;
+  display: block;
+  flex: none;
+  width: var(--w);
+  height: 28px;
+  margin: 0;
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.28);
+  backdrop-filter: blur(var(--blur));
+  -webkit-backdrop-filter: blur(var(--blur));
+  color: rgba(255, 255, 255, 0.78);
+  cursor: pointer;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  transition: border-color 0.25s ease, background 0.25s ease, transform 0.25s ease;
+}
+.reel-switch.is-on { --p: 1; }
+.reel-switch:active { transform: scale(0.97); }
+.reel-switch.is-dragging { cursor: grabbing; }
+@media (hover: hover) {
+  .reel-switch:hover { border-color: rgba(255, 255, 255, 0.4); color: #fff; }
+}
+@media (max-width: 880px) {
+  .reel-switch { --w: 56px; height: 26px; }
+}
+.rs-rail { position: absolute; inset: 0; }
+.rs-rail::before {
+  content: "";
+  position: absolute;
+  left: 15px;
+  right: 15px;
+  top: 50%;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.22);
+}
+.rs-rail__lit {
+  position: absolute;
+  left: 15px;
+  right: 15px;
+  top: 50%;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 0 6px rgba(255, 255, 255, 0.55);
+  transform-origin: 0 50%;
+  transform: scaleX(var(--p));
+  transition: transform 0.55s var(--spring);
+}
+.rs-rail__tick {
+  position: absolute;
+  top: 50%;
+  width: 1px;
+  height: 7px;
+  margin-top: -3.5px;
+  background: rgba(255, 255, 255, 0.35);
+}
+.rs-rail__tick--a { left: 15px; }
+.rs-rail__tick--b { right: 15px; }
+.rs-rail__cap {
+  position: absolute;
+  left: 15px;
+  top: 50%;
+  width: 8px;
+  height: 16px;
+  margin: -8px 0 0 -4px;
+  border-radius: 2.5px;
+  background: rgba(255, 255, 255, 0.86);
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.4);
+  transform: translateX(calc(var(--p) * (var(--w) - 32px)));
+  transition: transform 0.55s var(--spring), background 0.25s ease, box-shadow 0.3s ease;
+}
+.rs-rail__cap::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 4px;
+  bottom: 4px;
+  width: 1px;
+  margin-left: -0.5px;
+  background: rgba(11, 12, 14, 0.55);
+}
+.reel-switch.is-on .rs-rail__cap {
+  background: #fff;
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.4), 0 0 12px rgba(255, 255, 255, 0.55);
+}
+.reel-switch.is-dragging .rs-rail__cap,
+.reel-switch.is-dragging .rs-rail__lit { transition: none; }
+
+/* before the first flick the cap leans toward the other end now and then, so it reads as something that moves */
+@keyframes rsNudgeX { 0%, 84%, 100% { translate: 0 0; } 89% { translate: 4px 0; } 94% { translate: -1px 0; } }
+.reel-switch-mount:not(.reel-seen) .rs-rail__cap { animation: rsNudgeX 5.5s ease-in-out 2.5s infinite; }
+
+/* ---- scene map with many scenes (the Motion reel): words sit under their dots ---- */
+
+.scene-map--dense .scene-map__label {
+  top: calc(100% + 6px);
+  left: 50%;
+  right: auto;
+  transform: translateX(-50%);
+  transition: color 0.2s ease, opacity 0.25s ease, transform 0.2s ease;
+}
+.scene-map--dense .scene-map__node:focus-visible .scene-map__label {
+  transform: translateX(-50%) scale(1.08);
+}
+@media (hover: hover) {
+  .scene-map--dense .scene-map__node:hover .scene-map__label {
+    transform: translateX(-50%) scale(1.08);
+  }
+}
+/* a bigger touch target round each dot; the word is part of the button too */
+.scene-map--dense .scene-map__node::before {
+  content: "";
+  position: absolute;
+  inset: -10px;
+}
+.scene-map__node.is-quiet .scene-map__label { opacity: 0; }
+.scene-map__node.is-quiet.is-active .scene-map__label,
+.scene-map__node.is-quiet:focus-visible .scene-map__label { opacity: 1; }
+@media (hover: hover) {
+  .scene-map__node.is-quiet:hover .scene-map__label { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero__media--motion,
+  .rs-rail__cap,
+  .rs-rail__lit { transition: none; }
+  .reel-switch-mount .rs-rail__cap { animation: none; }
+}
+
+/* the first flick, while the Motion reel gets ready (the main reel stays on until then): the cap breathes */
+@keyframes rsLoading { 0%, 100% { opacity: 1; } 50% { opacity: 0.35; } }
+.reel-switch-mount.is-loading .rs-rail__cap { animation: rsLoading 0.9s ease-in-out infinite; }
+@media (prefers-reduced-motion: reduce) {
+  .reel-switch-mount.is-loading .rs-rail__cap { animation: none; opacity: 0.5; }
+}

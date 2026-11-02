@@ -1,0 +1,326 @@
+{
+ "desktop": [
+  {
+   "until": 4.1,
+   "label": "Altitude"
+  },
+  {
+   "until": 8.0,
+   "label": "Unison"
+  },
+  {
+   "until": 19.3,
+   "label": "Geometry"
+  },
+  {
+   "until": 22.2,
+   "label": "Artifact"
+  },
+  {
+   "until": 25.2,
+   "label": "Spectrum"
+  },
+  {
+   "until": 27.8,
+   "label": "Harvest"
+  },
+  {
+   "until": 31.1,
+   "label": "Ascent"
+  },
+  {
+   "until": 34.0,
+   "label": "Zest"
+  },
+  {
+   "until": 37.0,
+   "label": "Voyage"
+  },
+  {
+   "until": 40.0,
+   "label": "Meltdown"
+  },
+  {
+   "until": 43.0,
+   "label": "Serenity"
+  },
+  {
+   "until": 45.9,
+   "label": "Rupture"
+  },
+  {
+   "until": 48.9,
+   "label": "Grandeur"
+  },
+  {
+   "until": 50.0,
+   "label": "Bloom"
+  },
+  {
+   "until": 57.8,
+   "label": "Masquerade"
+  },
+  {
+   "until": 60.8,
+   "label": "Crimson"
+  },
+  {
+   "until": 66.7,
+   "label": "Pigment"
+  },
+  {
+   "until": 69.6,
+   "label": "Deluge"
+  },
+  {
+   "until": 78.9,
+   "label": "Candor"
+  },
+  {
+   "until": 81.9,
+   "label": "Vacancy"
+  },
+  {
+   "until": 87.8,
+   "label": "Tide"
+  },
+  {
+   "until": 92.2,
+   "label": "Levitation"
+  },
+  {
+   "until": 96.3,
+   "label": "Radiance"
+  },
+  {
+   "until": 98.2,
+   "label": "Luminance"
+  },
+  {
+   "until": 104.0,
+   "label": "Orbit"
+  },
+  {
+   "until": 105.1,
+   "label": "Freefall"
+  },
+  {
+   "until": 108.0,
+   "label": "Reverie"
+  },
+  {
+   "until": 109.2,
+   "label": "Velocity"
+  },
+  {
+   "until": 112.9,
+   "label": "Spectacle"
+  },
+  {
+   "until": 114.0,
+   "label": "Rhythm"
+  },
+  {
+   "until": 115.8,
+   "label": "Undertow"
+  },
+  {
+   "until": 118.0,
+   "label": "Mercury"
+  },
+  {
+   "until": 127.3,
+   "label": "Oasis"
+  },
+  {
+   "until": 129.9,
+   "label": "Escape"
+  },
+  {
+   "until": 135.1,
+   "label": "Meridian"
+  },
+  {
+   "until": 136.6,
+   "label": "Vapor"
+  },
+  {
+   "until": 142.1,
+   "label": "Canopy"
+  },
+  {
+   "until": 145.5,
+   "label": "Symmetry"
+  },
+  {
+   "until": 148.4,
+   "label": "Botanica"
+  },
+  {
+   "until": 151.6,
+   "label": "Horizon"
+  }
+ ],
+ "mobile": [
+  {
+   "until": 10.4,
+   "label": "Altitude"
+  },
+  {
+   "until": 19.2,
+   "label": "Unison"
+  },
+  {
+   "until": 22.2,
+   "label": "Geometry"
+  },
+  {
+   "until": 30.0,
+   "label": "Artifact"
+  },
+  {
+   "until": 31.1,
+   "label": "Spectrum"
+  },
+  {
+   "until": 37.0,
+   "label": "Harvest"
+  },
+  {
+   "until": 38.9,
+   "label": "Ascent"
+  },
+  {
+   "until": 44.8,
+   "label": "Zest"
+  },
+  {
+   "until": 45.9,
+   "label": "Voyage"
+  },
+  {
+   "until": 50.0,
+   "label": "Meltdown"
+  },
+  {
+   "until": 51.8,
+   "label": "Serenity"
+  },
+  {
+   "until": 57.8,
+   "label": "Rupture"
+  },
+  {
+   "until": 59.2,
+   "label": "Grandeur"
+  },
+  {
+   "until": 64.1,
+   "label": "Bloom"
+  },
+  {
+   "until": 66.6,
+   "label": "Masquerade"
+  },
+  {
+   "until": 71.5,
+   "label": "Crimson"
+  },
+  {
+   "until": 73.7,
+   "label": "Pigment"
+  },
+  {
+   "until": 78.9,
+   "label": "Deluge"
+  },
+  {
+   "until": 81.8,
+   "label": "Candor"
+  },
+  {
+   "until": 87.8,
+   "label": "Vacancy"
+  },
+  {
+   "until": 90.7,
+   "label": "Tide"
+  },
+  {
+   "until": 104.0,
+   "label": "Levitation"
+  },
+  {
+   "until": 105.0,
+   "label": "Radiance"
+  },
+  {
+   "until": 108.0,
+   "label": "Luminance"
+  },
+  {
+   "until": 109.9,
+   "label": "Orbit"
+  },
+  {
+   "until": 112.8,
+   "label": "Freefall"
+  },
+  {
+   "until": 114.0,
+   "label": "Reverie"
+  },
+  {
+   "until": 116.9,
+   "label": "Velocity"
+  },
+  {
+   "until": 118.0,
+   "label": "Spectacle"
+  },
+  {
+   "until": 121.7,
+   "label": "Rhythm"
+  },
+  {
+   "until": 122.8,
+   "label": "Undertow"
+  },
+  {
+   "until": 127.3,
+   "label": "Mercury"
+  },
+  {
+   "until": 130.6,
+   "label": "Oasis"
+  },
+  {
+   "until": 135.1,
+   "label": "Escape"
+  },
+  {
+   "until": 137.3,
+   "label": "Meridian"
+  },
+  {
+   "until": 140.1,
+   "label": "Vapor"
+  },
+  {
+   "until": 142.1,
+   "label": "Canopy"
+  },
+  {
+   "until": 149.5,
+   "label": "Symmetry"
+  },
+  {
+   "until": 150.6,
+   "label": "Botanica"
+  },
+  {
+   "until": 151.6,
+   "label": "Horizon"
+  }
+ ]
+}
