@@ -38,7 +38,7 @@ body{background:var(--bg);color:var(--fg);font-family:'Inter Tight',Arial,sans-s
 .crop img{position:absolute;max-width:none;height:auto;width:calc(24000% / var(--w));left:calc(var(--x0) * -100% / var(--w));top:calc(var(--y0) * -100% / var(--h))}
 
 /* HERO: the sheet on the left, the singer on the right */
-.hero{display:grid;grid-template-columns:minmax(0,1fr) auto;border-bottom:1px solid var(--line)}
+.hero{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.25fr);border-bottom:1px solid var(--line)}
 .sheet{display:flex;flex-direction:column;justify-content:space-between;gap:26px;padding:clamp(18px,2vw,28px) var(--g) clamp(18px,2vw,26px);border-right:1px solid var(--line)}
 .row{display:flex;justify-content:space-between;gap:14px;color:var(--dim)}
 h1{font-family:var(--sm);font-weight:700;font-size:clamp(64px,8.2vw,128px);line-height:.86;letter-spacing:-.06em;margin-top:clamp(10px,2vw,30px)}
@@ -50,7 +50,7 @@ h1{font-family:var(--sm);font-weight:700;font-size:clamp(64px,8.2vw,128px);line-
 .b{display:inline-flex;align-items:center;gap:8px;white-space:nowrap;font-family:var(--sm);font-size:12px;border:1px solid var(--fg);padding:10px 15px;background:none;color:var(--fg);cursor:pointer;transition:background .15s,color .15s}
 .b:hover,.b.solid{background:var(--fg);color:var(--bg)}
 .b.solid:hover{background:none;color:var(--fg)}
-.face{--x0:64;--y0:32;--w:112;--h:112;height:min(calc(100svh - 53px),860px);min-height:440px;width:auto}
+.face{--x0:0;--y0:32;--w:240;--h:112;width:100%;height:auto;align-self:center}
 .figcap{display:flex;justify-content:space-between;gap:12px;color:var(--dimmer)}
 
 /* body: a sticky index and the numbered parts */
@@ -151,11 +151,11 @@ ol.steps li b{font-family:var(--sm);font-weight:400;font-size:12px;color:var(--d
     </dl>
     <div>
       <div class="btns"><a class="b solid" href="#install">install &darr;</a><a class="b" href="#play">play in the browser</a><a class="b" href="#film">sound on</a></div>
-      <p class="figcap m" style="margin-top:18px"><span>fig. 00 · the singer, dabke&#x27;s home screen</span><span>&rarr;</span></p>
+      <p class="figcap m" style="margin-top:18px"><span>fig. 00 · the stage, dabke&#x27;s home screen</span><span>&rarr;</span></p>
     </div>
   </div>
   <figure class="face crop" data-bleed>
-    <img class="px" src="/dabke/assets/screens/portrait-b-night.png" width="240" height="240" alt="The singer, close up, from DABKE's home screen" fetchpriority="high">
+    <img class="px" src="/dabke/assets/screens/home-still.png" width="240" height="240" alt="The singer on the stage, from DABKE's home screen" fetchpriority="high">
   </figure>
 </section>
 
