@@ -1,0 +1,311 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="dark">
+<title>DABKE · STUDIOMORPHIK</title>
+<!-- PATHS: every DABKE asset on this page starts with /dabke/assets/ (the preview layout).
+     For the live site at /dabke/, replace /dabke/assets/ with /dabke/ in this file: one find-and-replace.
+     The player then loads from /dabke/emu/index.html. The font path /fonts/ already resolves to /fonts/ on the site. -->
+<meta name="description" content="DABKE is free firmware for the M-VAVE FM-1 by STUDIOMORPHIK: an Arabic wedding keyboard with maqam scales, quarter tones, dabke and shaabi rhythms. Public beta 0.16.">
+<link rel="icon" href="/favicon.ico">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+@font-face{font-family:'Integral CF';src:url('/fonts/IntegralCF-Bold.woff2') format('woff2');font-weight:700;font-display:swap}
+:root{--bg:#0b0c0e;--fg:rgba(255,255,255,.92);--dim:rgba(255,255,255,.6);--dimmer:rgba(255,255,255,.38);--line:rgba(255,255,255,.16);--g:clamp(16px,2.4vw,32px);--sm:'Space Mono',ui-monospace,Menlo,monospace;color-scheme:dark}
+*{box-sizing:border-box;margin:0;padding:0}
+a{color:inherit;text-decoration:none}
+img{display:block;max-width:100%}
+html,body{overflow-x:clip}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--fg);font-family:'Inter Tight',Arial,sans-serif;font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased}
+.px{image-rendering:pixelated;image-rendering:crisp-edges}
+.nb{white-space:nowrap}
+.m{font-family:var(--sm);font-size:12px;letter-spacing:.02em}
+
+/* the house top bar */
+.top{position:relative;z-index:3;display:flex;justify-content:space-between;padding:18px var(--g);font-size:11px;letter-spacing:.14em;text-transform:uppercase;border-bottom:1px solid var(--line)}
+.top .wm{font-family:'Integral CF',sans-serif;letter-spacing:.22em}
+.top nav{display:flex;gap:20px}.top nav a{opacity:.55}.top nav a:hover{opacity:1}
+@media (max-width:480px){.top nav{gap:9px;font-size:10px;letter-spacing:.1em}}
+@media (max-width:370px){.top nav{gap:7px;font-size:9px;letter-spacing:.06em}}
+
+/* a crop of a 240 x 240 screen, pixel for pixel: --x0 --y0 --w --h are in screen pixels */
+.crop{position:relative;overflow:hidden;aspect-ratio:var(--w) / var(--h);background:#000}
+.crop img{position:absolute;max-width:none;height:auto;width:calc(24000% / var(--w));left:calc(var(--x0) * -100% / var(--w));top:calc(var(--y0) * -100% / var(--h))}
+
+/* HERO: the sheet on the left, the singer on the right */
+.hero{display:grid;grid-template-columns:minmax(0,1fr) auto;border-bottom:1px solid var(--line)}
+.sheet{display:flex;flex-direction:column;justify-content:space-between;gap:26px;padding:clamp(18px,2vw,28px) var(--g) clamp(18px,2vw,26px);border-right:1px solid var(--line)}
+.row{display:flex;justify-content:space-between;gap:14px;color:var(--dim)}
+h1{font-family:var(--sm);font-weight:700;font-size:clamp(64px,8.2vw,128px);line-height:.86;letter-spacing:-.06em;margin-top:clamp(10px,2vw,30px)}
+.state{font-weight:500;font-size:clamp(21px,1.9vw,28px);line-height:1.18;letter-spacing:-.01em;max-width:24ch;margin-top:18px}
+.spec{border-top:1px solid var(--line)}
+.spec div{display:grid;grid-template-columns:110px 1fr;gap:14px;padding:8px 0;border-bottom:1px solid var(--line)}
+.spec dt{color:var(--dimmer)}
+.btns{display:flex;flex-wrap:wrap;gap:8px}
+.b{display:inline-flex;align-items:center;gap:8px;white-space:nowrap;font-family:var(--sm);font-size:12px;border:1px solid var(--fg);padding:10px 15px;background:none;color:var(--fg);cursor:pointer;transition:background .15s,color .15s}
+.b:hover,.b.solid{background:var(--fg);color:var(--bg)}
+.b.solid:hover{background:none;color:var(--fg)}
+.face{--x0:64;--y0:32;--w:112;--h:112;height:min(calc(100svh - 53px),860px);min-height:440px;width:auto}
+.figcap{display:flex;justify-content:space-between;gap:12px;color:var(--dimmer)}
+
+/* body: a sticky index and the numbered parts */
+.body{display:grid;grid-template-columns:250px minmax(0,1fr);border-bottom:1px solid var(--line)}
+.idx{position:sticky;top:0;align-self:start;padding:28px var(--g);display:grid;gap:7px}
+.idx a{color:var(--dim)}.idx a:hover{color:var(--fg)}
+.idx a b{font-weight:400;color:var(--dimmer);margin-right:8px}
+.parts{border-left:1px solid var(--line)}
+.part{padding:clamp(26px,3vw,40px) var(--g) clamp(44px,5vw,70px);border-bottom:1px solid var(--line);scroll-margin-top:0}
+.part:last-child{border-bottom:0}
+.ph{display:flex;align-items:baseline;gap:16px;margin-bottom:clamp(22px,2.6vw,34px)}
+.ph .n{color:var(--dimmer)}
+.ph h2{font-family:var(--sm);font-weight:700;font-size:clamp(24px,2.4vw,36px);letter-spacing:-.03em;line-height:1.1}
+.ph .r{margin-left:auto;color:var(--dimmer)}
+.duo{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.fig img{width:100%;height:auto;aspect-ratio:1;background:#000}
+.fig figcaption{margin-top:8px;color:var(--dim)}
+.txt{margin-top:22px;display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:clamp(18px,3vw,44px)}
+.txt p.say{font-weight:500;font-size:clamp(21px,1.8vw,26px);line-height:1.22;letter-spacing:-.01em}
+.txt .spec div{grid-template-columns:120px 1fr}
+.list{list-style:none;columns:2;column-gap:28px;border-top:1px solid var(--line)}
+.list li{break-inside:avoid;display:flex;gap:12px;padding:7px 0;border-bottom:1px solid var(--line)}
+.list li b{font-weight:400;color:var(--dimmer)}
+
+.vid{position:relative;background:#000}
+.vid video{display:block;width:100%;height:auto;aspect-ratio:1280/854}
+.vbar{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:12px;margin-top:10px;color:var(--dim)}
+
+.emu{border:1px solid var(--line);background:#000}
+.emu .facade{display:grid;grid-template-columns:auto 1fr;gap:clamp(18px,3vw,40px);align-items:center;padding:clamp(18px,3vw,36px)}
+.emu .facade img{width:clamp(150px,18vw,240px);height:auto;aspect-ratio:1}
+.emu iframe{display:block;width:100%;height:720px;border:0;opacity:0;transition:opacity .4s}
+.emu iframe.ready{opacity:1}
+
+ol.steps{list-style:none;border-top:1px solid var(--line)}
+ol.steps li{display:grid;grid-template-columns:60px 1fr;gap:14px;padding:12px 0;border-bottom:1px solid var(--line);font-size:18px}
+ol.steps li b{font-family:var(--sm);font-weight:400;font-size:12px;color:var(--dimmer);padding-top:5px}
+.fine{margin-top:18px;color:var(--dimmer);font-size:13px;line-height:1.6;max-width:70ch}
+
+/* every link, one index */
+.links{padding:clamp(60px,8vw,110px) var(--g) 0}
+.links h2{font-family:var(--sm);font-weight:700;font-size:clamp(24px,2.4vw,36px);letter-spacing:-.03em;margin-bottom:22px}
+.links a{display:grid;grid-template-columns:70px minmax(0,1fr) auto;gap:14px;align-items:baseline;padding:14px 0;border-top:1px solid var(--line);transition:padding .2s}
+.links a:last-child{border-bottom:1px solid var(--line)}
+.links a:hover{padding-left:10px}
+.links a .t{font-weight:500;font-size:clamp(20px,2vw,30px);letter-spacing:-.015em}
+.links a .t small{display:block;font-family:var(--sm);font-weight:400;font-size:12px;color:var(--dimmer);letter-spacing:0;margin-top:2px;overflow-wrap:anywhere}
+.links a .go{color:var(--dim)}
+.foot{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-top:clamp(60px,8vw,110px);padding:22px var(--g) 30px;border-top:1px solid var(--line);color:var(--dimmer)}
+
+@media (max-width:1000px){
+  .hero{grid-template-columns:1fr}
+  .face{order:-1;height:auto;width:100%;min-height:0}
+  .sheet{border-right:0}
+  .body{grid-template-columns:1fr}
+  .idx{position:static;grid-template-columns:repeat(2,minmax(0,1fr));border-bottom:1px solid var(--line)}
+  .parts{border-left:0}
+}
+@media (max-width:640px){
+  .txt{grid-template-columns:1fr}
+  .list{columns:1}
+  .emu .facade{grid-template-columns:1fr}
+  .emu iframe{height:560px}
+  .links a{grid-template-columns:44px minmax(0,1fr) auto}
+  .ph .r{display:none}
+}
+@media (max-width:480px){.duo{grid-template-columns:1fr}}
+</style>
+<link rel="canonical" href="https://studiomorphik.com/dabke/">
+<meta property="og:title" content="DABKE · STUDIOMORPHIK">
+<meta property="og:description" content="An Arabic wedding keyboard for the M-VAVE FM-1. Free firmware, public beta.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://studiomorphik.com/dabke/">
+<meta property="og:image" content="https://studiomorphik.com/dabke/assets/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://studiomorphik.com/dabke/assets/og.jpg">
+</head>
+<body>
+<header class="top"><a class="wm" href="/">STUDIOMORPHIK</a><nav><a href="/">Home</a><a href="/apps/">Apps</a><a href="/#/contact">Contact</a></nav></header>
+
+<section class="hero">
+  <div class="sheet">
+    <div>
+      <div class="row m"><span>fm-1 firmware</span><span>v0.16 · public beta</span></div>
+      <h1>DABKE</h1>
+      <p class="state">An Arabic wedding keyboard for the <span class="nb">M-VAVE FM-1</span> pocket synth.</p>
+    </div>
+    <dl class="spec m">
+      <div><dt>device</dt><dd><span class="nb">M-VAVE FM-1</span></dd></div>
+      <div><dt>version</dt><dd>0.16, public beta</dd></div>
+      <div><dt>price</dt><dd>free</dd></div>
+      <div><dt>licence</dt><dd>MPL-2.0, open source</dd></div>
+      <div><dt>install</dt><dd>from the browser: Chrome or Edge, over USB</dd></div>
+      <div><dt>try it</dt><dd>in the browser, no FM-1 needed</dd></div>
+      <div><dt>made by</dt><dd>STUDIOMORPHIK</dd></div>
+    </dl>
+    <div>
+      <div class="btns"><a class="b solid" href="#install">install &darr;</a><a class="b" href="#play">play in the browser</a><a class="b" href="#film">sound on</a></div>
+      <p class="figcap m" style="margin-top:18px"><span>fig. 00 · the singer, dabke&#x27;s home screen</span><span>&rarr;</span></p>
+    </div>
+  </div>
+  <figure class="face crop" data-bleed>
+    <img class="px" src="/dabke/assets/screens/portrait-b-night.png" width="240" height="240" alt="The singer, close up, from DABKE's home screen" fetchpriority="high">
+  </figure>
+</section>
+
+<div class="body">
+  <nav class="idx m" aria-label="Parts">
+    <a href="#film"><b>/&gt; 01</b>the film</a>
+    <a href="#maqam"><b>/&gt; 02</b>maqam</a>
+    <a href="#rhythm"><b>/&gt; 03</b>rhythm</a>
+    <a href="#voices"><b>/&gt; 04</b>voices</a>
+    <a href="#touch"><b>/&gt; 05</b>touch</a>
+    <a href="#hands"><b>/&gt; 06</b>left hand</a>
+    <a href="#tracks"><b>/&gt; 07</b>tracks</a>
+    <a href="#play"><b>/&gt; 08</b>play</a>
+    <a href="#install"><b>/&gt; 09</b>install</a>
+    <a href="#source"><b>/&gt; 10</b>source</a>
+  </nav>
+  <div class="parts">
+    <section class="part" id="film">
+      <div class="ph m"><span class="n">01</span><h2>The film</h2><span class="r">43 s · with sound</span></div>
+      <div class="vid">
+        <video id="video" autoplay muted loop playsinline preload="auto" poster="/dabke/assets/dabke-demo-poster.jpg">
+          <source src="/dabke/assets/dabke-demo-720.mp4" type="video/mp4" media="(max-width: 760px)">
+          <source src="/dabke/assets/dabke-demo-1280.mp4" type="video/mp4">
+        </video>
+      </div>
+      <div class="vbar m"><span>Wissam plays DABKE on the FM-1, filmed from above.</span><button class="b solid" id="sound" type="button" aria-pressed="false">&#9654; sound on</button></div>
+    </section>
+
+    <section class="part" id="maqam">
+      <div class="ph m"><span class="n">02</span><h2>Maqam</h2><span class="r">figs. 01, 02</span></div>
+      <div class="duo">
+        <figure class="fig"><img class="px" src="/dabke/assets/screens/maqam-sikah.png" width="240" height="240" loading="lazy" alt=""><figcaption class="m">fig. 01 · sikah on E half flat</figcaption></figure>
+        <figure class="fig"><img class="px" src="/dabke/assets/screens/maqam-rast.png" width="240" height="240" loading="lazy" alt=""><figcaption class="m">fig. 02 · rast on C</figcaption></figure>
+      </div>
+      <div class="txt"><p class="say">Maqam scales, with quarter tones on any note.</p><p>Inspired by Omar Souleyman and the Syrian wedding keyboard sound.</p></div>
+    </section>
+
+    <section class="part" id="rhythm">
+      <div class="ph m"><span class="n">03</span><h2>Rhythm</h2><span class="r">figs. 03, 04</span></div>
+      <div class="duo">
+        <figure class="fig"><img class="px" src="/dabke/assets/screens/step-kick.png" width="240" height="240" loading="lazy" alt=""><figcaption class="m">fig. 03 · the rhythm's kick, step by step</figcaption></figure>
+        <figure class="fig"><img class="px" src="/dabke/assets/screens/rhythm-8.png" width="240" height="240" loading="lazy" alt=""><figcaption class="m">fig. 04 · kick, darbuka, claps, riq, sagat</figcaption></figure>
+      </div>
+      <div class="txt"><p class="say">Dabke and shaabi rhythms.</p><ul class="list m"><li><b>01</b>maqsum</li><li><b>02</b>baladi</li><li><b>03</b>saidi</li><li><b>04</b>dabke</li><li><b>05</b>khaliji</li><li><b>06</b>chobi</li><li><b>+</b>and more</li></ul></div>
+    </section>
+
+    <section class="part" id="voices">
+      <div class="ph m"><span class="n">04</span><h2>Voices</h2><span class="r">figs. 05, 06</span></div>
+      <div class="duo">
+        <figure class="fig"><img class="px" src="/dabke/assets/screens/sound-1.png" width="240" height="240" loading="lazy" alt=""><figcaption class="m">fig. 05 · instrument: mijwiz</figcaption></figure>
+        <figure class="fig"><img class="px" src="/dabke/assets/screens/drone-accordion.png" width="240" height="240" loading="lazy" alt=""><figcaption class="m">fig. 06 · accordion, bayati on D</figcaption></figure>
+      </div>
+      <div class="txt"><p class="say">Thirteen voices, a drone under them.</p><ul class="list m"><li><b>01</b>mijwiz</li><li><b>02</b>zurna</li><li><b>03</b>keyboard lead</li><li><b>04</b>violin</li><li><b>05</b>ney</li><li><b>06</b>accordion</li><li><b>07</b>strings</li><li><b>08</b>organ</li><li><b>09</b>buzuq</li><li><b>10</b>oud</li><li><b>11</b>qanun</li><li><b>12</b>brass</li><li><b>13</b>square</li></ul></div>
+    </section>
+
+    <section class="part" id="touch">
+      <div class="ph m"><span class="n">05</span><h2>Touch</h2><span class="r">figs. 07, 08</span></div>
+      <div class="duo">
+        <figure class="fig"><img class="px" src="/dabke/assets/screens/orn-2.png" width="240" height="240" loading="lazy" alt=""><figcaption class="m">fig. 07 · pressure: bend up</figcaption></figure>
+        <figure class="fig"><img class="px" src="/dabke/assets/screens/orn-1.png" width="240" height="240" loading="lazy" alt=""><figcaption class="m">fig. 08 · ornament: auto</figcaption></figure>
+      </div>
+      <div class="txt"><p class="say">Lean on a key and the note bends.</p><dl class="spec m"><div><dt>ornaments</dt><dd>trills, glides, automatic ornaments</dd></div><div><dt>effects</dt><dd>delay, reverb, a wedding PA</dd></div></dl></div>
+    </section>
+
+    <section class="part" id="hands">
+      <div class="ph m"><span class="n">06</span><h2>Left hand</h2><span class="r">figs. 09, 10</span></div>
+      <div class="duo">
+        <figure class="fig"><img class="px" src="/dabke/assets/screens/rhythm-4.png" width="240" height="240" loading="lazy" alt=""><figcaption class="m">fig. 09 · left keys: bass</figcaption></figure>
+        <figure class="fig"><img class="px" src="/dabke/assets/screens/arp-panel.png" width="240" height="240" loading="lazy" alt=""><figcaption class="m">fig. 10 · the arpeggio page</figcaption></figure>
+      </div>
+      <div class="txt"><p class="say">Bass and backing from the left hand.</p><dl class="spec m"><div><dt>arpeggio</dt><dd>its own page of settings</dd></div><div><dt>drone</dt><dd>under the melody</dd></div></dl></div>
+    </section>
+
+    <section class="part" id="tracks">
+      <div class="ph m"><span class="n">07</span><h2>Tracks</h2><span class="r">figs. 11, 12</span></div>
+      <div class="duo">
+        <figure class="fig"><img class="px" src="/dabke/assets/screens/step-lead.png" width="240" height="240" loading="lazy" alt=""><figcaption class="m">fig. 11 · step mode</figcaption></figure>
+        <figure class="fig"><img class="px" src="/dabke/assets/screens/fx-6.png" width="240" height="240" loading="lazy" alt=""><figcaption class="m">fig. 12 · mix: track 1</figcaption></figure>
+      </div>
+      <div class="txt"><p class="say">Eight tracks with loops. A step sequencer.</p><dl class="spec m"><div><dt>mixer</dt><dd>an Akai MIDImix works as its mixer</dd></div><div><dt>usb</dt><dd>audio and MIDI</dd></div></dl></div>
+    </section>
+
+    <section class="part" id="play">
+      <div class="ph m"><span class="n">08</span><h2>Play in the browser</h2><span class="r">no fm-1 needed</span></div>
+      <div class="emu" id="emu">
+        <div class="facade" id="facade">
+          <img class="px" src="/dabke/assets/screens/home-hold.png" width="240" height="240" alt="DABKE's home screen">
+          <div><p class="say" style="font-weight:500;font-size:clamp(21px,1.8vw,26px);line-height:1.22;margin-bottom:18px">The same code the FM-1 runs, in this page.</p><button class="b solid" id="emuOn" type="button">load the fm-1 &rarr;</button></div>
+        </div>
+      </div>
+      <div class="vbar m"><span>keys, knobs and buttons work with a mouse or a keyboard</span><a href="/dabke/emu/index.html">full page &rarr;</a></div>
+    </section>
+
+    <section class="part" id="install">
+      <div class="ph m"><span class="n">09</span><h2>Install</h2><span class="r">chrome or edge · usb</span></div>
+      <ol class="steps"><li><b>step 1</b>Open the installer in Chrome or Edge.</li><li><b>step 2</b>Connect the FM-1 over USB.</li><li><b>step 3</b>Install DABKE 0.16.</li></ol>
+      <div class="btns" style="margin-top:22px"><a class="b solid" href="/dabke/install/">open the installer</a><a class="b" href="/dabke/manual/">read the manual</a><a class="b" href="/dabke/firmware/dabke-0.16.fwsc" download>dabke-0.16.fwsc &darr;</a></div>
+      <p class="fine">DABKE is a public beta. This is version 0.16. You install it at your own risk. The installer can put <span class="nb">M-VAVE&#x27;s</span> own firmware back.<br><span class="nb">M-VAVE</span> and FM-1 are trademarks of their owners. DABKE is not affiliated with <span class="nb">M-VAVE</span>.</p>
+    </section>
+
+    <section class="part" id="source">
+      <div class="ph m"><span class="n">10</span><h2>Source</h2><span class="r">MPL-2.0</span></div>
+      <div class="txt"><p class="say">Open source, under <span class="nb">MPL-2.0</span>.</p><p>Built on <span class="nb">fm1-base</span> by Charles Vestal and <span class="nb">felucca-bsp</span>, from Felucca by Leo Kuroshita (Hügelton Instruments).</p></div>
+    </section>
+  </div>
+</div>
+
+<nav class="links" aria-label="Links">
+  <h2>Every link</h2>
+  <a href="/dabke/install/"><span class="m">/&gt; 01</span><span class="t">The installer<small>studiomorphik.com/dabke/install</small></span><span class="go m">open &rarr;</span></a>
+  <a href="/dabke/manual/"><span class="m">/&gt; 02</span><span class="t">The manual<small>studiomorphik.com/dabke/manual</small></span><span class="go m">read &rarr;</span></a>
+  <a href="/dabke/emu/index.html"><span class="m">/&gt; 03</span><span class="t">Play in the browser<small>studiomorphik.com/dabke/emu</small></span><span class="go m">play &rarr;</span></a>
+  <a href="/dabke/firmware/dabke-0.16.fwsc" download><span class="m">/&gt; 04</span><span class="t">The firmware file<small>dabke-0.16.fwsc</small></span><span class="go m">download &darr;</span></a>
+  <a href="https://github.com/wissamsader/dabke" target="_blank" rel="noopener"><span class="m">/&gt; 05</span><span class="t">The source<small>github.com/wissamsader/dabke</small></span><span class="go m">github &#8599;</span></a>
+</nav>
+
+<div class="foot m"><span>&copy; 2026 STUDIOMORPHIK. All rights reserved.</span><span><a href="mailto:hello@studiomorphik.com">hello@studiomorphik.com</a></span></div>
+
+<script>
+// The film: muted loop until you ask for sound; the first "sound on" starts it from the top.
+(function(){
+  var v = document.getElementById('video'), b = document.getElementById('sound'), first = true;
+  b.addEventListener('click', function(){
+    var on = v.muted; v.muted = !on;
+    if (on && first) { first = false; v.currentTime = 0; }
+    if (on) v.play();
+    b.innerHTML = on ? '&#10074;&#10074; sound off' : '&#9654; sound on'; b.setAttribute('aria-pressed', on);
+  });
+})();
+
+// Play in the browser: the player loads on request (same site), in the page's dark colours, without its own title.
+(function(){
+  var SRC = '/dabke/emu/index.html', box = document.getElementById('emu');
+  document.getElementById('emuOn').addEventListener('click', function(){
+    var f = document.createElement('iframe');
+    f.src = SRC; f.title = 'DABKE in the browser'; f.allow = 'autoplay; midi';
+    f.addEventListener('load', function(){
+      try {
+        var d = f.contentDocument; d.documentElement.setAttribute('data-theme', 'dark');
+        var s = d.createElement('style');
+        s.textContent = 'body{background:transparent!important;padding-top:18px!important}body>header{display:none!important}';
+        d.head.appendChild(s);
+        var fit = function(){ f.style.height = (d.documentElement.scrollHeight + 4) + 'px'; };
+        fit(); setTimeout(fit, 600); addEventListener('resize', fit);
+      } catch (e) {}
+      f.classList.add('ready');
+    });
+    document.getElementById('facade').remove(); box.appendChild(f);
+  });
+})();
+</script>
+</body>
+</html>
