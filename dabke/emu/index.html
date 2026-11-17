@@ -529,11 +529,16 @@ for (const [c, kind] of [...Object.values(buttons).map((b) => [b, "btn"]), ...ke
 
 // shortcuts: single letters, only while the panel has focus, and they can be turned off
 const KEYMAP = {};
-"qwertyui".split("").forEach((c, i) => KEYMAP["Key" + c.toUpperCase()] = { key: WHITE_K[i] });
-"asdfghjk".split("").forEach((c, i) => KEYMAP["Key" + c.toUpperCase()] = { key: WHITE_K[8 + i] });
-"1234567890".split("").forEach((c, i) => KEYMAP["Digit" + c] = { key: BLACK_K[i] });
-KEYMAP.Minus = { key: BLACK_K[10] };
-Object.assign(KEYMAP, { KeyP: { btn: BTN.PLAY }, KeyO: { btn: BTN.REC }, Escape: { btn: BTN.HOME }, KeyZ: { btn: BTN["OCT-"] }, KeyX: { btn: BTN["OCT+"] } });
+// Ableton Live's computer keyboard. The FM-1's keys start at F: white 0..15 = F G A B C D E F G A B C D E F G,
+// black 0..10 = F# G# A# C# D# F# G# A# C# D# F#. A S D F G H J K L ; ' are the white keys from C,
+// W E T Y U O P the black ones, 1..7 the seven keys below that C (F F# G G# A A# B), Z and X the octave,
+// Space PLAY, Enter REC, Esc HOME.
+"asdfghjkl".split("").forEach((c, i) => KEYMAP["Key" + c.toUpperCase()] = { key: WHITE_K[4 + i] });
+KEYMAP.Semicolon = { key: WHITE_K[13] };
+KEYMAP.Quote = { key: WHITE_K[14] };
+[["KeyW", 3], ["KeyE", 4], ["KeyT", 5], ["KeyY", 6], ["KeyU", 7], ["KeyO", 8], ["KeyP", 9]].forEach(([c, i]) => KEYMAP[c] = { key: BLACK_K[i] });
+[["Digit1", WHITE_K[0]], ["Digit2", BLACK_K[0]], ["Digit3", WHITE_K[1]], ["Digit4", BLACK_K[1]], ["Digit5", WHITE_K[2]], ["Digit6", BLACK_K[2]], ["Digit7", WHITE_K[3]]].forEach(([c, k]) => KEYMAP[c] = { key: k });
+Object.assign(KEYMAP, { Space: { btn: BTN.PLAY }, Enter: { btn: BTN.REC }, Escape: { btn: BTN.HOME }, KeyZ: { btn: BTN["OCT-"] }, KeyX: { btn: BTN["OCT+"] } });
 const shortcuts = $("shortcuts");
 if (prefs.shortcuts === false) shortcuts.checked = false;
 shortcuts.addEventListener("change", () => { prefs.shortcuts = shortcuts.checked; savePrefs(); });
