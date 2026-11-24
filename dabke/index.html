@@ -8,7 +8,7 @@
 <!-- PATHS: every DABKE asset on this page starts with /dabke/assets/ (the preview layout).
      For the live site at /dabke/, replace /dabke/assets/ with /dabke/ in this file: one find-and-replace.
      The player then loads from /dabke/emu/index.html. The font path /fonts/ already resolves to /fonts/ on the site. -->
-<meta name="description" content="DABKE is free firmware for the M-VAVE FM-1 by STUDIOMORPHIK: an Arabic wedding keyboard with maqam scales, quarter tones, dabke and shaabi rhythms. Public beta 0.19.">
+<meta name="description" content="DABKE is free firmware for the M-VAVE FM-1 by STUDIOMORPHIK: an Arabic wedding keyboard with maqam scales, quarter tones, dabke and shaabi rhythms. Public beta 0.20.">
 <link rel="icon" href="/favicon.ico">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -50,7 +50,7 @@ h1{font-family:var(--sm);font-weight:700;font-size:clamp(64px,8.2vw,128px);line-
 .b{display:inline-flex;align-items:center;gap:8px;white-space:nowrap;font-family:var(--sm);font-size:12px;border:1px solid var(--fg);padding:10px 15px;background:none;color:var(--fg);cursor:pointer;transition:background .15s,color .15s}
 .b:hover,.b.solid{background:var(--fg);color:var(--bg)}
 .b.solid:hover{background:none;color:var(--fg)}
-.face{--x0:0;--y0:32;--w:240;--h:112;width:100%;height:auto;align-self:center}
+.face{--x0:0;--y0:18;--w:240;--h:110;width:100%;height:auto;align-self:center}
 .figcap{display:flex;justify-content:space-between;gap:12px;color:var(--dimmer)}
 
 /* body: a sticky index and the numbered parts */
@@ -136,13 +136,13 @@ ol.steps li b{font-family:var(--sm);font-weight:400;font-size:12px;color:var(--d
 <section class="hero">
   <div class="sheet">
     <div>
-      <div class="row m"><span>fm-1 firmware</span><span>v0.19 · public beta</span></div>
+      <div class="row m"><span>fm-1 firmware</span><span>v0.20 · public beta</span></div>
       <h1>DABKE</h1>
       <p class="state">An Arabic wedding keyboard for the <span class="nb">M-VAVE FM-1</span> pocket synth.</p>
     </div>
     <dl class="spec m">
       <div><dt>device</dt><dd><span class="nb">M-VAVE FM-1</span></dd></div>
-      <div><dt>version</dt><dd>0.19, public beta</dd></div>
+      <div><dt>version</dt><dd>0.20, public beta</dd></div>
       <div><dt>price</dt><dd>free</dd></div>
       <div><dt>licence</dt><dd>MPL-2.0, open source</dd></div>
       <div><dt>install</dt><dd>from the browser: Chrome or Edge, over USB</dd></div>
@@ -233,7 +233,7 @@ ol.steps li b{font-family:var(--sm);font-weight:400;font-size:12px;color:var(--d
       <div class="ph m"><span class="n">07</span><h2>Tracks</h2><span class="r">figs. 11, 12</span></div>
       <div class="duo">
         <figure class="fig"><img class="px" src="/dabke/assets/screens/step-lead.png" width="240" height="240" loading="lazy" alt=""><figcaption class="m">fig. 11 · step mode</figcaption></figure>
-        <figure class="fig"><img class="px" src="/dabke/assets/screens/fx-6.png" width="240" height="240" loading="lazy" alt=""><figcaption class="m">fig. 12 · mix: track 1</figcaption></figure>
+        <figure class="fig"><img class="px" src="/dabke/assets/screens/mixer.png" width="240" height="240" loading="lazy" alt=""><figcaption class="m">fig. 12 · the mixer: track 1</figcaption></figure>
       </div>
       <div class="txt"><p class="say">Eight tracks with loops, each with its own sound. A step sequencer.</p><dl class="spec m"><div><dt>mixer</dt><dd>an Akai MIDImix works as its mixer</dd></div><div><dt>usb</dt><dd>audio and MIDI</dd></div></dl></div>
     </section>
@@ -251,9 +251,9 @@ ol.steps li b{font-family:var(--sm);font-weight:400;font-size:12px;color:var(--d
 
     <section class="part" id="install">
       <div class="ph m"><span class="n">09</span><h2>Install</h2><span class="r">chrome or edge · usb</span></div>
-      <ol class="steps"><li><b>step 1</b>Open the installer in Chrome or Edge.</li><li><b>step 2</b>Connect the FM-1 over USB.</li><li><b>step 3</b>Install DABKE 0.19.</li></ol>
-      <div class="btns" style="margin-top:22px"><a class="b solid" href="/dabke/install/">open the installer</a><a class="b" href="/dabke/manual/">read the manual</a><a class="b" href="/dabke/firmware/dabke-0.19.fwsc" download>dabke-0.19.fwsc &darr;</a></div>
-      <p class="fine">DABKE is a public beta. This is version 0.19. You install it at your own risk. The installer can put <span class="nb">M-VAVE&#x27;s</span> own firmware back.<br><span class="nb">M-VAVE</span> and FM-1 are trademarks of their owners. DABKE is not affiliated with <span class="nb">M-VAVE</span>.</p>
+      <ol class="steps"><li><b>step 1</b>Open the installer in Chrome or Edge.</li><li><b>step 2</b>Connect the FM-1 over USB.</li><li><b>step 3</b>Install DABKE 0.20.</li></ol>
+      <div class="btns" style="margin-top:22px"><a class="b solid" href="/dabke/install/">open the installer</a><a class="b" href="/dabke/manual/">read the manual</a><a class="b" href="/dabke/firmware/dabke-0.20.fwsc" download>dabke-0.20.fwsc &darr;</a></div>
+      <p class="fine">DABKE is a public beta. This is version 0.20. You install it at your own risk. The installer can put <span class="nb">M-VAVE&#x27;s</span> own firmware back.<br><span class="nb">M-VAVE</span> and FM-1 are trademarks of their owners. DABKE is not affiliated with <span class="nb">M-VAVE</span>.</p>
     </section>
 
     <section class="part" id="source">
@@ -268,7 +268,7 @@ ol.steps li b{font-family:var(--sm);font-weight:400;font-size:12px;color:var(--d
   <a href="/dabke/install/"><span class="m">/&gt; 01</span><span class="t">The installer<small>studiomorphik.com/dabke/install</small></span><span class="go m">open &rarr;</span></a>
   <a href="/dabke/manual/"><span class="m">/&gt; 02</span><span class="t">The manual<small>studiomorphik.com/dabke/manual</small></span><span class="go m">read &rarr;</span></a>
   <a href="/dabke/emu/index.html"><span class="m">/&gt; 03</span><span class="t">Play in the browser<small>studiomorphik.com/dabke/emu</small></span><span class="go m">play &rarr;</span></a>
-  <a href="/dabke/firmware/dabke-0.19.fwsc" download><span class="m">/&gt; 04</span><span class="t">The firmware file<small>dabke-0.19.fwsc</small></span><span class="go m">download &darr;</span></a>
+  <a href="/dabke/firmware/dabke-0.20.fwsc" download><span class="m">/&gt; 04</span><span class="t">The firmware file<small>dabke-0.20.fwsc</small></span><span class="go m">download &darr;</span></a>
   <a href="https://github.com/wissamsader/dabke" target="_blank" rel="noopener"><span class="m">/&gt; 05</span><span class="t">The source<small>github.com/wissamsader/dabke</small></span><span class="go m">github &#8599;</span></a>
 </nav>
 
